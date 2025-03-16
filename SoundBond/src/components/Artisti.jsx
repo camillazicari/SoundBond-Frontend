@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
 import { SearchAnimata } from "./SearchAnimata";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Artisti = () => {
+  const state = useSelector((state) => state.user.firstName);
   const navigate = useNavigate();
   const [artists, setArtists] = useState([]);
   const [search, setSearch] = useState("");
@@ -71,7 +73,7 @@ const Artisti = () => {
       >
         <div className="flex flex-col items-center mt-4">
           <h2 className="text-2xl z-20 md:text-4xl xl:text-7xl font-bold text-center tracking-tight">
-            Camilla, benvenuta tra i{" "}
+            {state}, benvenuta tra i{" "}
             <span style={{ color: "#b849d6" }}>bonders</span>.
             <div className="bg-clip-text text-transparent bg-no-repeat">
               <span className="">Conosciamoci meglio...</span>
@@ -123,15 +125,19 @@ const Artisti = () => {
             ))}
           </ul>
         </div>
-        <div className="text-end mt-4 me-5">
+        <div className="flex justify-end w-[100%]">
           <button
             className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
-            onClick={handleNavigate}
+            onClick={() => {
+              handleNavigate();
+            }}
           >
             <div
-              className="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
-              style={{ backgroundColor: "#b849d6" }}
+              className="rounded-lg ms-5 sm:ms-0 sm:rounded-xl h-8 w-1/6 sm:h-10 sm:w-1/5 lg:w-1/4 lg:h-12 flex items-center justify-center absolute top-[4px] group-hover:w-[140px] sm:group-hover:w-[170px] lg:group-hover:w-[184px] z-10 duration-500"
+              style={{
+                backgroundColor: "#b849d6",
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +153,9 @@ const Artisti = () => {
                 />
               </svg>
             </div>
-            <p className="translate-x-2">Continua</p>
+            <p className="lg:translate-x-2 text-base pb-3.5 sm:text-xl lg-text-2xl sm:pb-1.5 lg:pb-0">
+              Continua
+            </p>
           </button>
         </div>
       </div>

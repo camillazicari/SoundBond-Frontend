@@ -9,24 +9,36 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SIGNUP_USER': {
+            const newUser = {
+                username: action.payload.username,
+                password: action.payload.password,
+                firstName: action.payload.firstName,
+                lastName: action.payload.lastName,
+                artists: action.payload.artists || [],
+                tracks: action.payload.tracks || [],
+                genres: action.payload.genres || [],
+                favTrack: action.payload.favTrack || null
+            };
+
             const newUsersData = {
                 ...state.usersData,
-                [action.payload.id]: {
-                    username: action.payload.username,
-                    password: action.payload.password,
-                    email: action.payload.email,
-                    firstName: action.payload.firstName,
-                    lastName: action.payload.lastName,
-                    artists: action.payload.artists || [],
-                    tracks: action.payload.tracks || [],
-                    genres: action.payload.genres || [],
-                    favTrack: action.payload.favTrack || null
-                }
+                [action.payload.id]: newUser
             };
-            console.log("Aggiornamento utenti registrati:", newUsersData);
+
+
             return {
                 ...state,
-                usersData: newUsersData
+                usersData: newUsersData,
+                user: {
+                    id: action.payload.id,
+                    username: action.payload.username,
+                    firstName: action.payload.firstName,
+                    lastName: action.payload.lastName
+                },
+                artists: newUser.artists,
+                tracks: newUser.tracks,
+                genres: newUser.genres,
+                favTrack: newUser.favTrack
             };
         }
 
@@ -37,7 +49,6 @@ const userReducer = (state = initialState, action) => {
                     ...state,
                     user: {
                         id: action.payload.id,
-                        email: action.payload.email,
                         username: user.username,
                         firstName: user.firstName,
                         lastName: user.lastName

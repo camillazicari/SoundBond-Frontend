@@ -1,9 +1,12 @@
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Generi = () => {
   const navigate = useNavigate();
+  const state = useSelector((state) => state.user.firstName);
+  console.log(state);
   const [buttons, setButtons] = useState([
     { id: "Jazz", isLiked: false },
     { id: "Pop", isLiked: false },
@@ -38,9 +41,9 @@ const Generi = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <div className="flex flex-col items-center mt-4">
-          <h2 className="text-2xl z-20 md:text-4xl lg:text-7xl font-bold text-center tracking-tight">
-            Camilla, benvenuta tra i{" "}
-            <span style={{ color: "#b849d6" }}>bonders</span>.
+          <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
+            {state}, benvenut* nella{" "}
+            <span style={{ color: "#b849d6" }}>bonders</span> community.
             <div className="bg-clip-text text-transparent bg-no-repeat">
               <span className="">Conosciamoci meglio...</span>
             </div>{" "}
@@ -53,21 +56,20 @@ const Generi = () => {
             Che generi preferisci?
           </p>
 
-          {/* Lista dei bottoni "mi piace" */}
           <div
-            className="liked-list rounded-4xl my-4 flex items-center justify-evenly"
+            className="liked-list rounded-2xl my-4 flex items-center justify-evenly p-2"
             style={{
               border: "0.5px solid #b849d6",
               minHeight: "60px",
               minWidth: "65%",
             }}
           >
-            <ul className="grid grid-cols-10">
+            <ul className="grid grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-2">
               {buttons
                 .filter((button) => button.isLiked)
                 .map((button) => (
                   <li
-                    className="m-2 py-1.5 px-3 rounded-2xl text-center"
+                    className="py-1.5 px-3 rounded-2xl text-center text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
                     key={button.id}
                     style={{
                       border: "0.5px solid #b849d6",
@@ -79,7 +81,7 @@ const Generi = () => {
             </ul>
           </div>
 
-          <div className="button-list grid grid-cols-6 place-items-center">
+          <div className="button-list grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 place-items-center">
             {buttons.map((button) => (
               <div key={button.id} className="like-button m-3">
                 <input
@@ -104,7 +106,7 @@ const Generi = () => {
             ))}
           </div>
         </div>
-        <div className=" text-end mt-4 me-5">
+        <div className="flex justify-end w-[100%]">
           <button
             className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
@@ -113,7 +115,7 @@ const Generi = () => {
             }}
           >
             <div
-              className="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+              className="rounded-lg ms-5 sm:ms-0 sm:rounded-xl h-8 w-1/6 sm:h-10 sm:w-1/5 lg:w-1/4 lg:h-12 flex items-center justify-center absolute top-[4px] group-hover:w-[140px] sm:group-hover:w-[170px] lg:group-hover:w-[184px] z-10 duration-500"
               style={{
                 backgroundColor: "#b849d6",
               }}
@@ -132,7 +134,9 @@ const Generi = () => {
                 />
               </svg>
             </div>
-            <p className="translate-x-2">Continua</p>
+            <p className="lg:translate-x-2 text-base pb-3.5 sm:text-xl lg-text-2xl sm:pb-1.5 lg:pb-0">
+              Continua
+            </p>
           </button>
         </div>
       </div>

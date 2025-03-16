@@ -11,7 +11,6 @@ const Registrati = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -21,7 +20,6 @@ const Registrati = () => {
     // Regex per validazione
     const usernameRegex = /^[a-zA-Z0-9._-]{5,}$/; // Almeno 5 caratteri, include ., -, _
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/; // Almeno 8 caratteri, maiuscole, minuscole, numeri
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!firstName || !lastName || !username || !password || !confirmPassword) {
       errors.generic = "Compilare tutti i campi!";
@@ -32,13 +30,6 @@ const Registrati = () => {
     }
     if (users[username.toLowerCase().replace(/\s/g, "")]) {
       errors.username = "Username già in uso.";
-    }
-
-    if (!emailRegex.test(email) || email === undefined) {
-      errors.email = "Email non valida.";
-    }
-    if (users[email]) {
-      errors.email = "Email già in uso.";
     }
 
     if (!passwordRegex.test(password)) {
@@ -119,19 +110,6 @@ const Registrati = () => {
         </label>
         {errorMessages.username && (
           <p className="text-sm text-center Errors">{errorMessages.username}</p>
-        )}
-        <label>
-          <input
-            className="input"
-            type="email"
-            placeholder=" "
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <span>Email</span>
-        </label>
-        {errorMessages.email && (
-          <p className="text-sm text-center Errors">{errorMessages.email}</p>
         )}
 
         <label>

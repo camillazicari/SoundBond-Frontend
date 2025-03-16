@@ -30,16 +30,16 @@ const Brani = () => {
             placeholders={placeholders}
           />
         </div>
-        <div className=" text-end mt-4 me-5">
+        <div className="flex justify-end w-[100%]">
           <button
             className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
-            // onClick={() => {
-            //   handleNavigate();
-            // }}
+            onClick={() => {
+              //handleNavigate();
+            }}
           >
             <div
-              className="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+              className="rounded-lg ms-5 sm:ms-0 sm:rounded-xl h-8 w-1/6 sm:h-10 sm:w-1/5 lg:w-1/4 lg:h-12 flex items-center justify-center absolute top-[4px] group-hover:w-[140px] sm:group-hover:w-[170px] lg:group-hover:w-[184px] z-10 duration-500"
               style={{
                 backgroundColor: "#b849d6",
               }}
@@ -49,13 +49,18 @@ const Brani = () => {
                 width="25"
                 height="25"
                 fill="currentColor"
-                className="bi bi-check2"
+                className="bi bi-arrow-right-short"
                 viewBox="0 0 16 16"
               >
-                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                <path
+                  fillRule="evenodd"
+                  d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"
+                />
               </svg>
             </div>
-            <p className="translate-x-2">Completa</p>
+            <p className="lg:translate-x-2 text-base pb-3.5 sm:text-xl lg-text-2xl sm:pb-1.5 lg:pb-0">
+              Continua
+            </p>
           </button>
         </div>
       </div>
