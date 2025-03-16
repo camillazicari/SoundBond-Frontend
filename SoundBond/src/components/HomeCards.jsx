@@ -1,4 +1,4 @@
-import SpotlightCard from "../../animations/SpotlightCard/SpotlightCard";
+import SpotlightCard from "../../animations/SpotlightCard";
 import { TextLoopBasic } from "./TextLoopBasic";
 
 const HomeCards = () => {

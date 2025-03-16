@@ -70,7 +70,7 @@ const Registrati = () => {
     setErrorMessages({});
     e.target.reset();
     // TODO: MANDARE A PREFERENZE
-    navigate("/preferenze");
+    navigate("/generi");
   };
 
   return (
@@ -167,7 +167,7 @@ const Registrati = () => {
           <span>Conferma password</span>
         </label>
         {errorMessages.confirmPassword && (
-          <p className="text-sm text-start Errors">
+          <p className="text-sm text-center Errors">
             {errorMessages.confirmPassword}
           </p>
         )}

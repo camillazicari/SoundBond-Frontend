@@ -1,6 +1,6 @@
 import { HeroParallaxDemo } from "./HeroParallaxDemo";
 import HomeCards from "./HomeCards";
-import GradientBig from "../../animations/GradientText/GradientBig";
+import GradientBig from "../../animations/GradientBig";
 
 const Home = () => {
   return (

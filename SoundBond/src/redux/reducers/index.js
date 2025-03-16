@@ -1,6 +1,8 @@
 const initialState = {
-    preferences: [],
+    artists: [],
     tracks: [],
+    genres: [],
+    favTrack: null,
     user: null,
     usersData: {},
 };
@@ -15,8 +17,10 @@ const userReducer = (state = initialState, action) => {
                     email: action.payload.email,
                     firstName: action.payload.firstName,
                     lastName: action.payload.lastName,
-                    preferences: action.payload.preferences || [],
-                    tracks: action.payload.tracks || []
+                    artists: action.payload.artists || [],
+                    tracks: action.payload.tracks || [],
+                    genres: action.payload.genres || [],
+                    favTrack: action.payload.favTrack || null
                 }
             };
             console.log("Aggiornamento utenti registrati:", newUsersData);
@@ -38,8 +42,9 @@ const userReducer = (state = initialState, action) => {
                         firstName: user.firstName,
                         lastName: user.lastName
                     },
-                    preferences: user.preferences,
-                    tracks: user.tracks
+                    artists: user.artists,
+                    tracks: user.tracks,
+                    genres: user.genres
                 };
             } else {
                 alert('Username o password errati.');
@@ -50,18 +55,19 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: null,
-                preferences: [],
-                tracks: []
+                artists: [],
+                tracks: [],
+                genres: [],
             };
-        case 'SET_PREFERENCES':
+        case 'SET_ARTISTS':
             return {
                 ...state,
-                preferences: action.payload,
+                artists: action.payload,
                 usersData: {
                     ...state.usersData,
                     [state.user.id]: {
                         ...state.usersData[state.user.id],
-                        preferences: action.payload
+                        artists: action.payload
                     }
                 }
             };
@@ -74,6 +80,32 @@ const userReducer = (state = initialState, action) => {
                     [state.user.id]: {
                         ...state.usersData[state.user.id],
                         tracks: action.payload
+                    }
+                }
+            };
+
+        case 'SET_GENRES':
+            return {
+                ...state,
+                genres: action.payload,
+                usersData: {
+                    ...state.usersData,
+                    [state.user.id]: {
+                        ...state.usersData[state.user.id],
+                        genres: action.payload
+                    }
+                }
+            };
+
+        case 'SET_FAV_TRACK':
+            return {
+                ...state,
+                favTrack: action.payload,
+                usersData: {
+                    ...state.usersData,
+                    [state.user.id]: {
+                        ...state.usersData[state.user.id],
+                        favTrack: action.payload
                     }
                 }
             };

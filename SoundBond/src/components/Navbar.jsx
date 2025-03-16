@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import GradientText from "../../animations/GradientText/GradientText";
+import GradientText from "../../animations/GradientText";
 import { Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
@@ -76,7 +76,6 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/home"
               className="font-medium text-base navText"
               style={{ color: "#b849d6" }}
             >
