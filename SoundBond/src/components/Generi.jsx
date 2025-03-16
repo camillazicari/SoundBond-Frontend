@@ -46,7 +46,10 @@ const Generi = () => {
             </div>{" "}
             <br />
           </h2>
-          <p className=" text-center text-2xl" style={{ color: "#b849d6" }}>
+          <p
+            className=" text-center md:text-xl lg:text-2xl"
+            style={{ color: "#b849d6" }}
+          >
             Che generi preferisci?
           </p>
 
@@ -103,31 +106,33 @@ const Generi = () => {
         </div>
         <div className=" text-end mt-4 me-5">
           <button
-            class="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
+            className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
             onClick={() => {
               handleNavigate();
             }}
           >
             <div
-              class="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
-              style={{ backgroundColor: "#b849d6" }}
+              className="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+              style={{
+                backgroundColor: "#b849d6",
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
                 height="25"
                 fill="currentColor"
-                class="bi bi-arrow-right-short"
+                className="bi bi-arrow-right-short"
                 viewBox="0 0 16 16"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"
                 />
               </svg>
             </div>
-            <p class="translate-x-2">Continua</p>
+            <p className="translate-x-2">Continua</p>
           </button>
         </div>
       </div>

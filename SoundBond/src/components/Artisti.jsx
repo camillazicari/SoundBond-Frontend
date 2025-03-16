@@ -1,19 +1,156 @@
+import { useNavigate } from "react-router-dom";
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
+import { SearchAnimata } from "./SearchAnimata";
+import { useState } from "react";
 
 const Artisti = () => {
+  const navigate = useNavigate();
+  const [artists, setArtists] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const placeholders = [
+    "Bruno Mars",
+    "Michael Jackson",
+    "Billie Eilish",
+    "Tiziano Ferro",
+    "Pinguini Tattici Nucleari",
+  ];
+
+  const getArtist = async (query) => {
+    const url = `http://localhost:5002/api/search?q=${query}`;
+
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Artista:", data);
+
+        const artistImage =
+          data.data && data.data[5] && data.data[5].album
+            ? data.data[5].album.cover_xl
+            : null;
+
+        const artistName =
+          data.data && data.data[5] && data.data[5].artist
+            ? data.data[5].artist.name
+            : null;
+        if (artistImage && !artists.some((artist) => artist.name === query)) {
+          setArtists((prev) => [
+            ...prev,
+            { name: artistName, image: artistImage },
+          ]);
+        }
+      } else {
+        throw new Error("Errore nel recupero dei dati");
+      }
+    } catch (error) {
+      console.log("errore", error);
+    }
+  };
+
+  const handleNavigate = () => {
+    navigate("/brani");
+  };
+
+  const handleSearch = (value) => {
+    if (value.trim() !== "" && !artists.includes(value)) {
+      getArtist(value);
+      setSearch("");
+    }
+  };
+
+  const handleRemoveArtist = (artist) => {
+    setArtists((prev) => prev.filter((item) => item !== artist));
+  };
+
   return (
     <BackgroundBeamsWithCollision>
-      <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white font-sans tracking-tight">
-        What&apos;s cooler than Beams?{" "}
-        <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
-          <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-            <span className="">Exploding beams.</span>
-          </div>
-          <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
-            <span className="">Exploding beams.</span>
-          </div>
+      <div
+        className="flex flex-col justify-around"
+        style={{ width: "100%", height: "100%" }}
+      >
+        <div className="flex flex-col items-center mt-4">
+          <h2 className="text-2xl z-20 md:text-4xl xl:text-7xl font-bold text-center tracking-tight">
+            Camilla, benvenuta tra i{" "}
+            <span style={{ color: "#b849d6" }}>bonders</span>.
+            <div className="bg-clip-text text-transparent bg-no-repeat">
+              <span className="">Conosciamoci meglio...</span>
+            </div>{" "}
+            <br />
+          </h2>
+          <SearchAnimata
+            text="Quali sono i tuoi artisti preferiti?"
+            placeholders={placeholders}
+            onChange={setSearch}
+            onSubmit={handleSearch}
+            search={search}
+          />
         </div>
-      </h2>
+        <div className="">
+          <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {artists.map((artist, index) => (
+              <li
+                className="m-3 py-1.5 px-3 rounded-4xl text-xs lg:text-base text-center cursor-pointer flex items-center justify-between"
+                style={{ border: "0.5px solid #b849d6" }}
+                key={index}
+                onClick={() => handleRemoveArtist(artist)}
+              >
+                {artist.image ? (
+                  <img
+                    src={artist.image}
+                    alt="cover"
+                    className="rounded-4xl h-10 w-10 lg:h-12.5 lg:w-12.5"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <p>No image available</p>
+                )}
+
+                {artist.name}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="23"
+                  fill="#b849d6"
+                  className="bi bi-x-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                </svg>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="text-end mt-4 me-5">
+          <button
+            className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
+            type="button"
+            onClick={handleNavigate}
+          >
+            <div
+              className="rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+              style={{ backgroundColor: "#b849d6" }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                fill="currentColor"
+                className="bi bi-arrow-right-short"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"
+                />
+              </svg>
+            </div>
+            <p className="translate-x-2">Continua</p>
+          </button>
+        </div>
+      </div>
     </BackgroundBeamsWithCollision>
   );
 };
