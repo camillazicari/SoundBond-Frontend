@@ -9,6 +9,7 @@ const Artisti = () => {
   const navigate = useNavigate();
   const [artists, setArtists] = useState([]);
   const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const placeholders = [
     "Bruno Mars",
@@ -19,28 +20,23 @@ const Artisti = () => {
   ];
 
   const getArtist = async (query) => {
-    const url = `http://localhost:5002/api/search?q=${query}`;
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
 
+    const url = `http://localhost:5002/api/search?q=${query}`;
     try {
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
-        console.log("Artista:", data);
 
-        const artistImage =
-          data.data && data.data[5] && data.data[5].album
-            ? data.data[5].album.cover_xl
-            : null;
-
-        const artistName =
-          data.data && data.data[5] && data.data[5].artist
-            ? data.data[5].artist.name
-            : null;
-        if (artistImage && !artists.some((artist) => artist.name === query)) {
-          setArtists((prev) => [
-            ...prev,
-            { name: artistName, image: artistImage },
-          ]);
+        if (data.data) {
+          const newResults = data.data.map((artist) => ({
+            name: artist.artist?.name || "Sconosciuto",
+            image: artist.album?.cover_xl || null,
+          }));
+          setSearchResults(newResults);
         }
       } else {
         throw new Error("Errore nel recupero dei dati");
@@ -54,11 +50,17 @@ const Artisti = () => {
     navigate("/brani");
   };
 
-  const handleSearch = (value) => {
-    if (value.trim() !== "" && !artists.includes(value)) {
-      getArtist(value);
-      setSearch("");
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    getArtist(value);
+  };
+
+  const handleSelectArtist = (artist) => {
+    if (!artists.some((s) => s.name === artist.name)) {
+      setArtists((prev) => [...prev, artist]);
     }
+    setSearch("");
+    setSearchResults([]);
   };
 
   const handleRemoveArtist = (artist) => {
@@ -80,13 +82,35 @@ const Artisti = () => {
             </div>{" "}
             <br />
           </h2>
-          <SearchAnimata
-            text="Quali sono i tuoi artisti preferiti?"
-            placeholders={placeholders}
-            onChange={setSearch}
-            onSubmit={handleSearch}
-            search={search}
-          />
+          <div className="relative w-full max-w-md">
+            <SearchAnimata
+              text="Quali sono i tuoi artisti preferiti?"
+              placeholders={placeholders}
+              onChange={handleSearchChange}
+              onSubmit={() => {}}
+              search={search}
+            />
+            {searchResults.length > 0 && (
+              <ul className="bg-zinc-800 shadow-lg rounded-lg mt-2 w-full max-h-60 overflow-y-auto absolute left-0 z-50">
+                {searchResults.map((artist, index) => (
+                  <li
+                    key={index}
+                    className="p-2 hover:bg-zinc-500 cursor-pointer flex items-center"
+                    onClick={() => handleSelectArtist(artist)}
+                  >
+                    {artist.image && (
+                      <img
+                        src={artist.image}
+                        alt="immagine"
+                        className="h-8 w-8 rounded-lg mr-2"
+                      />
+                    )}
+                    {artist.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
         <div className="">
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
