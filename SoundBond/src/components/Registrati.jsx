@@ -60,7 +60,6 @@ const Registrati = () => {
     setLastName("");
     setErrorMessages({});
     e.target.reset();
-    // TODO: MANDARE A PREFERENZE
     navigate("/generi");
   };
 

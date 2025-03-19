@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import GradientText from "../../animations/GradientText";
 import { Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import NavAvatar from "./NavAvatar";
 
 const Navbar = () => {
   const location = useLocation();
@@ -68,39 +69,86 @@ const Navbar = () => {
               backdropFilter: "blur(10px)",
             }}
           >
-            <Link
-              to="/"
-              className="font-medium text-base navText"
-              style={{ color: "#b849d6" }}
-            >
-              Home
-            </Link>
-            <Link
-              className="font-medium text-base navText"
-              style={{ color: "#b849d6" }}
-            >
-              Esplora
-            </Link>
-            <a
-              href="#"
-              className="font-medium text-base navText"
-              style={{ color: "#b849d6" }}
-            >
-              Connessioni
-            </a>
+            {location.pathname === "/" ||
+            location.pathname === "accedi" ||
+            location.pathname === "/accedi/registrati" ? (
+              <Link
+                to="/"
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Home
+              </Link>
+            ) : (
+              <Link
+                to="/home"
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Home
+              </Link>
+            )}
+            {location.pathname === "/" ||
+            location.pathname === "accedi" ||
+            location.pathname === "/accedi/registrati" ? (
+              <Link
+                to={"/accedi"}
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Esplora
+              </Link>
+            ) : (
+              <Link
+                to={"/esplora"}
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Esplora
+              </Link>
+            )}
+            {location.pathname === "/" ||
+            location.pathname === "accedi" ||
+            location.pathname === "/accedi/registrati" ? (
+              <Link
+                to={"/accedi"}
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Connessioni
+              </Link>
+            ) : (
+              <Link
+                to={"/connessioni"}
+                className="font-medium text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Connessioni
+              </Link>
+            )}
           </div>
         </div>
 
-        {location.pathname !== "/accedi" &&
+        {location.pathname === "/" && (
+          <div className="hidden sm:flex items-center">
+            <GradientText
+              colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
+              animationSpeed={5}
+              showBorder={true}
+            >
+              LOGIN
+            </GradientText>
+          </div>
+        )}
+
+        {location.pathname !== "/" &&
+          location.pathname !== "/accedi" &&
+          location.pathname !== "/artisti" &&
+          location.pathname !== "/brani" &&
+          location.pathname !== "/generi" &&
           location.pathname !== "/accedi/registrati" && (
             <div className="hidden sm:flex items-center">
-              <GradientText
-                colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
-                animationSpeed={5}
-                showBorder={true}
-              >
-                LOGIN
-              </GradientText>
+              <NavAvatar />
             </div>
           )}
       </nav>

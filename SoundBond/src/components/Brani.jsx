@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
 import { SearchAnimata } from "./SearchAnimata";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Brani = () => {
   const placeholders = [
@@ -12,6 +13,7 @@ const Brani = () => {
     "Sere nere",
   ];
 
+  const navigate = useNavigate();
   const state = useSelector((state) => state.user.firstName);
   const [songs, setSongs] = useState([]);
   const [search, setSearch] = useState("");
@@ -148,9 +150,9 @@ const Brani = () => {
           <button
             className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
-            // onClick={() => {
-            //   handleNavigate();
-            // }}
+            onClick={() => {
+              navigate("/home");
+            }}
           >
             <div
               className="rounded-lg ms-5 sm:ms-0 sm:rounded-xl h-8 w-1/6 sm:h-10 sm:w-1/5 lg:w-1/4 lg:h-12 flex items-center justify-center absolute top-[4px] group-hover:w-[140px] sm:group-hover:w-[170px] lg:group-hover:w-[184px] z-10 duration-500"

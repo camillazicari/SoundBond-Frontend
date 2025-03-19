@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 const Accedi = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
@@ -32,6 +33,8 @@ const Accedi = () => {
     setPassword("");
     setErrorMessages({});
     e.target.reset();
+
+    navigate("/home");
   };
 
   return (
@@ -68,7 +71,9 @@ const Accedi = () => {
           />
           <span>Password</span>
         </label>
-        <button className="submit">Accedi ora</button>
+        <button to={"/home"} className="submit text-center">
+          Accedi ora
+        </button>
         <p className="signin">
           Non hai un account? <Link to={"/accedi/registrati"}>Registrati</Link>{" "}
         </p>
