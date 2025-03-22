@@ -10,6 +10,10 @@ import Artisti from "./components/Artisti";
 import Preferenze from "./components/Preferenze";
 import Brani from "./components/Brani";
 import Home from "./components/Home";
+import Impostazioni from "./components/Impostazioni";
+import Feedback from "./components/Feedback";
+import { Toaster } from "sonner";
+
 function App() {
   return (
     <>
@@ -29,8 +33,17 @@ function App() {
           />
           <Route path="/brani" element={<Preferenze component={<Brani />} />} />
           <Route path="/home" element={<Preferenze component={<Home />} />} />
+          <Route
+            path="/impostazioni"
+            element={<Preferenze component={<Impostazioni />} />}
+          />
+          <Route
+            path="/feedback"
+            element={<Preferenze component={<Feedback />} />}
+          />
         </Routes>
         <Footer />
+        <Toaster position="top-center" />
       </BrowserRouter>
     </>
   );

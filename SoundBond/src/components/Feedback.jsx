@@ -1,0 +1,49 @@
+import { MarqueeDemo } from "./MarqueeDemo";
+import "locomotive-scroll/dist/locomotive-scroll.css";
+import LocomotiveScroll from "locomotive-scroll";
+import { useEffect, useRef } from "react";
+import { Footer } from "./Footer";
+import { Rate } from "antd";
+
+const Feedback = () => {
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const scrollInstance = new LocomotiveScroll({
+      el: scrollRef.current,
+      smooth: true,
+    });
+
+    return () => {
+      scrollInstance.destroy();
+    };
+  }, []);
+  return (
+    <div ref={scrollRef} className="scroll-container fade-in">
+      <section className="h-[90vh] flex flex-col justify-center gap-16">
+        <h2
+          data-scroll
+          data-scroll-speed="0.5"
+          className="text-8xl font-extrabold text-center"
+          style={{ color: "#b849d6" }}
+        >
+          Dicono di noi
+        </h2>{" "}
+        <div data-scroll data-scroll-speed="0.5">
+          <MarqueeDemo />
+        </div>
+      </section>
+      <section className="h-[90vh] flex flex-col justify-center items-center">
+        <Rate
+          allowHalf
+          defaultValue={2.5}
+          style={{
+            fontSize: 80,
+          }}
+        />
+      </section>
+    </div>
+  );
+};
+
+export default Feedback;

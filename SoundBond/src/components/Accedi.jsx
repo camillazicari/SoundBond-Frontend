@@ -38,7 +38,7 @@ const Accedi = () => {
   };
 
   return (
-    <div className="container mx-auto my-22 flex justify-center">
+    <div className="container mx-auto my-22 flex justify-center fade-in">
       {errorMessages.generic && (
         <p className="Errors">{errorMessages.generic}</p>
       )}

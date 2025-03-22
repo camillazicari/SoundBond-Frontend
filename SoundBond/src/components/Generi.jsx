@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 const Generi = () => {
   const navigate = useNavigate();
   const state = useSelector((state) => state.user.firstName);
-  console.log(state);
   const [buttons, setButtons] = useState([
     { id: "Jazz", isLiked: false },
     { id: "Pop", isLiked: false },

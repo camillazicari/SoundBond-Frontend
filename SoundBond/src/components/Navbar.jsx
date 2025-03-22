@@ -25,12 +25,12 @@ const Navbar = () => {
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent sticky top-0 z-30">
       <nav className="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between bg-transparent">
-        <Link
-          to="/"
-          className="text-3xl font-extrabold SoundBond"
-          style={{ color: "#d489e9", textShadow: "2px 2px 4px #0c0512" }}
-        >
-          SoundBond
+        <Link to="/" className="text-3xl font-extrabold SoundBond">
+          <img
+            src="src/assets/SoundBond/SoundBond (100 x 50 px).png"
+            alt=""
+            className="w-45"
+          />
         </Link>
 
         <button
@@ -60,7 +60,7 @@ const Navbar = () => {
               location.pathname !== "/accedi" &&
               location.pathname !== "/accedi/registrati" &&
               width > 670
-                ? "mr-20"
+                ? "mr-31.5"
                 : "mr-0"
             }`}
             style={{

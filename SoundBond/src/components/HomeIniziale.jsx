@@ -4,7 +4,7 @@ import GradientBig from "../../animations/GradientBig";
 
 const HomeIniziale = () => {
   return (
-    <>
+    <div className="fade-in">
       <HeroParallaxDemo />
       <HomeCards />
       <div className=" my-11">
@@ -17,7 +17,7 @@ const HomeIniziale = () => {
           INIZIA SUBITO
         </GradientBig>
       </div>
-    </>
+    </div>
   );
 };
 

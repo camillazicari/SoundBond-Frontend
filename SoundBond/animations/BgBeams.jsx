@@ -67,7 +67,7 @@ export const BackgroundBeamsWithCollision = ({ children, className }) => {
         "relative flex items-center w-full justify-center overflow-hidden",
         className
       )}
-      style={{ height: "100%" }}
+      style={{ height: "85dvh" }}
     >
       {beams.map((beam) => (
         <CollisionMechanism
@@ -153,7 +153,7 @@ const CollisionMechanism = React.forwardRef(
           key={beamKey}
           ref={(node) => {
             beamRef.current = node;
-            if (ref) ref(node); // Passa il ref qui
+            if (ref) ref(node);
           }}
           animate="animate"
           initial={{

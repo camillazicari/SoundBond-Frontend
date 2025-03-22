@@ -64,7 +64,7 @@ const Registrati = () => {
   };
 
   return (
-    <div className="container mx-auto my-7 flex flex-col items-center justify-center">
+    <div className="container mx-auto my-7 flex flex-col items-center justify-center fade-in">
       {errorMessages.generic && (
         <p className="Errors">{errorMessages.generic}</p>
       )}
