@@ -17,9 +17,10 @@ export default function NavAvatar() {
     dispatch({ type: "LOGOUT_USER" });
     navigate("/");
   };
+
   return (
     <div className="flex items-center">
-      <Dropdown placement="bottom-center" className="">
+      <Dropdown placement="bottom-center">
         <DropdownTrigger>
           <div className="border-2 border-[#b849d6] rounded-full">
             <img
@@ -31,7 +32,12 @@ export default function NavAvatar() {
         </DropdownTrigger>
         <DropdownMenu
           aria-label="User Actions"
-          className="flex justify-center bg-[#0c0512] p-2 border-[#b849d6] border-[0.5px] rounded-lg"
+          className="flex justify-center p-2 border-[#b849d6] border-[0.5px] rounded-lg"
+          style={{
+            borderColor: "rgba(184, 73, 214, 0.5)",
+            backgroundColor: "rgba(12, 5, 18, 0.5)",
+            backdropFilter: "blur(10px)",
+          }}
         >
           <DropdownItem
             key="profile"

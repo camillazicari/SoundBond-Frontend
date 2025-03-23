@@ -24,12 +24,12 @@ const Navbar = () => {
 
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent sticky top-0 z-30">
-      <nav className="max-w-[85rem] w-full mx-auto px-4 flex items-center justify-between bg-transparent">
-        <Link to="/" className="text-3xl font-extrabold SoundBond">
+      <nav className="w-full mx-auto px-4 flex items-center justify-between bg-transparent">
+        <Link to="/">
           <img
             src="src/assets/SoundBond/SoundBond (100 x 50 px).png"
             alt=""
-            className="w-45"
+            className="w-40 md:w-40 lg:w-50"
           />
         </Link>
 
@@ -56,11 +56,13 @@ const Navbar = () => {
           }`}
         >
           <div
-            className={`flex flex-col gap-5 py-3 px-15 sm:flex-row sm:items-center border rounded-3xl justify-center ${
+            className={`flex flex-col gap-5 py-3 px-8 md:px-15 sm:flex-row sm:items-center border rounded-3xl justify-center ${
               location.pathname !== "/accedi" &&
               location.pathname !== "/accedi/registrati" &&
-              width > 670
-                ? "mr-31.5"
+              width > 1023
+                ? "mr-37"
+                : width > 670
+                ? "mr-27"
                 : "mr-0"
             }`}
             style={{
@@ -74,7 +76,7 @@ const Navbar = () => {
             location.pathname === "/accedi/registrati" ? (
               <Link
                 to="/"
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Home
@@ -82,7 +84,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/home"
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Home
@@ -93,7 +95,7 @@ const Navbar = () => {
             location.pathname === "/accedi/registrati" ? (
               <Link
                 to={"/accedi"}
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Esplora
@@ -101,7 +103,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to={"/esplora"}
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Esplora
@@ -112,7 +114,7 @@ const Navbar = () => {
             location.pathname === "/accedi/registrati" ? (
               <Link
                 to={"/accedi"}
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Connessioni
@@ -120,17 +122,44 @@ const Navbar = () => {
             ) : (
               <Link
                 to={"/connessioni"}
-                className="font-medium text-base navText"
+                className="font-medium text-sm lg:text-base navText"
                 style={{ color: "#b849d6" }}
               >
                 Connessioni
               </Link>
             )}
+            {location.pathname === "/" && (
+              <div className="flex sm:hidden items-center">
+                <GradientText
+                  colors={[
+                    "#d489e9",
+                    "#b067a3",
+                    "#eda7f2",
+                    "#8d4a8c",
+                    "#f4caf9",
+                  ]}
+                  animationSpeed={5}
+                  showBorder={true}
+                >
+                  LOGIN
+                </GradientText>
+              </div>
+            )}
+
+            {location.pathname !== "/" &&
+              location.pathname !== "/accedi" &&
+              location.pathname !== "/artisti" &&
+              location.pathname !== "/brani" &&
+              location.pathname !== "/generi" &&
+              location.pathname !== "/accedi/registrati" && (
+                <div className="flex sm:hidden items-center">
+                  <NavAvatar />
+                </div>
+              )}
           </div>
         </div>
-
         {location.pathname === "/" && (
-          <div className="hidden sm:flex items-center">
+          <div className="md:flex hidden items-center">
             <GradientText
               colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
               animationSpeed={5}
@@ -147,7 +176,7 @@ const Navbar = () => {
           location.pathname !== "/brani" &&
           location.pathname !== "/generi" &&
           location.pathname !== "/accedi/registrati" && (
-            <div className="hidden sm:flex items-center">
+            <div className="sm:flex hidden items-center">
               <NavAvatar />
             </div>
           )}
