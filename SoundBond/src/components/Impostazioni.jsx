@@ -11,7 +11,7 @@ const Impostazioni = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1
-            className="text-3xl md:text-5xl font-extrabold mb-2"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter "
             style={{
               backgroundImage: "linear-gradient(to right, #e4b5f2, #a43bbe)",
               WebkitBackgroundClip: "text",
@@ -20,7 +20,9 @@ const Impostazioni = () => {
           >
             Impostazioni Profilo
           </h1>
-          <p className="text-xl">Personalizza la tua esperienza musicale</p>
+          <p className="text-base md:text-lg lg:text-xl">
+            Personalizza la tua esperienza musicale
+          </p>
         </div>
         <div className="grid gap-6">
           {/* Sezione Immagine e Username */}
