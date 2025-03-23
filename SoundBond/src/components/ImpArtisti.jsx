@@ -12,28 +12,50 @@ import {
 import { ScrollArea } from "../../animations/ScrollArea";
 import { Card } from "../../animations/Card";
 import { Input } from "../../animations/Input";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, X } from "lucide-react";
 
 const ImpArtisti = () => {
-  const [artists, setArtists] = useState([
-    { id: 1, name: "Queen" },
-    { id: 2, name: "The Beatles" },
-    { id: 3, name: "David Bowie" },
-    { id: 4, name: "Daft Punk" },
-  ]);
+  const [artists, setArtists] = useState([]);
 
-  const [newArtist, setNewArtist] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-  const addArtist = () => {
-    if (newArtist.trim()) {
-      setArtists([
-        ...artists,
-        {
-          id: artists.length ? Math.max(...artists.map((a) => a.id)) + 1 : 1,
-          name: newArtist,
-        },
-      ]);
-      setNewArtist("");
+  const getArtist = async (query) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const url = `http://localhost:5002/api/search?q=${query}`;
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.data) {
+          const newResults = data.data.map((artist) => ({
+            name: artist.artist?.name || "Sconosciuto",
+            image: artist.album?.cover_xl || null,
+          }));
+          setSearchResults(newResults);
+        }
+      } else {
+        throw new Error("Errore nel recupero dei dati");
+      }
+    } catch (error) {
+      console.log("errore", error);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    getArtist(value);
+  };
+
+  const handleSelectArtist = (artist) => {
+    if (!artists.some((s) => s.name === artist.name)) {
+      setArtists((prev) => [...prev, artist]);
       toast(
         <p className=" flex items-center">
           <svg
@@ -60,11 +82,13 @@ const ImpArtisti = () => {
           },
         }
       );
+      setSearch("");
+      setSearchResults([]);
     }
   };
 
-  const removeArtist = (id) => {
-    setArtists(artists.filter((artist) => artist.id !== id));
+  const handleRemoveArtist = (artist) => {
+    setArtists((prev) => prev.filter((item) => item !== artist));
     toast(
       <p className=" flex items-center">
         <svg
@@ -101,7 +125,14 @@ const ImpArtisti = () => {
         >
           I tuoi artisti preferiti
         </h3>
-        <Dialog>
+        <Dialog
+          onOpenChange={(open) => {
+            if (!open) {
+              setSearch("");
+              setSearchResults([]);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center">
               <Plus size={18} className="mr-2" /> Aggiungi
@@ -116,24 +147,37 @@ const ImpArtisti = () => {
                 Inserisci il nome dell'artista che vuoi aggiungere.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <label className="text-sm text-[#e4b5f2]">Nome artista</label>
-                <Input
-                  value={newArtist}
-                  onChange={(e) => setNewArtist(e.target.value)}
-                  className="bg-[#60256a] border-[#732880] focus:border-[#b849d6] text-white"
-                />
-              </div>
+            <div className="grid gap-2">
+              <label className="text-sm text-[#e4b5f2]">Nome artista</label>
+              <Input
+                onChange={handleSearchChange}
+                onSubmit={() => {}}
+                value={search}
+                className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
+              />
+              <DialogClose>
+                {searchResults.length > 0 && (
+                  <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[90%] max-h-60 overflow-y-auto absolute left-6 top-37 z-50">
+                    {searchResults.map((artist, index) => (
+                      <li
+                        key={index}
+                        className="p-2 hover:bg-[#60256a] cursor-pointer flex items-center"
+                        onClick={() => handleSelectArtist(artist)}
+                      >
+                        {artist.image && (
+                          <img
+                            src={artist.image}
+                            alt="immagine"
+                            className="h-8 w-8 rounded-lg mr-2"
+                          />
+                        )}
+                        {artist.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </DialogClose>
             </div>
-            <DialogClose>
-              <button
-                onClick={addArtist}
-                className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md"
-              >
-                Aggiungi
-              </button>
-            </DialogClose>
           </DialogContent>
         </Dialog>
       </div>
@@ -141,16 +185,16 @@ const ImpArtisti = () => {
       <ScrollArea className="pr-4">
         {artists.length > 0 ? (
           <div className="space-y-2">
-            {artists.map((artist) => (
+            {artists.map((artist, index) => (
               <div
-                key={artist.id}
+                key={index}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
               >
                 <span className="font-medium text-[#fbf5fe]">
                   {artist.name}
                 </span>
                 <button
-                  onClick={() => removeArtist(artist.id)}
+                  onClick={() => handleRemoveArtist(artist)}
                   size="icon"
                   variant="ghost"
                   className="hover:bg-[#a43bbe]/20 text-[#f7ebfc]"

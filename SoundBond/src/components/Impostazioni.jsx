@@ -4,7 +4,6 @@ import ImpBrani from "./ImpBrani";
 import ImpDelete from "./ImpDelete";
 import ImpGeneri from "./ImpGeneri";
 import ImpUser from "./ImpUser";
-import { Toaster } from "sonner";
 
 const Impostazioni = () => {
   return (
