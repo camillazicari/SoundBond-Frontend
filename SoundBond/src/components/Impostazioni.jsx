@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 const Impostazioni = () => {
   return (
-    <div className="py-4 px-4 md:px-8 lg:px-12">
+    <div className="py-4 px-4 md:px-8 lg:px-12 fade-in">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1
