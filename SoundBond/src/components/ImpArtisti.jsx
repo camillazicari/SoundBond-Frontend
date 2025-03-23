@@ -168,7 +168,7 @@ const ImpArtisti = () => {
                           <img
                             src={artist.image}
                             alt="immagine"
-                            className="h-8 w-8 rounded-lg mr-2"
+                            className="h-8 w-8 rounded-md mr-2"
                           />
                         )}
                         {artist.name}
@@ -190,7 +190,19 @@ const ImpArtisti = () => {
                 key={index}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
               >
-                <span className="font-medium text-[#fbf5fe]">
+                <span className="font-medium text-[#fbf5fe] flex items-center">
+                  {artist.image ? (
+                    <img
+                      src={artist.image}
+                      alt="cover"
+                      className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3"
+                      style={{
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <p>No image available</p>
+                  )}{" "}
                   {artist.name}
                 </span>
                 <button
