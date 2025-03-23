@@ -157,7 +157,7 @@ const ImpArtisti = () => {
               />
               <DialogClose>
                 {searchResults.length > 0 && (
-                  <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[90%] max-h-60 overflow-y-auto absolute left-6 top-37 z-50">
+                  <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
                     {searchResults.map((artist, index) => (
                       <li
                         key={index}

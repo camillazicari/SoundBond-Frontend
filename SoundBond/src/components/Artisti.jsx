@@ -74,9 +74,9 @@ const Artisti = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <div className="flex flex-col items-center mt-4">
-          <h2 className="text-2xl z-20 md:text-4xl xl:text-7xl font-bold text-center tracking-tight">
-            {state}, benvenuta tra i{" "}
-            <span style={{ color: "#b849d6" }}>bonders</span>.
+          <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
+            {state}, benvenut* nella{" "}
+            <span style={{ color: "#b849d6" }}>bonders</span> community.
             <div className="bg-clip-text text-transparent bg-no-repeat">
               <span className="">Conosciamoci meglio...</span>
             </div>{" "}
