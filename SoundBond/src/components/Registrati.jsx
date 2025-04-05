@@ -1,16 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { register } from "../redux/actions/account.js";
 
 const Registrati = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const users = useSelector((state) => state.usersData);
+  const errore = useSelector((state) => state.account.isRegisterError);
   const [errorMessages, setErrorMessages] = useState({});
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [dataDiNascita, setDataDiNascita] = useState("");
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ const Registrati = () => {
     // Regex per validazione
     const usernameRegex = /^[a-zA-Z0-9._-]{5,}$/; // Almeno 5 caratteri, include ., -, _
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/; // Almeno 8 caratteri, maiuscole, minuscole, numeri
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!firstName || !lastName || !username || !password || !confirmPassword) {
       errors.generic = "Compilare tutti i campi!";
@@ -28,8 +32,13 @@ const Registrati = () => {
     if (!usernameRegex.test(username)) {
       errors.username = "Il nome utente deve avere almeno 5 caratteri.";
     }
-    if (users[username.toLowerCase().replace(/\s/g, "")]) {
-      errors.username = "Username già in uso.";
+
+    if (errore) {
+      errors.username = "Nome utente già in uso";
+    }
+
+    if (!emailRegex.test(email)) {
+      errors.email = "Email non valida.";
     }
 
     if (!passwordRegex.test(password)) {
@@ -45,22 +54,25 @@ const Registrati = () => {
       return;
     }
 
-    const payload = {
-      id: username.toLowerCase().replace(/\s/g, ""), //serve per creare un id unico
-      username,
-      password,
-      firstName,
-      lastName,
-      preferences: [],
-    };
-    dispatch({ type: "SIGNUP_USER", payload });
     setUsername("");
     setPassword("");
     setFirstName("");
     setLastName("");
+    setDataDiNascita("");
+    setEmail("");
     setErrorMessages({});
     e.target.reset();
-    navigate("/generi");
+    dispatch(
+      register(
+        firstName,
+        lastName,
+        email,
+        dataDiNascita,
+        username,
+        password,
+        navigate
+      )
+    );
   };
 
   return (
@@ -81,6 +93,7 @@ const Registrati = () => {
               placeholder=" "
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              required
             />
             <span>Nome</span>
           </label>
@@ -92,11 +105,27 @@ const Registrati = () => {
               placeholder=" "
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              required
             />
             <span>Cognome</span>
           </label>
         </div>
-        {errorMessages.user && <p className="Errors">{errorMessages.user}</p>}
+        {errorMessages.user && (
+          <p className="text-sm text-center Errors">{errorMessages.user}</p>
+        )}
+
+        <label>
+          <input
+            className="input"
+            type="date"
+            placeholder=" "
+            value={dataDiNascita}
+            onChange={(e) => setDataDiNascita(e.target.value)}
+            required
+          />
+          <span>Data di nascita</span>
+        </label>
+
         <label>
           <input
             className="input"
@@ -104,6 +133,7 @@ const Registrati = () => {
             placeholder=" "
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
           <span>Username</span>
         </label>
@@ -114,10 +144,26 @@ const Registrati = () => {
         <label>
           <input
             className="input"
+            type="text"
+            placeholder=" "
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <span>Email</span>
+        </label>
+        {errorMessages.email && (
+          <p className="text-sm text-center Errors">{errorMessages.email}</p>
+        )}
+
+        <label>
+          <input
+            className="input"
             type="password"
             placeholder=" "
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <span>Password</span>
         </label>
@@ -140,6 +186,7 @@ const Registrati = () => {
             type="password"
             placeholder=" "
             name="confirmPassword"
+            required
           />
           <span>Conferma password</span>
         </label>

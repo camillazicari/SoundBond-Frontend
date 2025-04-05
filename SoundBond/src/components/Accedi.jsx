@@ -1,40 +1,35 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/actions/account.js";
 
 const Accedi = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
+  const errore = useSelector((state) => state.account.isLoginError);
 
   const handleLogin = (e) => {
     e.preventDefault();
 
     const errors = {};
 
-    if (!username || !password) {
+    if (!email || !password) {
       errors.generic = "Compilare tutti i campi!";
     }
 
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0 || errore) {
       setErrorMessages(errors);
       return;
     }
 
-    const payload = {
-      id: username.toLowerCase().replace(/\s/g, ""),
-      username,
-      password,
-    };
-    dispatch({ type: "LOGIN_USER", payload });
-    setUsername("");
+    dispatch(login(email, password, navigate));
+    setEmail("");
     setPassword("");
     setErrorMessages({});
     e.target.reset();
-
-    navigate("/home");
   };
 
   return (
@@ -42,6 +37,7 @@ const Accedi = () => {
       {errorMessages.generic && (
         <p className="Errors">{errorMessages.generic}</p>
       )}
+      {errore && <p className="Errors">{errore}</p>}
       <form className="form signInForm" onSubmit={handleLogin}>
         <p className="title">ACCEDI</p>
         <p className="message">
@@ -53,12 +49,15 @@ const Accedi = () => {
             className="input"
             type="text"
             placeholder=" "
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <span>Username</span>
+          <span>Email</span>
         </label>
+        {errorMessages.email && (
+          <p className="text-sm text-center Errors">{errorMessages.email}</p>
+        )}
 
         <label>
           <input

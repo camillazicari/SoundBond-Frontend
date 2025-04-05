@@ -13,14 +13,44 @@ import Home from "./components/Home";
 import Impostazioni from "./components/Impostazioni";
 import Feedback from "./components/Feedback";
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+  const loginSuccess = useSelector((state) => state.account.loginSuccess);
+  useEffect(() => {
+    const storedToken = localStorage.getItem("jwtToken");
+    if (storedToken) {
+      try {
+        dispatch({ type: "LOGIN_SUCCESS", payload: true });
+        const decodedToken = jwtDecode(storedToken);
+
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          localStorage.removeItem("jwtToken");
+          dispatch({ type: "LOGOUT" });
+          return;
+        }
+      } catch {
+        localStorage.removeItem("jwtToken");
+        dispatch({ type: "LOGOUT" });
+      }
+    }
+  }, [dispatch]);
+
   return (
     <>
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomeIniziale />} />
+          {!loginSuccess ? (
+            <Route path="/" element={<HomeIniziale />} />
+          ) : (
+            <Route path="/" element={<Preferenze component={<Home />} />} />
+          )}
+          <Route path="/homeIniziale" element={<HomeIniziale />} />
           <Route path="accedi" element={<Accedi />} />
           <Route path="/accedi/registrati" element={<Registrati />} />
           <Route

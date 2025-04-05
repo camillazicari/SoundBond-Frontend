@@ -1,26 +1,37 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GradientText from "../../animations/GradientText";
 import { Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import NavAvatar from "./NavAvatar";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
+  const loginSuccess = useSelector((state) => state.account.loginSuccess);
+  const logout = useSelector((state) => state.account.logout);
+  const navigate = useNavigate();
+
+  const isAuthorized = loginSuccess;
 
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (logout) {
+      navigate("/");
+    }
+  }, [logout]);
 
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent sticky top-0 z-30">
@@ -71,28 +82,15 @@ const Navbar = () => {
               backdropFilter: "blur(10px)",
             }}
           >
-            {location.pathname === "/" ||
-            location.pathname === "accedi" ||
-            location.pathname === "/accedi/registrati" ? (
-              <Link
-                to="/"
-                className="font-medium text-sm lg:text-base navText"
-                style={{ color: "#b849d6" }}
-              >
-                Home
-              </Link>
-            ) : (
-              <Link
-                to="/home"
-                className="font-medium text-sm lg:text-base navText"
-                style={{ color: "#b849d6" }}
-              >
-                Home
-              </Link>
-            )}
-            {location.pathname === "/" ||
-            location.pathname === "accedi" ||
-            location.pathname === "/accedi/registrati" ? (
+            <Link
+              to="/"
+              className="font-medium text-sm lg:text-base navText"
+              style={{ color: "#b849d6" }}
+            >
+              Home
+            </Link>
+
+            {!isAuthorized ? (
               <Link
                 to={"/accedi"}
                 className="font-medium text-sm lg:text-base navText"
@@ -109,9 +107,7 @@ const Navbar = () => {
                 Esplora
               </Link>
             )}
-            {location.pathname === "/" ||
-            location.pathname === "accedi" ||
-            location.pathname === "/accedi/registrati" ? (
+            {!isAuthorized ? (
               <Link
                 to={"/accedi"}
                 className="font-medium text-sm lg:text-base navText"
@@ -128,7 +124,7 @@ const Navbar = () => {
                 Connessioni
               </Link>
             )}
-            {location.pathname === "/" && (
+            {location.pathname === "/" && !isAuthorized && (
               <div className="flex sm:hidden items-center">
                 <GradientText
                   colors={[
@@ -146,7 +142,7 @@ const Navbar = () => {
               </div>
             )}
 
-            {location.pathname !== "/" &&
+            {isAuthorized &&
               location.pathname !== "/accedi" &&
               location.pathname !== "/artisti" &&
               location.pathname !== "/brani" &&
@@ -158,7 +154,7 @@ const Navbar = () => {
               )}
           </div>
         </div>
-        {location.pathname === "/" && (
+        {location.pathname === "/" && !isAuthorized && (
           <div className="md:flex hidden items-center">
             <GradientText
               colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
@@ -170,7 +166,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {location.pathname !== "/" &&
+        {isAuthorized &&
           location.pathname !== "/accedi" &&
           location.pathname !== "/artisti" &&
           location.pathname !== "/brani" &&

@@ -42,7 +42,7 @@ export const HeroParallax = ({ products = [] }) => {
   return (
     <div
       ref={ref}
-      className="h-[160vh] md:h-[250vh] lg:h-[295vh] pt-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[160vh] md:h-[250vh] lg:h-[295vh] pt-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -52,9 +52,9 @@ export const HeroParallax = ({ products = [] }) => {
           translateY,
           opacity,
         }}
-        className=""
+        className="relative"
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20 relative">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -63,7 +63,7 @@ export const HeroParallax = ({ products = [] }) => {
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row  mb-20 space-x-20 ">
+        <motion.div className="flex flex-row  mb-20 space-x-20 relative">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -72,7 +72,7 @@ export const HeroParallax = ({ products = [] }) => {
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 relative">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
@@ -109,10 +109,7 @@ export const ProductCard = ({ product, translate }) => {
       key={product.title}
       className="group/product h-96 w-[30rem] relative shrink-0"
     >
-      <Link
-        href={product.link}
-        className="block group-hover/product:shadow-2xl "
-      >
+      <Link to={product.link} className="block group-hover/product:shadow-2xl ">
         <img
           src={product.thumbnail}
           height="600"

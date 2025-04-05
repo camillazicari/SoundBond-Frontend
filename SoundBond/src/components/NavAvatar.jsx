@@ -5,17 +5,16 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function NavAvatar() {
   const username = useSelector((state) => state.user?.username || "Guest");
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleLogOut = (e) => {
     e.preventDefault();
-    dispatch({ type: "LOGOUT_USER" });
-    navigate("/");
+    localStorage.removeItem("jwtToken");
+    dispatch({ type: "LOGOUT", payload: true });
   };
 
   return (

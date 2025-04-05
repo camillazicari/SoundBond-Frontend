@@ -4,7 +4,7 @@ import GradientBig from "../../animations/GradientBig";
 
 const HomeIniziale = () => {
   return (
-    <div className="fade-in">
+    <div className="fade-in relative">
       <HeroParallaxDemo />
       <HomeCards />
       <div className=" my-11">
