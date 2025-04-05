@@ -1,15 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { getUtenteLoggato } from "../redux/actions/account.js";
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function NavAvatar() {
-  const username = useSelector((state) => state.user?.username || "Guest");
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.account.userLogged);
+
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+  }, []);
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -22,11 +29,19 @@ export default function NavAvatar() {
       <Dropdown placement="bottom-center">
         <DropdownTrigger>
           <div className="border-2 border-[#b849d6] rounded-full">
-            <img
-              src="https://cdn1.iconfinder.com/data/icons/avatars-55/100/avatar_profile_user_music_headphones_shirt_cool-512.png"
-              className=" rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
-              alt="user"
-            />
+            {user ? (
+              <img
+                src={user.profilo.immagine}
+                className=" rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                alt="user"
+              />
+            ) : (
+              <img
+                src="https://cdn1.iconfinder.com/data/icons/avatars-55/100/avatar_profile_user_music_headphones_shirt_cool-512.png"
+                className=" rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                alt="user"
+              />
+            )}
           </div>
         </DropdownTrigger>
         <DropdownMenu
@@ -40,13 +55,19 @@ export default function NavAvatar() {
         >
           <DropdownItem
             key="profile"
+            textValue={user ? `@${user.nomeUtente}` : "@Guest"}
             className="gap-2 border-b-[0.5px] border-[#b849d6] flex justify-center text-center"
           >
-            <p className="font-bold text-sm">@{username}</p>
+            {user ? (
+              <p className="font-bold text-sm">@{user.nomeUtente}</p>
+            ) : (
+              <p className="font-bold text-sm">@Guest</p>
+            )}
           </DropdownItem>
           <DropdownItem
             className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6] mt-1 flex items-center gap-2"
             key="settings"
+            textValue="Settings"
           >
             <Link to={"/impostazioni"} className="flex items-center gap-2">
               <svg
@@ -66,6 +87,7 @@ export default function NavAvatar() {
           <DropdownItem
             className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6]"
             key="feedback"
+            textValue="Feedback"
           >
             <Link to={"/feedback"} className="flex items-center gap-2">
               <svg
@@ -85,6 +107,7 @@ export default function NavAvatar() {
           <DropdownItem
             className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6]"
             key="help"
+            textValue="Help"
           >
             <div className="flex items-center gap-2">
               <svg
@@ -106,6 +129,7 @@ export default function NavAvatar() {
             className="text-sm text-start py-2 px-12 rounded-sm hover:bg-red-500"
             key="logout"
             color="danger"
+            textValue="Logout"
           >
             <button
               className="flex items-center gap-2 cursor-pointer"

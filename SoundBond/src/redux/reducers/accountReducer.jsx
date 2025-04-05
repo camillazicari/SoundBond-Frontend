@@ -4,6 +4,7 @@ const initialState = {
   isRegisterError: "",
   users: [],
   user: null,
+  userLogged: null,
   loginSuccess: false,
 };
 
@@ -39,6 +40,12 @@ const accountReducer = (state = initialState, action) => {
       return {
         ...state,
         users: action.payload,
+      };
+
+    case "GET_USER_LOGGED":
+      return {
+        ...state,
+        userLogged: action.payload,
       };
 
     default:

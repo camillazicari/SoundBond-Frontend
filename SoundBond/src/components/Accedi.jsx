@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/actions/account.js";
+import { getUtenteLoggato } from "../redux/actions/account.js";
 
 const Accedi = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,10 @@ const Accedi = () => {
   const [password, setPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const errore = useSelector((state) => state.account.isLoginError);
+
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+  });
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -70,9 +75,9 @@ const Accedi = () => {
           />
           <span>Password</span>
         </label>
-        <button to={"/home"} className="submit text-center">
-          Accedi ora
-        </button>
+
+        <button className="submit text-center">Accedi ora</button>
+
         <p className="signin">
           Non hai un account? <Link to={"/accedi/registrati"}>Registrati</Link>{" "}
         </p>

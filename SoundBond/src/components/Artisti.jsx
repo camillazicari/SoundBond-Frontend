@@ -1,15 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
 import { SearchAnimata } from "./SearchAnimata";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getUtenteLoggato } from "../redux/actions/account.js";
+import {
+  deleteArtista,
+  getArtisti,
+  postArtisti,
+} from "../redux/actions/artisti.js";
 
 const Artisti = () => {
-  const state = useSelector((state) => state.user.firstName);
   const navigate = useNavigate();
   const [artists, setArtists] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState("");
+
+  const user = useSelector((state) => state.account.userLogged);
+  const dispatch = useDispatch();
+  const artistiPreferiti = useSelector((state) => state.artisti.artisti);
+
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+    dispatch(getArtisti());
+  }, []);
 
   const placeholders = [
     "Bruno Mars",
@@ -46,13 +62,19 @@ const Artisti = () => {
     }
   };
 
-  const handleNavigate = () => {
-    navigate("/brani");
-  };
+  const uniqueArtists = searchResults.filter(
+    (value, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.name === value.name // o puoi usare t.id === value.id se l'artista ha un id unico
+      )
+  );
 
   const handleSearchChange = (value) => {
     setSearch(value);
     getArtist(value);
+    setError("");
   };
 
   const handleSelectArtist = (artist) => {
@@ -67,6 +89,29 @@ const Artisti = () => {
     setArtists((prev) => prev.filter((item) => item !== artist));
   };
 
+  const handleNavigate = async () => {
+    if (artists.length < 1) {
+      setError("Devi selezionare almeno un artista!");
+      return;
+    }
+
+    try {
+      if (artistiPreferiti.length > 0) {
+        await Promise.all(
+          artistiPreferiti.map((artista) =>
+            dispatch(deleteArtista(artista.nome))
+          )
+        );
+      }
+
+      await Promise.all(
+        artists.map((artist) => dispatch(postArtisti(artist.name, navigate)))
+      );
+    } catch (err) {
+      console.error("Errore nella navigazione:", err);
+    }
+  };
+
   return (
     <BackgroundBeamsWithCollision>
       <div
@@ -74,14 +119,16 @@ const Artisti = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <div className="flex flex-col items-center mt-4">
-          <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
-            {state}, benvenut* nella{" "}
-            <span style={{ color: "#b849d6" }}>bonders</span> community.
-            <div className="bg-clip-text text-transparent bg-no-repeat">
-              <span className="">Conosciamoci meglio...</span>
-            </div>{" "}
-            <br />
-          </h2>
+          {user && (
+            <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
+              {user.nome}, benvenut* nella{" "}
+              <span style={{ color: "#b849d6" }}>bonders</span> community.
+              <div className="bg-clip-text text-transparent bg-no-repeat">
+                <span className="">Conosciamoci meglio...</span>
+              </div>{" "}
+              <br />
+            </h2>
+          )}
           <div className="relative w-full max-w-md">
             <SearchAnimata
               text="Quali sono i tuoi artisti preferiti?"
@@ -92,7 +139,7 @@ const Artisti = () => {
             />
             {searchResults.length > 0 && (
               <ul className="bg-zinc-800 shadow-lg rounded-lg mt-2 w-full max-h-60 overflow-y-auto absolute left-0 z-50">
-                {searchResults.map((artist, index) => (
+                {uniqueArtists.map((artist, index) => (
                   <li
                     key={index}
                     className="p-2 hover:bg-zinc-500 cursor-pointer flex items-center"
@@ -111,6 +158,7 @@ const Artisti = () => {
               </ul>
             )}
           </div>
+          {error && <p className="text-sm text-center Errors mt-1">{error}</p>}
         </div>
         <div className="">
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

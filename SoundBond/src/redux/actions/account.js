@@ -1,3 +1,4 @@
+
 export const register = (nome, cognome, email, dataDiNascita, nomeUtente, password, navigate) => {
     return async (dispatch) => {
         try {
@@ -16,8 +17,6 @@ export const register = (nome, cognome, email, dataDiNascita, nomeUtente, passwo
                 }),
             });
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
                 navigate("/accedi")
             } else {
                 const text = await response.text();
@@ -53,10 +52,37 @@ export const login = (email, password, navigate) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 localStorage.setItem("jwtToken", data.token);
                 dispatch({ type: "LOGIN_SUCCESS", payload: true });
-                navigate("/home")
+                const userResponse = await fetch("http://192.168.1.65:5220/api/Account/userLogged", {
+                    headers: {
+                        Authorization: "Bearer " + data.token,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    const user = userData.user;
+
+                    dispatch({
+                        type: "GET_USER_LOGGED",
+                        payload: user,
+                    });
+                    const hasPreferences =
+                        user.brani?.length > 0 &&
+                        user.generi?.length > 0 &&
+                        user.artisti?.length > 0;
+
+                    if (hasPreferences) {
+                        navigate("/");
+                    } else {
+                        navigate("/generi");
+                    }
+                } else {
+                    throw new Error("Errore nella fetch di userLogged");
+                }
+
             } else {
                 dispatch({ action: "LOGIN_ERROR", payload: "Email o password errati." })
                 throw new Error("Errore nella response di login");
@@ -107,6 +133,31 @@ export const getUtente = (id) => {
                 dispatch({
                     type: "GET_USER",
                     payload: data.utente,
+                });
+            } else {
+                throw new Error("Errore nella response di getUtente");
+            }
+        } catch (error) {
+            console.error("ERRORE FETCH:" + error);
+        }
+    };
+};
+
+export const getUtenteLoggato = () => {
+    return async (dispatch) => {
+        try {
+            const response = await fetch("http://192.168.1.65:5220/api/Account/userLogged", {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                dispatch({
+                    type: "GET_USER_LOGGED",
+                    payload: data.user,
                 });
             } else {
                 throw new Error("Errore nella response di getUtente");

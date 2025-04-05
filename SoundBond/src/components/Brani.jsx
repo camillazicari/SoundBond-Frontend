@@ -1,10 +1,24 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
 import { SearchAnimata } from "./SearchAnimata";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getUtenteLoggato } from "../redux/actions/account.js";
+import { deleteBrano, getBrani, postBrani } from "@/redux/actions/brani";
 
 const Brani = () => {
+  const user = useSelector((state) => state.account.userLogged);
+  const dispatch = useDispatch();
+  const brani = useSelector((state) => state.brani.brani);
+
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+    dispatch(getBrani());
+  }, []);
+
+  const [error, setError] = useState("");
+
   const placeholders = [
     "All I Want",
     "My heart will go on",
@@ -14,7 +28,6 @@ const Brani = () => {
   ];
 
   const navigate = useNavigate();
-  const state = useSelector((state) => state.user.firstName);
   const [songs, setSongs] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -50,6 +63,7 @@ const Brani = () => {
   const handleSearchChange = (value) => {
     setSearch(value);
     getSongs(value);
+    setError("");
   };
 
   const handleSelectSong = (song) => {
@@ -64,6 +78,31 @@ const Brani = () => {
     setSongs((prev) => prev.filter((item) => item !== song));
   };
 
+  const handleNavigate = async () => {
+    if (songs.length < 1) {
+      setError("Devi selezionare almeno un brano!");
+      return;
+    }
+
+    try {
+      if (brani.length > 0) {
+        await Promise.all(
+          brani.map((brano) =>
+            dispatch(deleteBrano(brano.titolo, brano.artista))
+          )
+        );
+      }
+
+      await Promise.all(
+        songs.map((song) =>
+          dispatch(postBrani(song.title, song.name, navigate))
+        )
+      );
+    } catch (err) {
+      console.error("Errore nella navigazione:", err);
+    }
+  };
+
   return (
     <BackgroundBeamsWithCollision>
       <div
@@ -71,14 +110,16 @@ const Brani = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <div className="flex flex-col items-center mt-4 relative">
-          <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
-            {state}, benvenut* nella{" "}
-            <span style={{ color: "#b849d6" }}>bonders</span> community.
-            <div className="bg-clip-text text-transparent bg-no-repeat">
-              <span className="">Conosciamoci meglio...</span>
-            </div>{" "}
-            <br />
-          </h2>
+          {user && (
+            <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
+              {user.nome}, benvenut* nella{" "}
+              <span style={{ color: "#b849d6" }}>bonders</span> community.
+              <div className="bg-clip-text text-transparent bg-no-repeat">
+                <span className="">Conosciamoci meglio...</span>
+              </div>{" "}
+              <br />
+            </h2>
+          )}
           <br />
           <div className="relative w-full max-w-md">
             <SearchAnimata
@@ -109,8 +150,8 @@ const Brani = () => {
               </ul>
             )}
           </div>
+          {error && <p className="text-sm text-center mt-1 Errors">{error}</p>}
         </div>
-
         <div>
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {songs.map((song, index) => (
@@ -152,7 +193,7 @@ const Brani = () => {
             className="text-center w-48 rounded-2xl h-14 relative text-xl font-semibold group"
             type="button"
             onClick={() => {
-              navigate("/home");
+              handleNavigate();
             }}
           >
             <div

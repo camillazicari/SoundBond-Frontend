@@ -1,11 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { BackgroundBeamsWithCollision } from "../../animations/BgBeams";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getUtenteLoggato } from "../redux/actions/account.js";
+import { deleteGenere, postGeneri, getGeneri } from "@/redux/actions/generi";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const Generi = () => {
   const navigate = useNavigate();
-  const state = useSelector((state) => state.user.firstName);
+  const user = useSelector((state) => state.account.userLogged);
+  const generi = useSelector((state) => state.generi.generi);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+    dispatch(getGeneri());
+  }, []);
+
+  const [error, setError] = useState("");
   const [buttons, setButtons] = useState([
     { id: "Jazz", isLiked: false },
     { id: "Pop", isLiked: false },
@@ -27,10 +38,30 @@ const Generi = () => {
         button.id === id ? { ...button, isLiked: !button.isLiked } : button
       )
     );
+    setError("");
   };
 
-  const handleNavigate = () => {
-    navigate("/artisti");
+  const handleNavigate = async () => {
+    const likedButtons = buttons.filter((button) => button.isLiked);
+
+    if (likedButtons.length < 1) {
+      setError("Devi selezionare almeno un genere!");
+      return;
+    }
+
+    try {
+      if (generi.length > 0) {
+        await Promise.all(
+          generi.map((genere) => dispatch(deleteGenere(genere.nome)))
+        );
+      }
+
+      await Promise.all(
+        likedButtons.map((button) => dispatch(postGeneri(button.id, navigate)))
+      );
+    } catch (err) {
+      console.error("Errore nella navigazione:", err);
+    }
   };
 
   return (
@@ -40,14 +71,17 @@ const Generi = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <div className="flex flex-col items-center mt-4">
-          <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
-            {state}, benvenut* nella{" "}
-            <span style={{ color: "#b849d6" }}>bonders</span> community.
-            <div className="bg-clip-text text-transparent bg-no-repeat">
-              <span className="">Conosciamoci meglio...</span>
-            </div>{" "}
-            <br />
-          </h2>
+          {user && (
+            <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
+              {user.nome}, benvenut* nella{" "}
+              <span style={{ color: "#b849d6" }}>bonders</span> community.
+              <div className="bg-clip-text text-transparent bg-no-repeat">
+                <span className="">Conosciamoci meglio...</span>
+              </div>{" "}
+              <br />
+            </h2>
+          )}
+
           <p
             className=" text-center md:text-xl lg:text-2xl"
             style={{ color: "#b849d6" }}
@@ -79,6 +113,7 @@ const Generi = () => {
                 ))}
             </ul>
           </div>
+          {error && <p className="text-sm text-center Errors">{error}</p>}
 
           <div className="button-list grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 place-items-center">
             {buttons.map((button) => (
