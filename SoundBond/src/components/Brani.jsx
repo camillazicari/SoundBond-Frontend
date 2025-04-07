@@ -174,10 +174,7 @@ const Brani = () => {
                       <img
                         src={song.image}
                         alt="cover"
-                        className="rounded-4xl h-10 w-10 lg:h-12.5 lg:w-12.5"
-                        style={{
-                          objectFit: "cover",
-                        }}
+                        className="rounded-4xl h-10 w-10 lg:h-12.5 lg:w-12.5 object-cover"
                       />
                     ) : (
                       <p>No image available</p>

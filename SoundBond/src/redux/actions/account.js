@@ -104,7 +104,7 @@ export const getUtenti = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                //console.log(data);
+                console.log(data);
                 dispatch({
                     type: "GET_USERS",
                     payload: data.utenti,
@@ -154,7 +154,7 @@ export const getUtenteLoggato = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 dispatch({
                     type: "GET_USER_LOGGED",
                     payload: data.user,

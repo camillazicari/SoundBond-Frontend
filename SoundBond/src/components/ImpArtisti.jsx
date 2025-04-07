@@ -20,6 +20,7 @@ import {
   getArtisti,
   postArtisti,
 } from "@/redux/actions/artisti";
+import BondSpinner from "./BondSpinner";
 
 const ImpArtisti = () => {
   const dispatch = useDispatch();
@@ -141,113 +142,116 @@ const ImpArtisti = () => {
   };
   return (
     <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h3
-          className="text-lg font-semibold text-[#e4b5f2]"
-          style={{ color: "#e4b5f2" }}
-        >
-          I tuoi artisti preferiti
-        </h3>
-        <Dialog
-          onOpenChange={(open) => {
-            if (!open) {
-              setSearch("");
-              setSearchResults([]);
-            }
-          }}
-        >
-          <DialogTrigger asChild>
-            <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center">
-              <Plus size={18} className="mr-2" /> Aggiungi
-            </button>
-          </DialogTrigger>
-          <DialogContent className="bg-[#3d0d45] border-[#732880]">
-            <DialogHeader>
-              <DialogTitle className="text-[#f7ebfc]">
-                Aggiungi un artista preferito
-              </DialogTitle>
-              <DialogDescription className="text-[#efd6f8]">
-                Inserisci il nome dell'artista che vuoi aggiungere.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-2">
-              <label className="text-sm text-[#e4b5f2]">Nome artista</label>
-              <Input
-                onChange={handleSearchChange}
-                onSubmit={() => {}}
-                value={search}
-                className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
-              />
-              <DialogClose>
-                {searchResults.length > 0 && (
-                  <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
-                    {" "}
-                    {uniqueArtists.map((artist, index) => (
-                      <li
-                        key={index}
-                        className="p-2 hover:bg-[#60256a] cursor-pointer flex items-center"
-                        onClick={() => handleSelectArtist(artist)}
-                      >
-                        {artist.image && (
-                          <img
-                            src={artist.image}
-                            alt="immagine"
-                            className="h-8 w-8 rounded-lg mr-2"
-                          />
-                        )}
-                        {artist.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </DialogClose>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <ScrollArea className="pr-4">
-        {artisti.length > 0 ? (
-          <div className="space-y-2">
-            {artisti.map((artist) => (
-              <div
-                key={artist.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
-              >
-                <span className="font-medium text-[#fbf5fe] flex items-center">
-                  {artist.img ? (
-                    <img
-                      src={artist.img}
-                      alt="cover"
-                      className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3"
-                      style={{
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <p>No image available</p>
-                  )}{" "}
-                  {artist.nome}
-                </span>
-                <button
-                  onClick={() => handleRemoveArtist(artist)}
-                  size="icon"
-                  variant="ghost"
-                  className="hover:bg-[#a43bbe]/20 text-[#f7ebfc]"
-                >
-                  <Trash2 size={18} />
+      {artisti.length > 0 ? (
+        <>
+          {" "}
+          <div className="flex items-center justify-between mb-4">
+            <h3
+              className="text-lg font-semibold text-[#e4b5f2]"
+              style={{ color: "#e4b5f2" }}
+            >
+              I tuoi artisti preferiti
+            </h3>
+            <Dialog
+              onOpenChange={(open) => {
+                if (!open) {
+                  setSearch("");
+                  setSearchResults([]);
+                }
+              }}
+            >
+              <DialogTrigger asChild>
+                <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center">
+                  <Plus size={18} className="mr-2" /> Aggiungi
                 </button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#3d0d45] border-[#732880]">
+                <DialogHeader>
+                  <DialogTitle className="text-[#f7ebfc]">
+                    Aggiungi un artista preferito
+                  </DialogTitle>
+                  <DialogDescription className="text-[#efd6f8]">
+                    Inserisci il nome dell'artista che vuoi aggiungere.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-2">
+                  <label className="text-sm text-[#e4b5f2]">Nome artista</label>
+                  <Input
+                    onChange={handleSearchChange}
+                    onSubmit={() => {}}
+                    value={search}
+                    className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
+                  />
+                  <DialogClose>
+                    {searchResults.length > 0 && (
+                      <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
+                        {" "}
+                        {uniqueArtists.map((artist, index) => (
+                          <li
+                            key={index}
+                            className="p-2 hover:bg-[#60256a] cursor-pointer flex items-center"
+                            onClick={() => handleSelectArtist(artist)}
+                          >
+                            {artist.image && (
+                              <img
+                                src={artist.image}
+                                alt="immagine"
+                                className="h-8 w-8 rounded-lg mr-2"
+                              />
+                            )}
+                            {artist.name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <ScrollArea className="pr-4">
+            {artisti.length > 0 ? (
+              <div className="space-y-2">
+                {artisti.map((artist) => (
+                  <div
+                    key={artist.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
+                  >
+                    <span className="font-medium text-[#fbf5fe] flex items-center">
+                      {artist.img ? (
+                        <img
+                          src={artist.img}
+                          alt="cover"
+                          className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3 object-cover"
+                        />
+                      ) : (
+                        <p></p>
+                      )}{" "}
+                      {artist.nome}
+                    </span>
+                    <button
+                      onClick={() => handleRemoveArtist(artist)}
+                      size="icon"
+                      variant="ghost"
+                      className="hover:bg-[#a43bbe]/20 text-[#f7ebfc]"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="h-full flex items-center justify-center">
-            <p className="text-[#efd6f8] italic">
-              Non hai ancora aggiunto artisti preferiti
-            </p>
-          </div>
-        )}
-      </ScrollArea>
+            ) : (
+              <div className="h-full flex items-center justify-center">
+                <p className="text-[#efd6f8] italic">
+                  Non hai ancora aggiunto artisti preferiti
+                </p>
+              </div>
+            )}
+          </ScrollArea>{" "}
+        </>
+      ) : (
+        <BondSpinner />
+      )}
     </Card>
   );
 };

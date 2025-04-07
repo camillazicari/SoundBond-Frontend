@@ -19,6 +19,7 @@ import {
   deleteGenere,
   postGeneri,
 } from "../redux/actions/generi.js";
+import BondSpinner from "./BondSpinner";
 
 const ImpGeneri = () => {
   const generi = useSelector((state) => state.generi.generi);
@@ -140,73 +141,84 @@ const ImpGeneri = () => {
   };
   return (
     <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold mb-3" style={{ color: "#e4b5f2" }}>
-          I tuoi generi preferiti
-        </h3>
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center ">
-              <Plus size={18} className="mr-2" /> Aggiungi
-            </button>
-          </DialogTrigger>
-          <DialogContent className="bg-[#3d0d45] border-[#732880]">
-            <DialogHeader>
-              <DialogTitle className="text-[#f7ebfc]">
-                Aggiungi un genere preferito
-              </DialogTitle>
-              <DialogDescription className="text-[#efd6f8]">
-                Seleziona il genere musicale che vuoi aggiungere.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogClose>
-              <div className="grid gap-4 py-4">
-                <div className="flex flex-wrap gap-1">
-                  {generiList
-                    .filter((genere) => !generi.some((g) => g.nome === genere))
-                    .map((genere) => (
-                      <Badge
-                        key={genere}
-                        className="px-3 py-1 bg-[#b849d6] hover:bg-[#8a2e9d] flex items-center gap-2 cursor-pointer"
-                        onClick={() => {
-                          addGenre(genere);
-                        }}
-                      >
-                        {genere}
-                      </Badge>
-                    ))}
-                </div>
-              </div>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {generi && generi.length > 0 ? (
-          generi.map((genre) => (
-            <Badge
-              key={genre.id}
-              className="px-3 py-1 bg-[#732880] hover:bg-[#8a2e9d] text-white flex items-center gap-2"
+      {generi.length > 0 ? (
+        <>
+          {" "}
+          <div className="flex items-center justify-between mb-4">
+            <h3
+              className="text-lg font-semibold mb-3"
+              style={{ color: "#e4b5f2" }}
             >
-              {genre.nome}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  removeGenre(genre.id);
-                }}
-                className="ml-1 hover:text-[#e4b5f2] transition-colors"
-              >
-                <X size={14} />
-              </button>
-            </Badge>
-          ))
-        ) : (
-          <p className="text-[#efd6f8] italic w-full text-center py-4">
-            Non hai ancora aggiunto generi preferiti
-          </p>
-        )}
-      </div>
+              I tuoi generi preferiti
+            </h3>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center ">
+                  <Plus size={18} className="mr-2" /> Aggiungi
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#3d0d45] border-[#732880]">
+                <DialogHeader>
+                  <DialogTitle className="text-[#f7ebfc]">
+                    Aggiungi un genere preferito
+                  </DialogTitle>
+                  <DialogDescription className="text-[#efd6f8]">
+                    Seleziona il genere musicale che vuoi aggiungere.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogClose>
+                  <div className="grid gap-4 py-4">
+                    <div className="flex flex-wrap gap-1">
+                      {generiList
+                        .filter(
+                          (genere) => !generi.some((g) => g.nome === genere)
+                        )
+                        .map((genere) => (
+                          <Badge
+                            key={genere}
+                            className="px-3 py-1 bg-[#b849d6] hover:bg-[#8a2e9d] flex items-center gap-2 cursor-pointer"
+                            onClick={() => {
+                              addGenre(genere);
+                            }}
+                          >
+                            {genere}
+                          </Badge>
+                        ))}
+                    </div>
+                  </div>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {generi && generi.length > 0 ? (
+              generi.map((genre) => (
+                <Badge
+                  key={genre.id}
+                  className="px-3 py-1 bg-[#732880] hover:bg-[#8a2e9d] text-white flex items-center gap-2"
+                >
+                  {genre.nome}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeGenre(genre.id);
+                    }}
+                    className="ml-1 hover:text-[#e4b5f2] transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </Badge>
+              ))
+            ) : (
+              <p className="text-[#efd6f8] italic w-full text-center py-4">
+                Non hai ancora aggiunto generi preferiti
+              </p>
+            )}
+          </div>{" "}
+        </>
+      ) : (
+        <BondSpinner />
+      )}
     </Card>
   );
 };

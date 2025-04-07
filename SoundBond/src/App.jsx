@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import BondSpinner from "./components/BondSpinner";
 import PrivateRoute from "./components/PrivateRoute";
+import Connessioni from "./components/Connessioni";
 
 function App() {
   const dispatch = useDispatch();
@@ -121,6 +122,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Feedback />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/connessioni"
+            element={
+              <PrivateRoute>
+                <Connessioni />
               </PrivateRoute>
             }
           />

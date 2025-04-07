@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 * {
-  color: #f7ebfc;
   font-family: "Manrope", sans-serif;
   src: url("/assets/fonts/Manrope-Regular.woff2") format("woff2"),
     url("/assets/fonts/Manrope-Regular.woff") format("woff");
   font-optical-sizing: auto;
 }
 body {
+  color: #f7ebfc;
   background-color: #0c0512;
   scroll-behavior: smooth !important;
+  line-height: 1 !important;
 }
 
 .Errors {
@@ -148,6 +149,7 @@ body {
 .footer {
   background-image: linear-gradient(to top, #b849d6 -150%, #0c0512 100%);
   padding: 2rem;
+  line-height: 1.3;
 }
 
 /* LOGIN */
@@ -559,4 +561,42 @@ body {
   100% {
     rotate: 1080deg;
   }
+}
+
+.textGradient {
+  background: linear-gradient(
+    to bottom right,
+    #e9d5ff,
+    #d8b4fe,
+    #c084fc
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.buttonGradient {
+  background: linear-gradient(to right, #d489e9, #8a2e9d, #b849d6, #3d0d45);
+  background-size: 300% 100%;
+  background-position: left;
+  transition: background-position 2s ease;
+}
+
+.buttonGradient:hover {
+  background-position: right;
+}
+
+.buttonGradient2 {
+  background: linear-gradient(to right, #d489e9, #8a2e9d, #b849d6, #3d0d45);
+  background-size: 300% 100%;
+  background-position: left;
+  transition: background-position 2s ease;
+}
+
+.buttonGradient2:hover {
+  background-position: right;
+}
+
+.bioColorata {
+  color: #e4b5f2 !important;
 }
