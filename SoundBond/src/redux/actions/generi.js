@@ -22,7 +22,7 @@ export const getGeneri = () => {
     };
 };
 
-export const postGeneri = (nome, navigate) => {
+export const postGeneri = (nome) => {
     return async (dispatch) => {
         try {
             const response = await fetch("http://192.168.1.65:5220/api/Generi", {
@@ -37,7 +37,6 @@ export const postGeneri = (nome, navigate) => {
             });
             if (response.ok) {
                 dispatch(getGeneri())
-                navigate("/artisti")
             } else {
                 const text = await response.text();
                 let message = "Errore.";

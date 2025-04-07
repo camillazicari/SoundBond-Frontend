@@ -34,7 +34,7 @@ const Navbar = () => {
   }, [logout]);
 
   return (
-    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent sticky top-0 z-30">
+    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent relative z-30">
       <nav className="w-full mx-auto px-4 flex items-center justify-between bg-transparent">
         <Link to="/">
           <img
@@ -124,23 +124,25 @@ const Navbar = () => {
                 Connessioni
               </Link>
             )}
-            {location.pathname === "/" && !isAuthorized && (
-              <div className="flex sm:hidden items-center">
-                <GradientText
-                  colors={[
-                    "#d489e9",
-                    "#b067a3",
-                    "#eda7f2",
-                    "#8d4a8c",
-                    "#f4caf9",
-                  ]}
-                  animationSpeed={5}
-                  showBorder={true}
-                >
-                  LOGIN
-                </GradientText>
-              </div>
-            )}
+            {(location.pathname === "/" ||
+              location.pathname === "/homeIniziale") &&
+              !isAuthorized && (
+                <div className="flex sm:hidden items-center">
+                  <GradientText
+                    colors={[
+                      "#d489e9",
+                      "#b067a3",
+                      "#eda7f2",
+                      "#8d4a8c",
+                      "#f4caf9",
+                    ]}
+                    animationSpeed={5}
+                    showBorder={true}
+                  >
+                    LOGIN
+                  </GradientText>
+                </div>
+              )}
 
             {isAuthorized &&
               location.pathname !== "/accedi" &&
@@ -154,17 +156,18 @@ const Navbar = () => {
               )}
           </div>
         </div>
-        {location.pathname === "/" && !isAuthorized && (
-          <div className="md:flex hidden items-center">
-            <GradientText
-              colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
-              animationSpeed={5}
-              showBorder={true}
-            >
-              LOGIN
-            </GradientText>
-          </div>
-        )}
+        {(location.pathname === "/" || location.pathname === "/homeIniziale") &&
+          !isAuthorized && (
+            <div className="md:flex hidden items-center">
+              <GradientText
+                colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
+                animationSpeed={5}
+                showBorder={true}
+              >
+                LOGIN
+              </GradientText>
+            </div>
+          )}
 
         {isAuthorized &&
           location.pathname !== "/accedi" &&

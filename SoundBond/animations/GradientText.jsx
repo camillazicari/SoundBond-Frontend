@@ -13,7 +13,7 @@ export default function GradientText({
 
   return (
     <Link
-      to={"accedi"}
+      to={"/accedi"}
       className="flex justify-center animated-gradient-text hover:scale-110 text-lg transition-transform backdrop-blur-lg backdrop-brightness-75"
       style={{ padding: "8px 20px 8px 20px", transitionDuration: "1s" }}
     >

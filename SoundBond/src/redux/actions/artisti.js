@@ -22,7 +22,7 @@ export const getArtisti = () => {
   };
 };
 
-export const postArtisti = (nome, navigate) => {
+export const postArtisti = (nome, img) => {
   return async (dispatch) => {
     try {
       const response = await fetch("http://192.168.1.65:5220/api/Artisti", {
@@ -33,11 +33,11 @@ export const postArtisti = (nome, navigate) => {
         method: "POST",
         body: JSON.stringify({
           nome: nome,
+          img: img
         }),
       });
       if (response.ok) {
         dispatch(getArtisti());
-        navigate("/brani");
       } else {
         const text = await response.text();
         let message = "Errore.";
@@ -56,7 +56,7 @@ export const postArtisti = (nome, navigate) => {
   };
 };
 
-export const putArtisti = (nome) => {
+export const putArtisti = (nome, img) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
@@ -66,6 +66,7 @@ export const putArtisti = (nome) => {
           method: "PUT",
           body: JSON.stringify({
             nome: nome,
+            img: img
           }),
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwtToken"),

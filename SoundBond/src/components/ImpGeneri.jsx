@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -12,19 +13,60 @@ import {
 import { Card } from "../../animations/Card";
 import Badge from "../../animations/Badge";
 import { Plus, X } from "lucide-react";
-import { Input } from "../../animations/Input";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getGeneri,
+  deleteGenere,
+  postGeneri,
+} from "../redux/actions/generi.js";
 
 const ImpGeneri = () => {
-  const [genres, setGenres] = useState([
-    { id: 1, name: "Rock" },
-    { id: 2, name: "Pop" },
-    { id: 3, name: "Jazz" },
-    { id: 4, name: "Elettronica" },
-  ]);
+  const generi = useSelector((state) => state.generi.generi);
+  const dispatch = useDispatch();
+  const [genres, setGenres] = useState([]);
+  const generiList = [
+    "Rock",
+    "Pop",
+    "Hip Hop",
+    "R&B",
+    "Country",
+    "Electronic",
+    "Jazz",
+    "Classical",
+    "Folk",
+    "Metal",
+    "Blues",
+    "Reggae",
+    "Punk",
+    "Soul",
+    "Funk",
+    "Disco",
+    "House",
+    "Techno",
+    "Ambient",
+    "Indie",
+    "Gospel",
+    "Latin",
+    "Trap",
+    "K-Pop",
+    "Dubstep",
+    "Lo-Fi",
+    "EDM",
+    "Dance",
+    "Reggaeton",
+    "Hard Rock",
+  ];
 
-  const [newGenre, setNewGenre] = useState("");
+  useEffect(() => {
+    dispatch(getGeneri());
+    setGenres(generi);
+  }, []);
 
-  const addGenre = () => {
+  useEffect(() => {
+    setGenres(generi);
+  }, [generi]);
+
+  const addGenre = (newGenre) => {
     if (newGenre.trim()) {
       setGenres([
         ...genres,
@@ -33,7 +75,7 @@ const ImpGeneri = () => {
           name: newGenre,
         },
       ]);
-      setNewGenre("");
+      dispatch(postGeneri(newGenre));
       toast(
         <p className=" flex items-center">
           <svg
@@ -43,10 +85,10 @@ const ImpGeneri = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-circle-check"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-check"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="m9 12 2 2 4-4" />
@@ -64,33 +106,37 @@ const ImpGeneri = () => {
   };
 
   const removeGenre = (id) => {
-    setGenres(genres.filter((genre) => genre.id !== id));
-    toast(
-      <p className=" flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-circle-check"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>{" "}
-        &nbsp; Genere rimosso dai preferiti!
-      </p>,
-      {
-        style: {
-          background: "rgb(7, 176, 7)",
-          border: "none",
-        },
-      }
-    );
+    const genreToDelete = genres.find((genre) => genre.id === id);
+    if (genreToDelete) {
+      dispatch(deleteGenere(genreToDelete.nome));
+      setGenres(genres.filter((genre) => genre.id !== id));
+      toast(
+        <p className=" flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-check"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>{" "}
+          &nbsp; Genere rimosso dai preferiti!
+        </p>,
+        {
+          style: {
+            background: "rgb(7, 176, 7)",
+            border: "none",
+          },
+        }
+      );
+    }
   };
   return (
     <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
@@ -110,41 +156,45 @@ const ImpGeneri = () => {
                 Aggiungi un genere preferito
               </DialogTitle>
               <DialogDescription className="text-[#efd6f8]">
-                Inserisci il nome del genere musicale che vuoi aggiungere.
+                Seleziona il genere musicale che vuoi aggiungere.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <label className="text-sm">Nome genere</label>
-                <Input
-                  value={newGenre}
-                  onChange={(e) => setNewGenre(e.target.value)}
-                  className="bg-[#60256a] border-[#732880] focus:border-[#b849d6] text-white"
-                />
-              </div>
-            </div>
             <DialogClose>
-              <button
-                onClick={addGenre}
-                className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md"
-              >
-                Aggiungi
-              </button>
+              <div className="grid gap-4 py-4">
+                <div className="flex flex-wrap gap-1">
+                  {generiList
+                    .filter((genere) => !generi.some((g) => g.nome === genere))
+                    .map((genere) => (
+                      <Badge
+                        key={genere}
+                        className="px-3 py-1 bg-[#b849d6] hover:bg-[#8a2e9d] flex items-center gap-2 cursor-pointer"
+                        onClick={() => {
+                          addGenre(genere);
+                        }}
+                      >
+                        {genere}
+                      </Badge>
+                    ))}
+                </div>
+              </div>
             </DialogClose>
           </DialogContent>
         </Dialog>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {genres.length > 0 ? (
-          genres.map((genre) => (
+        {generi && generi.length > 0 ? (
+          generi.map((genre) => (
             <Badge
               key={genre.id}
               className="px-3 py-1 bg-[#732880] hover:bg-[#8a2e9d] text-white flex items-center gap-2"
             >
-              {genre.name}
+              {genre.nome}
               <button
-                onClick={() => removeGenre(genre.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  removeGenre(genre.id);
+                }}
                 className="ml-1 hover:text-[#e4b5f2] transition-colors"
               >
                 <X size={14} />

@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { getProfilo } from "@/redux/actions/profilo.js";
 import { getUtenteLoggato } from "../redux/actions/account.js";
 import {
   Dropdown,
@@ -13,10 +14,17 @@ import { Link } from "react-router-dom";
 export default function NavAvatar() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account.userLogged);
+  const profilo = useSelector((state) => state.profilo.profilo);
 
   useEffect(() => {
-    dispatch(getUtenteLoggato());
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      dispatch(getUtenteLoggato());
+      dispatch(getProfilo());
+    }
   }, []);
+
+  useEffect(() => {}, [profilo]);
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -29,16 +37,16 @@ export default function NavAvatar() {
       <Dropdown placement="bottom-center">
         <DropdownTrigger>
           <div className="border-2 border-[#b849d6] rounded-full">
-            {user ? (
+            {profilo && profilo.immagine ? (
               <img
-                src={user.profilo.immagine}
-                className=" rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                src={profilo.immagine}
+                className="rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
                 alt="user"
               />
             ) : (
               <img
                 src="https://cdn1.iconfinder.com/data/icons/avatars-55/100/avatar_profile_user_music_headphones_shirt_cool-512.png"
-                className=" rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                className="rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
                 alt="user"
               />
             )}

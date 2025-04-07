@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -13,12 +14,32 @@ import { ScrollArea } from "../../animations/ScrollArea";
 import { Card } from "../../animations/Card";
 import { Input } from "../../animations/Input";
 import { Trash2, Plus, X } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteArtista,
+  getArtisti,
+  postArtisti,
+} from "@/redux/actions/artisti";
 
 const ImpArtisti = () => {
+  const dispatch = useDispatch();
   const [artists, setArtists] = useState([]);
-
+  const artisti = useSelector((state) => state.artisti.artisti);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const uniqueArtists = searchResults.filter(
+    (value, index, self) =>
+      index === self.findIndex((t) => t.name === value.name)
+  );
+
+  useEffect(() => {
+    dispatch(getArtisti());
+    setArtists(artisti);
+  }, []);
+
+  useEffect(() => {
+    setArtists(artisti);
+  }, [artisti]);
 
   const getArtist = async (query) => {
     if (!query.trim()) {
@@ -56,6 +77,7 @@ const ImpArtisti = () => {
   const handleSelectArtist = (artist) => {
     if (!artists.some((s) => s.name === artist.name)) {
       setArtists((prev) => [...prev, artist]);
+      dispatch(postArtisti(artist.name, artist.image));
       toast(
         <p className=" flex items-center">
           <svg
@@ -65,10 +87,10 @@ const ImpArtisti = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-circle-check"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-check"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="m9 12 2 2 4-4" />
@@ -89,6 +111,7 @@ const ImpArtisti = () => {
 
   const handleRemoveArtist = (artist) => {
     setArtists((prev) => prev.filter((item) => item !== artist));
+    dispatch(deleteArtista(artist.nome));
     toast(
       <p className=" flex items-center">
         <svg
@@ -98,10 +121,10 @@ const ImpArtisti = () => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-circle-check"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-circle-check"
         >
           <circle cx="12" cy="12" r="10" />
           <path d="m9 12 2 2 4-4" />
@@ -158,7 +181,8 @@ const ImpArtisti = () => {
               <DialogClose>
                 {searchResults.length > 0 && (
                   <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
-                    {searchResults.map((artist, index) => (
+                    {" "}
+                    {uniqueArtists.map((artist, index) => (
                       <li
                         key={index}
                         className="p-2 hover:bg-[#60256a] cursor-pointer flex items-center"
@@ -168,7 +192,7 @@ const ImpArtisti = () => {
                           <img
                             src={artist.image}
                             alt="immagine"
-                            className="h-8 w-8 rounded-md mr-2"
+                            className="h-8 w-8 rounded-lg mr-2"
                           />
                         )}
                         {artist.name}
@@ -183,17 +207,17 @@ const ImpArtisti = () => {
       </div>
 
       <ScrollArea className="pr-4">
-        {artists.length > 0 ? (
+        {artisti.length > 0 ? (
           <div className="space-y-2">
-            {artists.map((artist, index) => (
+            {artisti.map((artist) => (
               <div
-                key={index}
+                key={artist.id}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
               >
                 <span className="font-medium text-[#fbf5fe] flex items-center">
-                  {artist.image ? (
+                  {artist.img ? (
                     <img
-                      src={artist.image}
+                      src={artist.img}
                       alt="cover"
                       className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3"
                       style={{
@@ -203,7 +227,7 @@ const ImpArtisti = () => {
                   ) : (
                     <p>No image available</p>
                   )}{" "}
-                  {artist.name}
+                  {artist.nome}
                 </span>
                 <button
                   onClick={() => handleRemoveArtist(artist)}

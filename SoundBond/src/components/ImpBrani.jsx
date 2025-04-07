@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -13,13 +14,25 @@ import { ScrollArea } from "../../animations/ScrollArea";
 import { Card } from "../../animations/Card";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "../../animations/Input";
+import { useDispatch, useSelector } from "react-redux";
+import { getBrani, deleteBrano, postBrani } from "@/redux/actions/brani";
 
 const ImpBrani = () => {
-  // TODO: CANZONI ESEMPIO!!!!!!!!
+  const dispatch = useDispatch();
+  const brani = useSelector((state) => state.brani.brani);
   const [songs, setSongs] = useState([]);
 
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    dispatch(getBrani());
+    setSongs(brani);
+  }, []);
+
+  useEffect(() => {
+    setSongs(brani);
+  }, [brani]);
 
   const getSongs = async (query) => {
     if (!query.trim()) {
@@ -58,6 +71,7 @@ const ImpBrani = () => {
   const handleSelectSong = (song) => {
     if (!songs.some((s) => s.title === song.title)) {
       setSongs((prev) => [...prev, song]);
+      dispatch(postBrani(song.title, song.name, song.image));
     }
     setSearch("");
     setSearchResults([]);
@@ -70,10 +84,10 @@ const ImpBrani = () => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-circle-check"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-circle-check"
         >
           <circle cx="12" cy="12" r="10" />
           <path d="m9 12 2 2 4-4" />
@@ -89,34 +103,66 @@ const ImpBrani = () => {
     );
   };
 
-  const handleRemoveSong = (song) => {
-    setSongs((prev) => prev.filter((item) => item !== song));
-    toast(
-      <p className=" flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-circle-check"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>{" "}
-        &nbsp; Brano rimosso dai preferiti!
-      </p>,
-      {
-        style: {
-          background: "rgb(7, 176, 7)",
-          border: "none",
-        },
-      }
-    );
+  const handleRemoveSong = async (song) => {
+    try {
+      dispatch(deleteBrano(song.titolo, song.artista));
+
+      setSongs((prev) => prev.filter((item) => item.id !== song.id));
+
+      toast(
+        <p className="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-check"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>{" "}
+          &nbsp; Brano rimosso dai preferiti!
+        </p>,
+        {
+          style: {
+            background: "rgb(7, 176, 7)",
+            border: "none",
+          },
+        }
+      );
+    } catch {
+      toast(
+        <p className="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-x"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>{" "}
+          &nbsp; Errore nella rimozione del brano!
+        </p>,
+        {
+          style: {
+            background: "rgb(255, 0, 0)",
+            border: "none",
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -185,19 +231,19 @@ const ImpBrani = () => {
       </div>
 
       <ScrollArea className="pr-4">
-        {songs.length > 0 ? (
+        {brani.length > 0 ? (
           <div className="space-y-2">
-            {songs.map((song, index) => (
+            {brani.map((song) => (
               <div
-                key={index}
+                key={song.id}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
               >
                 <div className="flex items-center">
-                  {song.image ? (
+                  {song.img ? (
                     <img
-                      src={song.image}
+                      src={song.img}
                       alt="cover"
-                      className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3"
+                      className="rounded-lg h-12 w-12 md:h-15 md:w-15 mr-3"
                       style={{
                         objectFit: "cover",
                       }}
@@ -206,8 +252,10 @@ const ImpBrani = () => {
                     <p>No image available</p>
                   )}
                   <div>
-                    <h4 className="font-medium text-[#fbf5fe]">{song.title}</h4>
-                    <p className="text-sm text-[#efd6f8]">{song.name}</p>
+                    <h4 className="font-medium text-[#fbf5fe]">
+                      {song.titolo}
+                    </h4>
+                    <p className="text-sm text-[#efd6f8]">{song.artista}</p>
                   </div>
                 </div>
                 <button

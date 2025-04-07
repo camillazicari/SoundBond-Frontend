@@ -104,7 +104,7 @@ export const getUtenti = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 dispatch({
                     type: "GET_USERS",
                     payload: data.utenti,
@@ -129,7 +129,7 @@ export const getUtente = (id) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 dispatch({
                     type: "GET_USER",
                     payload: data.utente,
@@ -168,6 +168,7 @@ export const getUtenteLoggato = () => {
     };
 };
 
+
 export const deleteUtente = (navigate) => {
     return async () => {
         try {
@@ -178,7 +179,7 @@ export const deleteUtente = (navigate) => {
                 },
             });
             if (response.ok) {
-                navigate("/")
+                navigate("/homeIniziale")
             } else throw new Error("errore nella deleteUtente");
         } catch (error) {
             console.error("ERRORE:", error);

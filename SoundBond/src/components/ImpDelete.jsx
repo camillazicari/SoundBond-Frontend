@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { Card } from "../../animations/Card";
 import {
@@ -12,12 +11,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../animations/AlertDialog";
+import { useDispatch } from "react-redux";
+import { deleteUtente } from "@/redux/actions/account";
+import { useNavigate } from "react-router-dom";
 
 const ImpDelete = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const deleteProfile = () => {
-    // In un'applicazione reale, qui ci sarebbe la logica per eliminare il profilo
-    toast.success("Profilo eliminato con successo");
-    // Redirect alla pagina di login o home
+    dispatch(deleteUtente(navigate));
+    dispatch({ type: "LOGOUT", payload: true });
   };
 
   return (

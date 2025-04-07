@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/actions/account.js";
-import { getUtenteLoggato } from "../redux/actions/account.js";
+import BondSpinner from "./BondSpinner.jsx";
 
 const Accedi = () => {
   const dispatch = useDispatch();
@@ -11,10 +11,7 @@ const Accedi = () => {
   const [password, setPassword] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const errore = useSelector((state) => state.account.isLoginError);
-
-  useEffect(() => {
-    dispatch(getUtenteLoggato());
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -29,15 +26,23 @@ const Accedi = () => {
       setErrorMessages(errors);
       return;
     }
-
-    dispatch(login(email, password, navigate));
+    setIsLoading(true);
     setEmail("");
     setPassword("");
     setErrorMessages({});
     e.target.reset();
+    dispatch(login(email, password, navigate))
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   };
 
-  return (
+  return isLoading ? (
+    <BondSpinner />
+  ) : (
     <div className="container mx-auto my-22 flex justify-center fade-in">
       {errorMessages.generic && (
         <p className="Errors">{errorMessages.generic}</p>

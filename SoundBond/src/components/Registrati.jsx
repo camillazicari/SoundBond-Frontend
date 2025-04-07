@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { register } from "../redux/actions/account.js";
+import BondSpinner from "./BondSpinner.jsx";
 
 const Registrati = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Registrati = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [dataDiNascita, setDataDiNascita] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -54,6 +56,7 @@ const Registrati = () => {
       return;
     }
 
+    setIsLoading(true);
     setUsername("");
     setPassword("");
     setFirstName("");
@@ -62,6 +65,7 @@ const Registrati = () => {
     setEmail("");
     setErrorMessages({});
     e.target.reset();
+
     dispatch(
       register(
         firstName,
@@ -72,11 +76,19 @@ const Registrati = () => {
         password,
         navigate
       )
-    );
+    )
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   };
 
-  return (
-    <div className="container mx-auto my-7 flex flex-col items-center justify-center fade-in">
+  return isLoading ? (
+    <BondSpinner />
+  ) : (
+    <div className="flex flex-col items-center justify-center fade-in">
       {errorMessages.generic && (
         <p className="Errors">{errorMessages.generic}</p>
       )}
@@ -85,31 +97,29 @@ const Registrati = () => {
         <p className="message">
           Registrati ora ed ottieni accesso completo alla nostra app.
         </p>
-        <div className="flexible">
-          <label>
-            <input
-              className="input"
-              type="text"
-              placeholder=" "
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-            />
-            <span>Nome</span>
-          </label>
+        <label>
+          <input
+            className="input"
+            type="text"
+            placeholder=" "
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          <span>Nome</span>
+        </label>
 
-          <label>
-            <input
-              className="input"
-              type="text"
-              placeholder=" "
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
-            <span>Cognome</span>
-          </label>
-        </div>
+        <label>
+          <input
+            className="input"
+            type="text"
+            placeholder=" "
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          <span>Cognome</span>
+        </label>
         {errorMessages.user && (
           <p className="text-sm text-center Errors">{errorMessages.user}</p>
         )}

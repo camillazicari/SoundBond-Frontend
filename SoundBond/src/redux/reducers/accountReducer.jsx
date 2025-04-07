@@ -13,6 +13,7 @@ const accountReducer = (state = initialState, action) => {
     case "LOGIN_ERROR":
       return {
         ...state,
+        loginSuccess: false,
         isLoginError: action.payload,
       };
 
@@ -27,6 +28,7 @@ const accountReducer = (state = initialState, action) => {
       return {
         ...state,
         loginSuccess: false,
+        userLogged: null,
         logout: action.payload,
       };
 

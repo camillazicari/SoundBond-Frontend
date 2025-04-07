@@ -1,63 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Card } from "../../animations/Card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../../animations/Avatar";
+import { Edit2, Camera } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Input } from "../../animations/Input";
-import { Edit2, Save, X, Camera } from "lucide-react";
-import { useState, useRef } from "react";
+import { Textarea } from "../../animations/TextArea";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfilo, putProfilo } from "@/redux/actions/profilo";
+import { getUtenteLoggato } from "../redux/actions/account.js";
+import {
+  DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogClose,
+  DialogTitle,
+  DialogDescription,
+} from "../../animations/Dialog";
 
 const ImpUser = () => {
-  // TODO: PROFILO ESEMPIO!!!!!!!!!
-  const [profile, setProfile] = useState({
-    username: "MusicLover",
-    bio: "Appassionato di musica di tutti i generi, ma con una predilezione per il rock alternativo e la musica elettronica.",
-    avatar: "",
-  });
-  const [editUsername, setEditUsername] = useState(false);
-  const [newUsername, setNewUsername] = useState(profile.username);
+  const [bio, setBio] = useState("");
+  const [immagine, setImmagine] = useState("");
+  const profilo = useSelector((state) => state.profilo.profilo);
+  const [editBio, setEditBio] = useState(false);
+  const [newBio, setNewBio] = useState(bio);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.account.userLogged);
 
-  const fileInputRef = useRef(null);
+  useEffect(() => {
+    dispatch(getProfilo());
+    dispatch(getUtenteLoggato());
+    setBio(profilo.bio);
+    setImmagine(profilo.immagine);
+  }, []);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfile({ ...profile, avatar: reader.result });
-        toast(
-          <p className=" flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-circle-check"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>{" "}
-            &nbsp; Immagine di profilo aggiornata!
-          </p>,
-          {
-            style: {
-              background: "rgb(7, 176, 7)",
-              border: "none",
-            },
-          }
-        );
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  useEffect(() => {
+    setBio(profilo.bio);
+    setImmagine(profilo.immagine);
+  }, [profilo]);
 
-  const saveUsername = () => {
-    if (newUsername.trim()) {
-      setProfile({ ...profile, username: newUsername });
-      setEditUsername(false);
+  const handleImageUpload = () => {
+    if (immagine) {
+      dispatch(putProfilo(immagine, bio));
+      dispatch(getUtenteLoggato());
       toast(
         <p className=" flex items-center">
           <svg
@@ -67,15 +53,15 @@ const ImpUser = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-circle-check"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-check"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="m9 12 2 2 4-4" />
           </svg>{" "}
-          &nbsp; Username aggiornato!
+          &nbsp; Immagine di profilo aggiornata!
         </p>,
         {
           style: {
@@ -85,56 +71,82 @@ const ImpUser = () => {
         }
       );
     } else {
-      toast(
-        <p className="flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-circle-alert"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" x2="12" y1="8" y2="12" />
-            <line x1="12" x2="12.01" y1="16" y2="16" />
-          </svg>{" "}
-          &nbsp; L'username non può essere vuoto!
-        </p>,
-        {
-          style: {
-            background: "rgb(202, 8, 8)",
-            border: "none",
-          },
-        }
-      );
+      toast("Per favore inserisci un URL valido per l'immagine.");
     }
   };
 
+  const saveBio = () => {
+    dispatch(putProfilo(immagine, bio));
+    setEditBio(false);
+    toast(
+      <p className=" flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-circle-check"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>{" "}
+        &nbsp; Profilo aggiornato!
+      </p>,
+      {
+        style: {
+          background: "rgb(7, 176, 7)",
+          border: "none",
+        },
+      }
+    );
+  };
+
   return (
-    <>
-      <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
+    <div className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
+      <Card className=" border-0">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative group">
             <Avatar className="w-32 h-32 border-4 border-[#b849d6] transition-all duration-300 group-hover:border-[#d489e9]">
-              <AvatarImage src={profile.avatar} alt={profile.username} />
+              <AvatarImage src={immagine} alt={profile && profile.nomeUtente} />
               <AvatarFallback className="bg-[#732880] text-white text-2xl">
-                {profile.username.slice(0, 2).toUpperCase()}
+                {profile && profile.nomeUtente.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <button
-              className="absolute bottom-0 right-0 bg-[#b849d6] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              onClick={() => fileInputRef.current.click()}
-            >
-              <Camera size={20} />
-            </button>
+            <Dialog>
+              <DialogTrigger className="absolute bottom-0 right-0 bg-[#b849d6] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Camera size={20} />
+              </DialogTrigger>
+              <DialogContent className="bg-[#3d0d45] border-[#732880]">
+                <DialogHeader>
+                  <DialogTitle className="text-[#f7ebfc]">
+                    Aggiungi la tua immagine di profilo
+                  </DialogTitle>
+                  <DialogDescription className="text-[#efd6f8]">
+                    Inserisci il link dell'immagine che vuoi aggiungere.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-2">
+                  <Input
+                    onChange={(e) => setImmagine(e.target.value)}
+                    value={immagine}
+                    className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
+                  />
+                  <DialogClose
+                    className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#b849d6] hover:bg-[#a43bbe]"
+                    onClick={handleImageUpload}
+                  >
+                    Salva
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </Dialog>
             <input
-              type="file"
-              ref={fileInputRef}
+              type="text"
               onChange={handleImageUpload}
               className="hidden"
               accept="image/*"
@@ -149,47 +161,71 @@ const ImpUser = () => {
               >
                 Username
               </label>
-              {editUsername ? (
-                <div className="flex">
-                  <Input
-                    value={newUsername}
-                    onChange={(e) => setNewUsername(e.target.value)}
-                    className="bg-[#3d0d45]/50 border-[#732880] focus:border-[#b849d6]"
-                  />
-                  <button
-                    onClick={saveUsername}
-                    className="hover:bg-[#732880]/30 p-2.5 rounded-4xl ml-2 md:ml-4"
-                  >
-                    <Save size={18} />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditUsername(false);
-                      setNewUsername(profile.username);
-                    }}
-                    className="hover:bg-[#732880]/30 p-2.5 rounded-4xl"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white mb-0">
-                    {profile.username} &nbsp;
-                  </h3>
-                  <button
-                    onClick={() => setEditUsername(true)}
-                    className="hover:bg-[#732880]/30 p-2 rounded-2xl"
-                  >
-                    <Edit2 size={18} />
-                  </button>
-                </div>
-              )}
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-white mb-0">
+                  {profile && profile.nomeUtente} &nbsp;
+                </h3>
+              </div>
             </div>
           </div>
+
+          {!editBio && (
+            <button
+              onClick={() => setEditBio(true)}
+              className="hover:bg-[#732880]/30 p-2 rounded-2xl"
+            >
+              <Edit2 size={18} />
+            </button>
+          )}
         </div>
       </Card>
-    </>
+
+      <Card className="border-0 mt-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold" style={{ color: "#e4b5f2" }}>
+            La tua biografia
+          </h3>
+        </div>
+        {editBio ? (
+          <div>
+            <Textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="min-h-[120px] bg-[#3d0d45]/50 border-[#732880] focus:border-[#b849d6]"
+              placeholder="Racconta qualcosa su di te..."
+              maxLength={500}
+            />
+            <div className="flex justify-between mt-2">
+              <span className="text-xs">{newBio.length}/500 caratteri</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    saveBio();
+                  }}
+                  className="bg-[#b849d6] hover:bg-[#a43bbe] py-1 px-3 rounded-md"
+                >
+                  Salva
+                </button>
+                <button
+                  onClick={() => {
+                    setEditBio(false);
+                    setNewBio(bio);
+                  }}
+                  variant="outline"
+                  className="border-[#732880] hover:bg-[#732880]/30 py-1 px-3 rounded-md"
+                >
+                  Annulla
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-[#fbf5fe] leading-relaxed">
+            {profilo && profilo.bio}
+          </p>
+        )}
+      </Card>
+    </div>
   );
 };
 

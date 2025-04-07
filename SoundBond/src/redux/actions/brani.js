@@ -22,7 +22,7 @@ export const getBrani = () => {
     };
 };
 
-export const postBrani = (titolo, artista, navigate) => {
+export const postBrani = (titolo, artista, img) => {
     return async (dispatch) => {
         try {
             const response = await fetch("http://192.168.1.65:5220/api/Brani", {
@@ -33,12 +33,12 @@ export const postBrani = (titolo, artista, navigate) => {
                 method: "POST",
                 body: JSON.stringify({
                     titolo: titolo,
-                    artista: artista
+                    artista: artista,
+                    img: img
                 }),
             });
             if (response.ok) {
                 dispatch(getBrani());
-                navigate("/");
             } else {
                 const text = await response.text();
                 let message = "Errore.";
@@ -57,7 +57,7 @@ export const postBrani = (titolo, artista, navigate) => {
     };
 };
 
-export const putBrani = (titolo, artista) => {
+export const putBrani = (titolo, artista, img) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
@@ -65,7 +65,8 @@ export const putBrani = (titolo, artista) => {
                 method: "PUT",
                 body: JSON.stringify({
                     titolo: titolo,
-                    artista: artista
+                    artista: artista,
+                    img: img
                 }),
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
