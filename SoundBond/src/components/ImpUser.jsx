@@ -25,7 +25,6 @@ const ImpUser = () => {
   const [immagine, setImmagine] = useState("");
   const profilo = useSelector((state) => state.profilo.profilo);
   const [editBio, setEditBio] = useState(false);
-  const [newBio, setNewBio] = useState(bio);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.account.userLogged);
 
@@ -218,7 +217,6 @@ const ImpUser = () => {
                     <button
                       onClick={() => {
                         setEditBio(false);
-                        setNewBio(bio);
                       }}
                       variant="outline"
                       className="border-[#732880] hover:bg-[#732880]/30 py-1 px-3 rounded-md"

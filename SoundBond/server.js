@@ -32,4 +32,38 @@ app.get("/api/genres", async (req, res) => {
     }
 });
 
+app.get("/api/artists", async (req, res) => {
+    const { genre_id } = req.query;
+
+    if (!genre_id) {
+        return res.status(400).json({ error: "Parametro 'id' mancante" });
+    }
+
+    try {
+        const response = await fetch(`https://api.deezer.com/genre/${genre_id}/artists`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Errore durante la richiesta a Deezer", details: error.message });
+    }
+});
+
+app.get("/api/songs", async (req, res) => {
+    const { artist_id } = req.query;
+
+    if (!artist_id) {
+        return res.status(400).json({ error: "Parametro 'id' mancante" });
+    }
+
+    try {
+        const response = await fetch(`https://api.deezer.com/artist/${artist_id}/top?limit=5`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Errore durante la richiesta a Deezer", details: error.message });
+    }
+});
+
+
+
 app.listen(5002, () => console.log("Server in ascolto su porta 5002"));
