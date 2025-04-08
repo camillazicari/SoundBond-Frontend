@@ -85,6 +85,10 @@ const Brani = () => {
       setError("Devi selezionare almeno un brano!");
       return;
     }
+    if (songs.length > 5) {
+      setError("Puoi selezionare al massimo 5 brani.");
+      return;
+    }
     setIsLoading(true);
     try {
       if (brani.length > 0) {

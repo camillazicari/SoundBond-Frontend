@@ -26,36 +26,36 @@ const ImpGeneri = () => {
   const dispatch = useDispatch();
   const [genres, setGenres] = useState([]);
   const generiList = [
-    "Rock",
     "Pop",
     "Hip Hop",
+    "Rap",
+    "Rock",
+    "Dance",
     "R&B",
-    "Country",
-    "Electronic",
-    "Jazz",
-    "Classical",
+    "Alternative",
+    "Electro",
     "Folk",
-    "Metal",
-    "Blues",
     "Reggae",
-    "Punk",
+    "Jazz",
+    "Classica",
+    "Metal",
     "Soul",
     "Funk",
-    "Disco",
+    "Blues",
+    "Cumbia",
     "House",
     "Techno",
     "Ambient",
     "Indie",
     "Gospel",
-    "Latin",
+    "Latina",
     "Trap",
     "K-Pop",
-    "Dubstep",
     "Lo-Fi",
-    "EDM",
-    "Dance",
-    "Reggaeton",
     "Hard Rock",
+    "Brasiliana",
+    "Indiana",
+    "Asiatica",
   ];
 
   useEffect(() => {
@@ -68,37 +68,62 @@ const ImpGeneri = () => {
   }, [generi]);
 
   const addGenre = (newGenre) => {
-    if (newGenre.trim()) {
-      setGenres([
-        ...genres,
-        {
-          id: genres.length ? Math.max(...genres.map((g) => g.id)) + 1 : 1,
-          name: newGenre,
-        },
-      ]);
-      dispatch(postGeneri(newGenre));
+    if (genres.length < 10) {
+      if (newGenre.trim()) {
+        setGenres([
+          ...genres,
+          {
+            id: genres.length ? Math.max(...genres.map((g) => g.id)) + 1 : 1,
+            name: newGenre,
+          },
+        ]);
+        dispatch(postGeneri(newGenre));
+        toast(
+          <p className="flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>{" "}
+            &nbsp; Genere aggiunto ai preferiti!
+          </p>,
+          {
+            style: {
+              background: "rgb(7, 176, 7)",
+              border: "none",
+            },
+          }
+        );
+      }
+    } else {
       toast(
-        <p className=" flex items-center">
+        <p className="flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-circle-check"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
           </svg>{" "}
-          &nbsp; Genere aggiunto ai preferiti!
+          &nbsp; Puoi selezionare al massimo 10 generi!
         </p>,
         {
           style: {
-            background: "rgb(7, 176, 7)",
+            background: "rgb(255, 0, 0)",
             border: "none",
           },
         }
@@ -107,32 +132,57 @@ const ImpGeneri = () => {
   };
 
   const removeGenre = (id) => {
-    const genreToDelete = genres.find((genre) => genre.id === id);
-    if (genreToDelete) {
-      dispatch(deleteGenere(genreToDelete.nome));
-      setGenres(genres.filter((genre) => genre.id !== id));
+    if (genres.length > 1) {
+      const genreToDelete = genres.find((genre) => genre.id === id);
+      if (genreToDelete) {
+        dispatch(deleteGenere(genreToDelete.nome));
+        setGenres(genres.filter((genre) => genre.id !== id));
+        toast(
+          <p className=" flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>{" "}
+            &nbsp; Genere rimosso dai preferiti!
+          </p>,
+          {
+            style: {
+              background: "rgb(7, 176, 7)",
+              border: "none",
+            },
+          }
+        );
+      }
+    } else {
       toast(
-        <p className=" flex items-center">
+        <p className="flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-circle-check"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
           </svg>{" "}
-          &nbsp; Genere rimosso dai preferiti!
+          &nbsp; Devi avere almeno 1 genere preferito!
         </p>,
         {
           style: {
-            background: "rgb(7, 176, 7)",
+            background: "rgb(255, 0, 0)",
             border: "none",
           },
         }

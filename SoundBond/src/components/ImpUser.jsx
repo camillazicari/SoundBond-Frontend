@@ -46,7 +46,7 @@ const ImpUser = () => {
       dispatch(putProfilo(immagine, bio));
       dispatch(getUtenteLoggato());
       toast(
-        <p className=" flex items-center">
+        <p className=" flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -80,7 +80,7 @@ const ImpUser = () => {
     dispatch(putProfilo(immagine, bio));
     setEditBio(false);
     toast(
-      <p className=" flex items-center">
+      <p className=" flex items-center text-white">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -205,7 +205,7 @@ const ImpUser = () => {
                   maxLength={500}
                 />
                 <div className="flex justify-between mt-2">
-                  <span className="text-xs">{newBio.length}/500 caratteri</span>
+                  <span className="text-xs">{bio.length}/500 caratteri</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => {

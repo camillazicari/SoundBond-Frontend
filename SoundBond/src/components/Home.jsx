@@ -1,10 +1,17 @@
-import { useSelector } from "react-redux";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useDispatch, useSelector } from "react-redux";
 import { Card } from "../../animations/Card";
 import BondSpinner from "./BondSpinner";
 import { useNavigate } from "react-router-dom";
 import TopMusicMatches from "./TopMusicMatches";
+import { useEffect } from "react";
+import { getUtenteLoggato } from "@/redux/actions/account";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUtenteLoggato());
+  }, []);
   const user = useSelector((state) => state.account.userLogged);
   const navigate = useNavigate();
 

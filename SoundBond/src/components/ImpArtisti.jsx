@@ -76,11 +76,71 @@ const ImpArtisti = () => {
   };
 
   const handleSelectArtist = (artist) => {
-    if (!artists.some((s) => s.name === artist.name)) {
-      setArtists((prev) => [...prev, artist]);
-      dispatch(postArtisti(artist.name, artist.image));
+    if (artists.length < 5) {
+      if (!artists.some((s) => s.name === artist.name)) {
+        setArtists((prev) => [...prev, artist]);
+        dispatch(postArtisti(artist.name, artist.image));
+        toast(
+          <p className=" flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>{" "}
+            &nbsp; Artista aggiunto dai preferiti!
+          </p>,
+          {
+            style: {
+              background: "rgb(7, 176, 7)",
+              border: "none",
+            },
+          }
+        );
+        setSearch("");
+        setSearchResults([]);
+      }
+    } else {
       toast(
-        <p className=" flex items-center">
+        <p className="flex items-center text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+          </svg>{" "}
+          &nbsp; Puoi selezionare al massimo 5 artisti!
+        </p>,
+        {
+          style: {
+            background: "rgb(255, 0, 0)",
+            border: "none",
+          },
+        }
+      );
+    }
+  };
+
+  const handleRemoveArtist = (artist) => {
+    if (artists.length > 1) {
+      setArtists((prev) => prev.filter((item) => item !== artist));
+      dispatch(deleteArtista(artist.nome));
+      toast(
+        <p className=" flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -96,7 +156,7 @@ const ImpArtisti = () => {
             <circle cx="12" cy="12" r="10" />
             <path d="m9 12 2 2 4-4" />
           </svg>{" "}
-          &nbsp; Artista aggiunto dai preferiti!
+          &nbsp; Artista rimosso dai preferiti!
         </p>,
         {
           style: {
@@ -105,40 +165,30 @@ const ImpArtisti = () => {
           },
         }
       );
-      setSearch("");
-      setSearchResults([]);
+    } else {
+      toast(
+        <p className="flex items-center text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+          </svg>{" "}
+          &nbsp; Devi avere almeno 1 artista preferito!
+        </p>,
+        {
+          style: {
+            background: "rgb(255, 0, 0)",
+            border: "none",
+          },
+        }
+      );
     }
-  };
-
-  const handleRemoveArtist = (artist) => {
-    setArtists((prev) => prev.filter((item) => item !== artist));
-    dispatch(deleteArtista(artist.nome));
-    toast(
-      <p className=" flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-circle-check"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>{" "}
-        &nbsp; Artista rimosso dai preferiti!
-      </p>,
-      {
-        style: {
-          background: "rgb(7, 176, 7)",
-          border: "none",
-        },
-      }
-    );
   };
   return (
     <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">

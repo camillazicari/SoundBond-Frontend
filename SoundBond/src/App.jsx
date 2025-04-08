@@ -21,38 +21,47 @@ import BondSpinner from "./components/BondSpinner";
 import PrivateRoute from "./components/PrivateRoute";
 import Connessioni from "./components/Connessioni";
 import Esplora from "./components/Esplora";
+import { getUtenteLoggato } from "./redux/actions/account";
 
 function App() {
   const dispatch = useDispatch();
   const loginSuccess = useSelector((state) => state.account.loginSuccess);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const storedToken = localStorage.getItem("jwtToken");
+
     if (storedToken) {
       try {
         const decodedToken = jwtDecode(storedToken);
         const currentTime = Date.now() / 1000;
+        const timeRemaining = decodedToken.exp - currentTime;
 
-        if (decodedToken.exp < currentTime) {
+        if (timeRemaining < 0) {
+          console.log("Token scaduto, rimuovo dal localStorage");
           localStorage.removeItem("jwtToken");
           dispatch({ type: "LOGOUT" });
           navigate("/homeIniziale");
         } else {
+          console.log("Token valido, procedo con il login");
           dispatch({ type: "LOGIN_SUCCESS", payload: true });
+          dispatch(getUtenteLoggato());
         }
-      } catch {
+      } catch (error) {
+        console.error("Errore nella decodifica del token:", error);
         localStorage.removeItem("jwtToken");
         dispatch({ type: "LOGOUT" });
         navigate("/homeIniziale");
       }
     } else {
+      console.log("Nessun token trovato, utente non loggato");
       dispatch({ type: "LOGOUT" });
       navigate("/homeIniziale");
     }
 
     setIsAuthChecked(true);
-  }, [dispatch]);
+  }, []);
 
   if (!isAuthChecked) {
     return (

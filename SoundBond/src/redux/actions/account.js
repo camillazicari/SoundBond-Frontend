@@ -104,7 +104,7 @@ export const getUtenti = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 dispatch({
                     type: "GET_USERS",
                     payload: data.utenti,
@@ -144,7 +144,7 @@ export const getUtente = (id) => {
 };
 
 export const getUtenteLoggato = () => {
-    return async (dispatch) => {
+    return async (dispatch, navigate) => {
         try {
             const response = await fetch("http://192.168.1.65:5220/api/Account/userLogged", {
                 headers: {
@@ -159,7 +159,13 @@ export const getUtenteLoggato = () => {
                     type: "GET_USER_LOGGED",
                     payload: data.user,
                 });
-            } else {
+            }
+            else if (response.status === 401) {
+                localStorage.removeItem("jwtToken");
+                dispatch({ type: "LOGOUT" });
+                navigate("/homeIniziale");
+            }
+            else {
                 throw new Error("Errore nella response di getUtente");
             }
         } catch (error) {

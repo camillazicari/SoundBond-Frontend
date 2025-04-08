@@ -92,6 +92,10 @@ const Artisti = () => {
       setError("Devi selezionare almeno un artista!");
       return;
     }
+    if (artists.length > 5) {
+      setError("Puoi selezionare al massimo 5 artisti.");
+      return;
+    }
     setIsLoading(true);
     try {
       if (artistiPreferiti.length > 0) {

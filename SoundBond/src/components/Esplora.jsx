@@ -1,4 +1,23 @@
+import { useEffect } from "react";
+
 const Esplora = () => {
+  useEffect(() => {
+    getGenres();
+  }, []);
+  const getGenres = async () => {
+    const url = "http://localhost:5002/api/genres";
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        throw new Error("Errore nel recupero dei dati");
+      }
+    } catch (error) {
+      console.log("errore", error);
+    }
+  };
   //fare get generi da https://api.deezer.com/genre
   //fare get generi utente
   //trovare id dei generi di deezer dove data.name = genere.nome e pusharli in un array

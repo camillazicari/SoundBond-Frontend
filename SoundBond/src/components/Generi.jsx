@@ -22,36 +22,36 @@ const Generi = () => {
   const [error, setError] = useState("");
 
   const [buttons, setButtons] = useState([
-    { id: "Rock", isLiked: false },
     { id: "Pop", isLiked: false },
     { id: "Hip Hop", isLiked: false },
+    { id: "Rap", isLiked: false },
+    { id: "Rock", isLiked: false },
+    { id: "Dance", isLiked: false },
     { id: "R&B", isLiked: false },
-    { id: "Country", isLiked: false },
-    { id: "Electronic", isLiked: false },
-    { id: "Jazz", isLiked: false },
-    { id: "Classical", isLiked: false },
+    { id: "Alternative", isLiked: false },
+    { id: "Electro", isLiked: false },
     { id: "Folk", isLiked: false },
-    { id: "Metal", isLiked: false },
-    { id: "Blues", isLiked: false },
     { id: "Reggae", isLiked: false },
-    { id: "Punk", isLiked: false },
+    { id: "Jazz", isLiked: false },
+    { id: "Classica", isLiked: false },
+    { id: "Metal", isLiked: false },
     { id: "Soul", isLiked: false },
     { id: "Funk", isLiked: false },
-    { id: "Disco", isLiked: false },
+    { id: "Blues", isLiked: false },
+    { id: "Cumbia", isLiked: false },
     { id: "House", isLiked: false },
     { id: "Techno", isLiked: false },
     { id: "Ambient", isLiked: false },
     { id: "Indie", isLiked: false },
     { id: "Gospel", isLiked: false },
-    { id: "Latin", isLiked: false },
+    { id: "Latina", isLiked: false },
     { id: "Trap", isLiked: false },
     { id: "K-Pop", isLiked: false },
-    { id: "Dubstep", isLiked: false },
     { id: "Lo-Fi", isLiked: false },
-    { id: "EDM", isLiked: false },
-    { id: "Dance", isLiked: false },
-    { id: "Reggaeton", isLiked: false },
     { id: "Hard Rock", isLiked: false },
+    { id: "Brasiliana", isLiked: false },
+    { id: "Indiana", isLiked: false },
+    { id: "Asiatica", isLiked: false },
   ]);
 
   const handleLikeClick = (id) => {
@@ -68,6 +68,11 @@ const Generi = () => {
 
     if (likedButtons.length < 1) {
       setError("Devi selezionare almeno un genere!");
+      return;
+    }
+
+    if (likedButtons.length > 10) {
+      setError("Puoi selezionare al massimo 10 generi.");
       return;
     }
     setIsLoading(true);

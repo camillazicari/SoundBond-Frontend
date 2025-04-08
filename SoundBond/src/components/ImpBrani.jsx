@@ -69,48 +69,15 @@ const ImpBrani = () => {
   };
 
   const handleSelectSong = (song) => {
-    if (!songs.some((s) => s.title === song.title)) {
-      setSongs((prev) => [...prev, song]);
-      dispatch(postBrani(song.title, song.name, song.image));
-    }
-    setSearch("");
-    setSearchResults([]);
-    toast(
-      <p className=" flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-circle-check"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>{" "}
-        &nbsp; Brano aggiunto ai preferiti!
-      </p>,
-      {
-        style: {
-          background: "rgb(7, 176, 7)",
-          border: "none",
-        },
+    if (songs.length < 5) {
+      if (!songs.some((s) => s.title === song.title)) {
+        setSongs((prev) => [...prev, song]);
+        dispatch(postBrani(song.title, song.name, song.image));
       }
-    );
-  };
-
-  const handleRemoveSong = async (song) => {
-    try {
-      dispatch(deleteBrano(song.titolo, song.artista));
-
-      setSongs((prev) => prev.filter((item) => item.id !== song.id));
-
+      setSearch("");
+      setSearchResults([]);
       toast(
-        <p className="flex items-center">
+        <p className=" flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -126,7 +93,7 @@ const ImpBrani = () => {
             <circle cx="12" cy="12" r="10" />
             <path d="m9 12 2 2 4-4" />
           </svg>{" "}
-          &nbsp; Brano rimosso dai preferiti!
+          &nbsp; Brano aggiunto ai preferiti!
         </p>,
         {
           style: {
@@ -135,25 +102,104 @@ const ImpBrani = () => {
           },
         }
       );
-    } catch {
+    } else {
       toast(
-        <p className="flex items-center">
+        <p className="flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-circle-x"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
           </svg>{" "}
-          &nbsp; Errore nella rimozione del brano!
+          &nbsp; Puoi selezionare al massimo 5 brani!
+        </p>,
+        {
+          style: {
+            background: "rgb(255, 0, 0)",
+            border: "none",
+          },
+        }
+      );
+    }
+  };
+
+  const handleRemoveSong = async (song) => {
+    if (songs.length > 1) {
+      try {
+        dispatch(deleteBrano(song.titolo, song.artista));
+
+        setSongs((prev) => prev.filter((item) => item.id !== song.id));
+
+        toast(
+          <p className="flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>{" "}
+            &nbsp; Brano rimosso dai preferiti!
+          </p>,
+          {
+            style: {
+              background: "rgb(7, 176, 7)",
+              border: "none",
+            },
+          }
+        );
+      } catch {
+        toast(
+          <p className="flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              fill="currentColor"
+              class="bi bi-exclamation-circle"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+            </svg>{" "}
+            &nbsp; Errore nella rimozione del brano!
+          </p>,
+          {
+            style: {
+              background: "rgb(255, 0, 0)",
+              border: "none",
+            },
+          }
+        );
+      }
+    } else {
+      toast(
+        <p className="flex items-center text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="19"
+            height="19"
+            fill="currentColor"
+            class="bi bi-exclamation-circle"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+          </svg>{" "}
+          &nbsp; Devi avere almeno 1 brano preferito!
         </p>,
         {
           style: {

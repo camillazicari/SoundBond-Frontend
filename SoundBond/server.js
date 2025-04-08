@@ -21,4 +21,15 @@ app.get("/api/search", async (req, res) => {
     }
 });
 
-app.listen(5002, () => console.log("Server in ascolto su porta 5000"));
+app.get("/api/genres", async (req, res) => {
+
+    try {
+        const response = await fetch(`https://api.deezer.com/genre`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
+app.listen(5002, () => console.log("Server in ascolto su porta 5002"));
