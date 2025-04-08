@@ -20,6 +20,7 @@ import { useState } from "react";
 import BondSpinner from "./components/BondSpinner";
 import PrivateRoute from "./components/PrivateRoute";
 import Connessioni from "./components/Connessioni";
+import Esplora from "./components/Esplora";
 
 function App() {
   const dispatch = useDispatch();
@@ -130,6 +131,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Connessioni />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/esplora"
+            element={
+              <PrivateRoute>
+                <Esplora />
               </PrivateRoute>
             }
           />

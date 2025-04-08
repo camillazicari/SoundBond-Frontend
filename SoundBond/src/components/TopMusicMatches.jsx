@@ -69,7 +69,7 @@ const TopMusicMatches = () => {
                         utente.artisti?.slice(0, 5).map((artista) => {
                           return (
                             <Avatar
-                              key={artista.nome}
+                              key={artista.id}
                               className="w-9 h-9 md:w-11 md:h-11 lg:w-13 lg:h-13 m-[-10px] object-cover border-2 border-[#1C0721]"
                             >
                               <AvatarImage
@@ -93,7 +93,7 @@ const TopMusicMatches = () => {
                         utente.brani?.slice(0, 5).map((brano) => {
                           return (
                             <Avatar
-                              key={brano.nome}
+                              key={brano.id}
                               className="w-9 h-9 md:w-11 md:h-11 lg:w-13 lg:h-13 m-[-10px] object-cover border-2 border-[#1C0721]"
                             >
                               <AvatarImage src={brano.img} alt={brano.nome} />
