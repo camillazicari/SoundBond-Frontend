@@ -5,13 +5,16 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 import { HeroUIProvider } from "@heroui/react";
 import { BrowserRouter } from "react-router-dom";
+import { PlayerProvider } from "./context/PlayerContext";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <HeroUIProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <PlayerProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </PlayerProvider>
     </HeroUIProvider>
   </Provider>
 );

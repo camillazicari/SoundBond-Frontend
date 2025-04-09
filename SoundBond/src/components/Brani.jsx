@@ -152,7 +152,7 @@ const Brani = () => {
                           <img
                             src={song.image}
                             alt="cover"
-                            className="h-8 w-8 rounded-lg mr-2"
+                            className="h-8 w-8 rounded-lg mr-2 object-cover"
                           />
                         )}
                         {song.title} - {song.name}

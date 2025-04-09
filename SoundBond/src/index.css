@@ -600,3 +600,229 @@ body {
 .bioColorata {
   color: #e4b5f2 !important;
 }
+
+.hoverBrani:hover {
+  background-color: rgba(184, 73, 214, 0.2);
+}
+
+/* PLAYER */
+
+.cardPlayer {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  background: rgba(12, 5, 18, 0.9);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.top {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+input[type="range"].time {
+  -webkit-appearance: none;
+  width: 90%;
+  height: 6px;
+  background: #444;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+input[type="range"].time::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 3px;
+}
+
+/* La parte attiva prima del thumb */
+input[type="range"].time::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: transparent;
+  margin-top: -4px;
+  position: relative;
+  z-index: 1;
+}
+
+input[type="range"].time {
+  background: linear-gradient(
+    to right,
+    #b849d6 0%,
+    #b849d6 var(--progress, 0%),
+    #444 var(--progress, 0%),
+    #444 100%
+  );
+}
+
+.pfp {
+  position: relative;
+  top: 5px;
+  left: 5px;
+  height: 50px;
+  width: 50px;
+  background-color: #d2d2d2;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-1 {
+  font-size: 20px;
+  font-weight: bolder;
+  color: #b849d6;
+}
+
+.title-2 {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.time {
+  width: 90%;
+  background-color: #b849d6;
+  height: 6px;
+  border-radius: 3px;
+  position: absolute;
+  left: 5%;
+  bottom: 22px;
+}
+
+.elapsed {
+  background-color: #b849d6;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.controls {
+  display: flex;
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls svg {
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.controls svg:hover {
+  color: #b849d6;
+}
+
+.timetext {
+  color: white;
+  font-size: 8px;
+  position: absolute;
+}
+
+.time_now {
+  bottom: 11px;
+  left: 10px;
+}
+
+.time_full {
+  bottom: 11px;
+  right: 10px;
+}
+
+.playing {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  gap: 1px;
+  width: 30px;
+  height: 20px;
+}
+
+.greenline {
+  background-color: #b849d6;
+  height: 20px;
+  width: 4px;
+  position: relative;
+  transform-origin: bottom;
+}
+
+.line-1 {
+  animation: infinite playing 1s ease-in-out;
+  animation-delay: 0.2s;
+}
+
+.line-2 {
+  animation: infinite playing 1s ease-in-out;
+  animation-delay: 0.5s;
+}
+
+.line-3 {
+  animation: infinite playing 1s ease-in-out;
+  animation-delay: 0.6s;
+}
+
+.line-4 {
+  animation: infinite playing 1s ease-in-out;
+  animation-delay: 0s;
+}
+
+.line-5 {
+  animation: infinite playing 1s ease-in-out;
+  animation-delay: 0.4s;
+}
+
+@keyframes playing {
+  0% {
+    transform: scaleY(0.1);
+  }
+
+  33% {
+    transform: scaleY(0.6);
+  }
+
+  66% {
+    transform: scaleY(0.9);
+  }
+
+  100% {
+    transform: scaleY(0.1);
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .title-1 {
+    font-size: 15px;
+  }
+
+  .title-2 {
+    font-size: 12px;
+  }
+
+  .pfp {
+    height: 40px;
+    width: 40px;
+  }
+
+  .frecciaSx,
+  .frecciaDx {
+    width: 25px;
+  }
+
+  .bi-play-circle-fill,
+  .bi-pause-circle-fill {
+    width: 30px;
+  }
+
+  .cardPlayer {
+    width: 100%;
+    height: 130px;
+  }
+}

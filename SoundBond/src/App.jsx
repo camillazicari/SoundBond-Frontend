@@ -22,6 +22,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Connessioni from "./components/Connessioni";
 import Esplora from "./components/Esplora";
 import { getUtenteLoggato } from "./redux/actions/account";
+import Player from "./components/Player";
 
 function App() {
   const dispatch = useDispatch();
@@ -153,6 +154,7 @@ function App() {
           />
         </Routes>
       </main>
+      <Player />
       <Footer />
       <Toaster position="top-center" />
     </div>

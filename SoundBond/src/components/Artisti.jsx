@@ -158,7 +158,7 @@ const Artisti = () => {
                           <img
                             src={artist.image}
                             alt="immagine"
-                            className="h-8 w-8 rounded-lg mr-2"
+                            className="h-8 w-8 rounded-lg mr-2 object-cover"
                           />
                         )}
                         {artist.name}
