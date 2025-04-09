@@ -22,11 +22,7 @@ const Esplora = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [shuffledSongs, setShuffledSongs] = useState([]);
   const [match, setMatch] = useState([]);
-
-  // Dal contesto, ora abbiamo anche la possibilità di impostare la playlist corrente e l'indice della traccia selezionata
-  const { nowPlaying, setNowPlaying, setPlaylist, setCurrentIndex, setAudio } =
-    usePlayer();
-
+  const [dailyCovers, setDailyCovers] = useState([]);
   const covers = [
     { id: 1, img: "/src/assets/PLAYLISTS/P1.jpeg" },
     { id: 2, img: "/src/assets/PLAYLISTS/P2.jpeg" },
@@ -39,6 +35,40 @@ const Esplora = () => {
     { id: 9, img: "/src/assets/PLAYLISTS/P9.jpeg" },
     { id: 10, img: "/src/assets/PLAYLISTS/P10.jpeg" },
   ];
+
+  // Funzione semplice per generare un numero casuale basato sul seed
+  function seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
+  // Funzione per mescolare un array con un seed dato
+  function shuffleArray(array, seed) {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+      // Usa il seed combinato con l'indice per ottenere vari valori casuali
+      const randomValue = seededRandom(seed + i);
+      const j = Math.floor(randomValue * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+  useEffect(() => {
+    // Crea un seed basato sulla data nel formato YYYYMMDD
+    const today = new Date();
+    const seed =
+      parseInt(
+        `${today.getFullYear()}${("0" + (today.getMonth() + 1)).slice(-2)}${(
+          "0" + today.getDate()
+        ).slice(-2)}`
+      ) || new Date().getTime(); // fallback
+    const shuffled = shuffleArray(covers, seed);
+    setDailyCovers(shuffled);
+  }, []);
+
+  // Dal contesto, ora abbiamo anche la possibilità di impostare la playlist corrente e l'indice della traccia selezionata
+  const { nowPlaying, setNowPlaying, setPlaylist, setCurrentIndex, setAudio } =
+    usePlayer();
 
   useEffect(() => {
     dispatch(getGeneri());
@@ -179,7 +209,7 @@ const Esplora = () => {
               <div className="mx-auto grid grid-cols-2 md:grid-cols-3">
                 {match &&
                   match?.map((genere, id) => {
-                    const cover = covers[id];
+                    const cover = dailyCovers[id];
                     return (
                       <Dialog key={genere?.id}>
                         <DialogTrigger

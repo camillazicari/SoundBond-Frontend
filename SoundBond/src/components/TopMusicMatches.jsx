@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { Card } from "../../animations/Card";
-import BondSpinner from "./BondSpinner";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUtenti } from "../redux/actions/account.js";

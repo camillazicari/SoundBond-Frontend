@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import TopMusicMatches from "./TopMusicMatches";
 import { useEffect } from "react";
 import { getUtenteLoggato } from "@/redux/actions/account";
+import RecommendedPlaylists from "./RecommendedPlaylists";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const Home = () => {
       </Card>
 
       <TopMusicMatches />
+      <RecommendedPlaylists />
     </div>
   ) : (
     <BondSpinner />
