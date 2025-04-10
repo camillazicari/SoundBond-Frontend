@@ -180,7 +180,7 @@ const Esplora = () => {
                         </DialogTrigger>
                         <DialogContent
                           aria-label={`Playlist ${genere?.name}`}
-                          className="grid grid-cols-1 rounded-lg p-2"
+                          className="grid grid-cols-1 p-2"
                           style={{
                             borderColor: "rgba(184, 73, 214, 0.5)",
                             backgroundColor: "rgba(12, 5, 18, 0.5)",
@@ -191,13 +191,20 @@ const Esplora = () => {
                           <DialogDescription className="text-lg font-bold text-center text-[#b849d6]">
                             Il meglio di "{genere?.name}"
                           </DialogDescription>
-                          <div className="h-130 overflow-auto">
+                          <div className="h-140 overflow-auto">
                             {songs[selectedIndex]?.length > 0 ? (
                               <div className="grid grid-cols-1 gap-2 ">
                                 {songs[selectedIndex]?.map((song, j) => (
                                   <div
                                     key={j}
-                                    className="py-1.5 shadow flex items-center justify-between hoverBrani rounded-lg px-3"
+                                    className="py-1.5 shadow flex items-center justify-between hoverBrani rounded-lg px-3 cursor-pointer"
+                                    onClick={() =>
+                                      handleSongSelect(
+                                        song,
+                                        j,
+                                        songs[selectedIndex]
+                                      )
+                                    }
                                   >
                                     <div className="flex items-center w-[80%]">
                                       <p className="w-[30px]">{j + 1}.</p>
@@ -253,9 +260,7 @@ const Esplora = () => {
                                 ))}
                               </div>
                             ) : (
-                              <p className="text-white">
-                                Nessun brano disponibile.
-                              </p>
+                              <p>Nessun brano disponibile.</p>
                             )}
                           </div>
                         </DialogContent>
@@ -265,7 +270,14 @@ const Esplora = () => {
               </div>
             </>
           ) : (
-            <p className="text-center text-white">Nessun genere trovato.</p>
+            <div>
+              <p className="text-center text-lg">
+                Wow che gusti ricercati... persino l'algoritmo si è arreso.
+              </p>
+              <p className="text-center">
+                Prova ad aggiungere altri generi nelle impostazioni.
+              </p>
+            </div>
           )}
         </div>
       )}

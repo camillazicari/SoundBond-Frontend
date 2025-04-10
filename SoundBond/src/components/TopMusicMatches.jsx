@@ -35,7 +35,7 @@ const TopMusicMatches = () => {
               <Card
                 onClick={() => navigate("/connessioni")}
                 key={utente.id}
-                className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg  gap-5 items-center"
+                className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg  gap-5 items-center cursor-pointer"
               >
                 <div className="flex items-center gap-x-4">
                   <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">

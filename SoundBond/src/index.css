@@ -6,10 +6,10 @@
   scroll-behavior: smooth;
 }
 body {
-  color: #f7ebfc !important;
   background-color: #0c0512;
   line-height: 1 !important;
   box-sizing: border-box;
+  color: #f7ebfc !important;
 }
 
 .Errors {
@@ -621,8 +621,6 @@ body {
 
 input[type="range"].time {
   -webkit-appearance: none;
-  width: 90%;
-  height: 6px;
   background: #444;
   border-radius: 3px;
   transition: background 0.2s ease;
@@ -717,7 +715,7 @@ input[type="range"].time {
 
 .timetext {
   color: white;
-  font-size: 8px;
+  font-size: 12px;
   position: absolute;
 }
 

@@ -117,7 +117,7 @@ const Player = () => {
         audio === null
           ? "hidden"
           : isHidden
-          ? "fixed bottom-[-11%] left-0 right-0 z-50 mx-2"
+          ? "fixed bottom-[-10.5%] left-0 right-0 z-50 mx-2"
           : "fixed bottom-0 left-0 right-0 z-50 mx-2"
       }`}
     >

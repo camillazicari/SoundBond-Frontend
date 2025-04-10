@@ -181,7 +181,7 @@ const Connessioni = () => {
             onClick={() => setFilter("low")}
             className={`text-sm sm:text-base rounded-full 2xl:text-2xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold ${
               filter === "low"
-                ? "buttonGradient"
+                ? "buttonGradient2"
                 : "bg-purple-500/10 hover:bg-purple-500/20"
             }`}
           >
@@ -257,13 +257,13 @@ const Connessioni = () => {
 
       <div>
         {filteredMatches && filteredMatches.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-6">
             {filteredMatches.map((match) => (
               <Card
                 key={match.user?.id}
-                className="py-3 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center"
+                className="py-3 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center"
               >
-                <div className="flex justify-between items-center p-5">
+                <div className="flex justify-between items-center p-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#d489e9]">
                       <AvatarImage
@@ -299,7 +299,7 @@ const Connessioni = () => {
                   ata-scroll-section="false"
                 >
                   <div className="grid grid-cols-1 place-items-center">
-                    <p className="text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold">
+                    <p className="text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold bioColorata">
                       Artisti:
                     </p>
                     <div className="flex justify-center items-center">
@@ -333,8 +333,8 @@ const Connessioni = () => {
                         ))}
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 place-items-center">
-                    <p className="mt-4 text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl font-semibold">
+                  <div className="grid grid-cols-1 place-items-center my-5">
+                    <p className="text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl font-semibold bioColorata">
                       Brani:
                     </p>
                     <div className="w-[90%] max-h-40 sm:max-h-50 lg:max-h-30 overflow-auto">
@@ -343,13 +343,13 @@ const Connessioni = () => {
                           return (
                             <div
                               key={brano.id}
-                              className="py-1 px-3 shadow flex items-center justify-between hoverBrani rounded-lg"
+                              className="py-1 shadow flex items-center justify-between rounded-lg"
                             >
                               <div className="flex items-center w-[80%]">
                                 <img
                                   src={brano?.img}
                                   alt="cover canzone"
-                                  className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3 object-cover"
+                                  className="rounded-full h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3 object-cover"
                                 />
                                 <div>
                                   <p className="font-semibold w-[100%] xl:text-lg 2xl:text-lg">
@@ -399,10 +399,10 @@ const Connessioni = () => {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 place-items-center">
-                    <p className="mt-4 text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold">
+                    <p className="mt-4 text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold bioColorata">
                       Generi:
                     </p>
-                    <div className="grid grid-cols-5 place-items-center mx-1 gap-x-1 gap-y-2">
+                    <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-2 w-[80%] h-12">
                       {match.user?.generi &&
                         match.user?.generi?.map((genere) => {
                           return (
@@ -424,8 +424,8 @@ const Connessioni = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center pt-10">
-                  <button className=" bg-[#b849d6] px-5 py-2 rounded-md hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg 2xl:text-2xl">
+                <div className="flex justify-center pt-10 pb-8">
+                  <button className=" bg-[#b849d6] px-5 py-2 rounded-md hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl">
                     Connetti
                   </button>
                 </div>
