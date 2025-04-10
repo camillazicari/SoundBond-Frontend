@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useContext, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const PlayerContext = createContext();
 
@@ -7,6 +8,17 @@ export const PlayerProvider = ({ children }) => {
   const [nowPlaying, setNowPlaying] = useState(null); // Traccia corrente
   const [audio, setAudio] = useState(null); // Istanza Audio
   const [isPlaying, setIsPlaying] = useState(false); // Stato di riproduzione
+  const userLogged = useSelector((state) => state.account.userLogged);
+
+  useEffect(() => {
+    if (userLogged === null) {
+      setNowPlaying(null);
+      setIsPlaying(false);
+      setAudio(null);
+      setPlaylist([]);
+      setCurrentIndex(0);
+    }
+  }, [userLogged]);
 
   // Nuove variabili per gestire la playlist corrente
   const [playlist, setPlaylist] = useState([]);

@@ -47,7 +47,6 @@ const RecommendedPlaylists = () => {
         const found = genres?.find((g) =>
           g.name.toLowerCase().includes(genere.nome.toLowerCase())
         );
-        if (!found) console.log(`Nessuna corrispondenza per: ${genere.nome}`);
         return found;
       })
       .filter(Boolean);

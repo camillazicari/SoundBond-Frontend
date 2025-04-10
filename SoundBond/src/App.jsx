@@ -23,6 +23,7 @@ import Connessioni from "./components/Connessioni";
 import Esplora from "./components/Esplora";
 import { getUtenteLoggato } from "./redux/actions/account";
 import Player from "./components/Player";
+import { PlayerProvider } from "./context/PlayerContext";
 
 function App() {
   const dispatch = useDispatch();

@@ -250,7 +250,7 @@ const Player = () => {
           type="range"
           min="0"
           max="100"
-          value={progress}
+          value={isNaN(progress) ? 0 : progress}
           onChange={handleSeek}
           style={{ "--progress": `${progress}%` }}
         />
