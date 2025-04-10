@@ -1,23 +1,11 @@
 import { MarqueeDemo } from "./MarqueeDemo";
-import "locomotive-scroll/dist/locomotive-scroll.css";
-import LocomotiveScroll from "locomotive-scroll";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Footer } from "./Footer";
 import { Rate } from "antd";
 
 const Feedback = () => {
   const scrollRef = useRef(null);
 
-  useEffect(() => {
-    const scrollInstance = new LocomotiveScroll({
-      el: scrollRef.current,
-      smooth: true,
-    });
-
-    return () => {
-      scrollInstance.destroy();
-    };
-  }, []);
   return (
     <div ref={scrollRef} className="scroll-container fade-in">
       <section className="h-[90vh] flex flex-col justify-center gap-16">
