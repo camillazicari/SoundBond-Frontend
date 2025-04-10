@@ -19,7 +19,7 @@ const TopMusicMatches = () => {
     <div>
       <div className=" flex justify-between mx-4 xxl:mx-2 my-2">
         <h2 className="font-bold text-xl sm:text-2xl lg:text-3xl">
-          I tuoi migliori match musicali
+          Potenziali match musicali
         </h2>
         <button
           className=" cursor-pointer"
@@ -33,10 +33,11 @@ const TopMusicMatches = () => {
           utenti.slice(0, 4).map((utente) => {
             return (
               <Card
+                onClick={() => navigate("/connessioni")}
                 key={utente.id}
                 className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg  gap-5 items-center"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-x-4">
                   <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
                     <AvatarImage
                       src={utente.profilo?.immagine}
@@ -55,9 +56,6 @@ const TopMusicMatches = () => {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm md:text-sm lg:text-base bioColorata text-center mt-1 lg:mt-0">
-                  1 artista in comune, 2 generi in comune
-                </p>
                 <div className="grid grid-cols-2 gap-5 ">
                   <div className="grid grid-cols-1 place-items-center">
                     <p className="my-4 text-xs sm:text-sm md:text-base">

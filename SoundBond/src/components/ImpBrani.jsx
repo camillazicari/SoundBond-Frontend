@@ -226,7 +226,7 @@ const ImpBrani = () => {
           }}
         >
           <DialogTrigger asChild>
-            <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center">
+            <button className="bg-[#b849d6] hover:bg-[#a43bbe] py-1.5 px-4 rounded-md flex items-center transition-colors">
               <Plus size={18} className="mr-2" /> Aggiungi
             </button>
           </DialogTrigger>

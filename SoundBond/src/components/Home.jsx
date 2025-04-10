@@ -40,7 +40,7 @@ const Home = () => {
             Scopri nuova musica
           </button>
           <button
-            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient2 font-semibold"
+            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient font-semibold"
             onClick={() => navigate("/connessioni")}
           >
             Trova nuove connessioni

@@ -7,30 +7,30 @@ export const calculateCompatibility = (user1, user2) => {
   // Compatibilità generi (60% del totale)
   const genreWeight = 0.6;
   // Estrai il nome per ogni genere, invece che l'oggetto intero
-  const user1Generi = user1.generi.map((genre) => genre.nome.trim().toLowerCase());
-  const user2Generi = user2.generi.map((genre) => genre.nome.trim().toLowerCase());
-  const commonGenres = user1Generi.filter((genre) =>
+  const user1Generi = user1.generi?.map((genre) => genre.nome.trim().toLowerCase());
+  const user2Generi = user2.generi?.map((genre) => genre.nome.trim().toLowerCase());
+  const commonGenres = user1Generi?.filter((genre) =>
     user2Generi.includes(genre)
   );
   const genreScore =
-    (commonGenres.length / Math.max(user1Generi.length, user2Generi.length)) *
+    (commonGenres?.length / Math.max(user1Generi?.length, user2Generi?.length)) *
     maxScore *
     genreWeight;
 
   // Compatibilità artisti (40% del totale)
   const artistWeight = 0.4;
-  const user1ArtistNames = user1.artisti.map((artist) =>
+  const user1ArtistNames = user1.artisti?.map((artist) =>
     artist.nome.trim().toLowerCase()
   );
-  const user2ArtistNames = user2.artisti.map((artist) =>
+  const user2ArtistNames = user2.artisti?.map((artist) =>
     artist.nome.trim().toLowerCase()
   );
-  const commonArtists = user1ArtistNames.filter((nome) =>
+  const commonArtists = user1ArtistNames?.filter((nome) =>
     user2ArtistNames.includes(nome)
   );
   const artistScore =
-    (commonArtists.length /
-      Math.max(user1ArtistNames.length, user2ArtistNames.length)) *
+    (commonArtists?.length /
+      Math.max(user1ArtistNames?.length, user2ArtistNames?.length)) *
     maxScore *
     artistWeight;
 
@@ -60,7 +60,8 @@ export const calculateCompatibility = (user1, user2) => {
     score: Math.round(score),
     details: {
       commonGenres,
-      commonArtistCount: commonArtists.length,
+      commonArtistCount: commonArtists?.length,
+      commonArtists: commonArtists,
       //commonTrackCount: commonTracks.length,
     },
   };

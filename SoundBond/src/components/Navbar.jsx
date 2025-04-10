@@ -34,7 +34,7 @@ const Navbar = () => {
   }, [logout]);
 
   return (
-    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent relative z-30">
+    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-3 bg-transparent sticky top-0 z-30">
       <nav className="w-full mx-auto px-4 flex items-center justify-between bg-transparent">
         <Link to="/">
           <img
@@ -122,6 +122,23 @@ const Navbar = () => {
                 style={{ color: "#b849d6" }}
               >
                 Connessioni
+              </Link>
+            )}
+            {!isAuthorized ? (
+              <Link
+                to={"/accedi"}
+                className="font-medium text-sm lg:text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Bonders
+              </Link>
+            ) : (
+              <Link
+                to={"/"}
+                className="font-medium text-sm lg:text-base navText"
+                style={{ color: "#b849d6" }}
+              >
+                Bonders
               </Link>
             )}
             {(location.pathname === "/" ||

@@ -15,7 +15,7 @@ export function Footer() {
                 <img
                   src="src/assets/SoundBond/SoundBond (100 x 50 px).png"
                   alt=""
-                  className="w-1/2"
+                  className=" w-1/3 sm:w-1/2"
                 />
                 <span
                   className="text-xl font-semibold SoundBond"

@@ -73,7 +73,7 @@ const RecommendedPlaylists = () => {
             const shuff = shuffled[id];
             return (
               <div
-                className="m-3 xxl:mx-0 border-0 rounded-xl shadow-lg  gap-5 items-center"
+                className="m-3 xxl:mx-0 border-0 rounded-xl shadow-lg  gap-5 items-center cursor-pointer"
                 key={genere?.id}
                 onClick={() => navigate("/esplora")}
               >

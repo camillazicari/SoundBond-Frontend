@@ -582,18 +582,13 @@ body {
   transition: background-position 2s ease;
 }
 
-.buttonGradient:hover {
-  background-position: right;
-}
-
 .buttonGradient2 {
   background: linear-gradient(to right, #d489e9, #8a2e9d, #b849d6, #3d0d45);
   background-size: 300% 100%;
   background-position: left;
-  transition: background-position 2s ease;
 }
 
-.buttonGradient2:hover {
+.buttonGradient:hover {
   background-position: right;
 }
 

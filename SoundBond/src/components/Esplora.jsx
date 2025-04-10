@@ -213,7 +213,7 @@ const Esplora = () => {
                     return (
                       <Dialog key={genere?.id}>
                         <DialogTrigger
-                          className="my-2 place-items-center"
+                          className="my-2 place-items-center cursor-pointer"
                           onClick={() => setSelectedIndex(id)}
                         >
                           <div>
@@ -270,7 +270,7 @@ const Esplora = () => {
                                     }
                                     className="cursor-pointer"
                                   >
-                                    {nowPlaying?.id === song.id ? (
+                                    {nowPlaying?.id === song?.id ? (
                                       // Icona Pause se il brano è in riproduzione
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"

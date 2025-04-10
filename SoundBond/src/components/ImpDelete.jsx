@@ -41,7 +41,7 @@ const ImpDelete = () => {
           <AlertDialogTrigger asChild>
             <button
               variant="destructive"
-              className="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 py-2 px-4 rounded-md flex items-center"
+              className="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 py-2 px-4 rounded-md flex items-center transition-colors"
             >
               <Trash2 size={18} className="mr-2" /> Elimina profilo
             </button>
