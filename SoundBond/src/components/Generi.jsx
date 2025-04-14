@@ -23,7 +23,6 @@ const Generi = () => {
 
   const [buttons, setButtons] = useState([
     { id: "Pop", isLiked: false },
-    { id: "Hip Hop", isLiked: false },
     { id: "Rap", isLiked: false },
     { id: "Rock", isLiked: false },
     { id: "Dance", isLiked: false },
@@ -52,6 +51,7 @@ const Generi = () => {
     { id: "Brasiliana", isLiked: false },
     { id: "Indiana", isLiked: false },
     { id: "Asiatica", isLiked: false },
+    { id: "Africana", isLiked: false },
   ]);
 
   const handleLikeClick = (id) => {

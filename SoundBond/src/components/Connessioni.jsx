@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetUserMatches } from "./data/matchMaking.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getUtenteLoggato, getUtenti } from "@/redux/actions/account.js";
@@ -8,13 +7,31 @@ import BondSpinner from "./BondSpinner.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../../animations/Avatar";
 import Badge from "../../animations/Badge";
 import { usePlayer } from "../context/PlayerContext";
+import { getBonders } from "@/redux/actions/bonders.js";
+import {
+  deleteRichiesta,
+  getRichiesteInviate,
+  getRichiesteRicevute,
+  postRichiesta,
+} from "@/redux/actions/richieste.js";
 
 const Connessioni = () => {
   const user = useSelector((state) => state.account.userLogged);
+  const bonders = useSelector((state) => state.bonders.bonders);
+  const richiesteInviate = useSelector(
+    (state) => state.richieste.richiesteInviate
+  );
+  const richiesteRicevute = useSelector(
+    (state) => state.richieste.richiesteRicevute
+  );
   const matches = useGetUserMatches();
   const [filter, setFilter] = useState("all");
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+  const [hoverStates, setHoverStates] = useState({});
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
+
   const {
     nowPlaying,
     setNowPlaying,
@@ -71,28 +88,42 @@ const Connessioni = () => {
     }
   };
 
-  console.log(matches);
-
   useEffect(() => {
-    dispatch(getUtenteLoggato());
-    dispatch(getUtenti());
-  }, []);
+    const fetchData = async () => {
+      dispatch(getUtenteLoggato());
+      await Promise.all([
+        dispatch(getUtenti()),
+        dispatch(getBonders()),
+        dispatch(getRichiesteInviate()),
+        dispatch(getRichiesteRicevute()),
+      ]);
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const nonBonders = useMemo(() => {
+    if (!bonders || !matches) return [];
+
+    const bonderIds = new Set(bonders.map((bonder) => bonder.otherUser.id));
+
+    return matches.filter((match) => !bonderIds.has(match.user.id));
+  }, [bonders, matches]);
 
   const getFilteredMatches = () => {
-    if (!matches || matches.length === 0) return [];
+    if (!nonBonders || nonBonders.length === 0) return [];
 
     let filtered = [];
     if (filter === "all") {
-      filtered = matches;
+      filtered = nonBonders;
     } else if (filter === "high") {
-      filtered = matches.filter((match) => match.compatibility.score >= 70);
+      filtered = nonBonders.filter((match) => match.compatibility.score >= 70);
     } else if (filter === "medium") {
-      filtered = matches.filter(
+      filtered = nonBonders.filter(
         (match) =>
           match.compatibility.score >= 40 && match.compatibility.score < 70
       );
     } else if (filter === "low") {
-      filtered = matches.filter((match) => match.compatibility.score < 40);
+      filtered = nonBonders.filter((match) => match.compatibility.score < 40);
     }
 
     if (search) {
@@ -128,9 +159,24 @@ const Connessioni = () => {
 
   const filteredMatches = getFilteredMatches();
 
-  if (!matches || matches.length === 0) {
+  if (!filteredMatches || filteredMatches.length === 0) {
     return <BondSpinner />;
   }
+
+  const checkIfRequestSent = (userId) => {
+    return richiesteInviate?.some(
+      (req) =>
+        req.receiver.id === userId || (req.isTemp && req.receiver.id === userId)
+    );
+  };
+
+  const handleMouseEnter = (userId) => {
+    setHoverStates((prev) => ({ ...prev, [userId]: true }));
+  };
+
+  const handleMouseLeave = (userId) => {
+    setHoverStates((prev) => ({ ...prev, [userId]: false }));
+  };
 
   return (
     <div className="fade-in container mx-auto grid grid-cols-1 gap-y-6">
@@ -256,9 +302,9 @@ const Connessioni = () => {
       </div>
 
       <div>
-        {filteredMatches && filteredMatches.length > 0 ? (
+        {filteredMatches && user?.nome && filteredMatches.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-6">
-            {filteredMatches.map((match) => (
+            {filteredMatches.slice(0, page * itemsPerPage).map((match) => (
               <Card
                 key={match.user?.id}
                 className="py-3 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center"
@@ -373,7 +419,7 @@ const Connessioni = () => {
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="40"
                                     height="40"
-                                    fill="#b849d6"
+                                    fill="currentColor"
                                     className="bi bi-pause-circle-fill"
                                     viewBox="0 0 16 16"
                                   >
@@ -425,12 +471,45 @@ const Connessioni = () => {
                 </div>
 
                 <div className="flex justify-center pt-10 pb-8">
-                  <button className=" bg-[#b849d6] px-5 py-2 rounded-md hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl">
-                    Connetti
-                  </button>
+                  {checkIfRequestSent(match.user?.id) ? (
+                    <button
+                      onMouseEnter={() => handleMouseEnter(match.user?.id)}
+                      onMouseLeave={() => handleMouseLeave(match.user?.id)}
+                      className="bg-[#732880] px-5 py-2 rounded-md hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      onClick={() => dispatch(deleteRichiesta(match.user?.id))}
+                    >
+                      {hoverStates[match.user?.id]
+                        ? "Annulla richiesta"
+                        : "Richiesta inviata"}
+                    </button>
+                  ) : richiesteRicevute?.some(
+                      (req) => req.sender.id === match.user?.id
+                    ) ? (
+                    <button
+                      className="bg-[#732880] px-5 py-2 rounded-md transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      disabled={true}
+                    >
+                      Da accettare
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#b849d6] px-5 py-2 rounded-md hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      onClick={() => {
+                        dispatch(postRichiesta(match.user?.id)),
+                          console.log(richiesteInviate);
+                      }}
+                    >
+                      Connetti
+                    </button>
+                  )}
                 </div>
               </Card>
             ))}
+            {page * itemsPerPage < filteredMatches.length && (
+              <button onClick={() => setPage((p) => p + 1)}>
+                Carica altro
+              </button>
+            )}
           </div>
         ) : (
           <p className="text-center text-lg font-extrabold">

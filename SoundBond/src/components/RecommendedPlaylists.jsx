@@ -1,16 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
-import { Card } from "../../animations/Card";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getGeneri } from "@/redux/actions/generi";
 
 const RecommendedPlaylists = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const generi = useSelector((state) => state.generi.generi);
   const [genres, setGenres] = useState([]);
   const [match, setMatch] = useState([]);
+  const [shuffledCovers, setShuffledCovers] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setShuffledCovers([...covers].sort(() => Math.random() - 0.5));
+  }, []);
+
   const covers = [
     { id: 1, img: "/src/assets/PLAYLISTS/P1.jpeg" },
     { id: 2, img: "/src/assets/PLAYLISTS/P2.jpeg" },
@@ -23,12 +28,11 @@ const RecommendedPlaylists = () => {
     { id: 9, img: "/src/assets/PLAYLISTS/P9.jpeg" },
     { id: 10, img: "/src/assets/PLAYLISTS/P10.jpeg" },
   ];
-  const shuffled = [...covers].sort(() => Math.random() - 0.5);
 
   useEffect(() => {
     dispatch(getGeneri());
     fetchGenres();
-  }, []);
+  }, [dispatch]);
 
   const fetchGenres = async () => {
     try {
@@ -70,7 +74,7 @@ const RecommendedPlaylists = () => {
       <div className="grid grid-cols-2 md:grid-cols-3">
         {match &&
           match?.map((genere, id) => {
-            const shuff = shuffled[id];
+            const shuff = shuffledCovers[id];
             return (
               <div
                 className="m-3 xxl:mx-0 border-0 rounded-xl shadow-lg  gap-5 items-center cursor-pointer"

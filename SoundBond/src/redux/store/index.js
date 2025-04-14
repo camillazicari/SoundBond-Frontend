@@ -4,13 +4,17 @@ import generiReducer from "../reducers/generiReducer";
 import artistiReducer from "../reducers/artistiReducer";
 import braniReducer from "../reducers/braniReducer";
 import profiloReducer from "../reducers/profiloReducer";
+import richiesteReducer from "../reducers/richiesteReducer";
+import bondersReducer from "../reducers/bondersReducer";
 
 const mainReducer = combineReducers({
     account: accountReducer,
     generi: generiReducer,
     artisti: artistiReducer,
     brani: braniReducer,
-    profilo: profiloReducer
+    profilo: profiloReducer,
+    richieste: richiesteReducer,
+    bonders: bondersReducer
 });
 
 const store = configureStore({

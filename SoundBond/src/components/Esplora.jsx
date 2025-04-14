@@ -52,6 +52,8 @@ const Esplora = () => {
     setGeneriId(matches.map((m) => m.id));
   }, [genres, generi]);
 
+  console.log(genres);
+
   useEffect(() => {
     if (generiId.length === 0) return;
 
@@ -60,9 +62,6 @@ const Esplora = () => {
         const giornoDellAnno = Math.floor(
           (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
         );
-        const step = 6;
-        const start = giornoDellAnno * step;
-        const end = start + 5;
 
         const results = await Promise.all(
           generiId.map(async (id) => {
@@ -71,16 +70,28 @@ const Esplora = () => {
             );
             if (!res.ok) throw new Error(`Errore artisti genre_id: ${id}`);
             const data = await res.json();
-            const artists =
-              data.data?.length > 0
-                ? data.data.length >= end
-                  ? data.data.slice(start, end)
-                  : data.data.slice(0, 5)
-                : data.data.slice(0, 5);
+            const allArtists = data.data || [];
 
+            if (allArtists.length === 0) return [];
+
+            // Numero di gruppi distinti possibili
+            const groupsCount = Math.ceil(allArtists.length / 3);
+
+            // Seleziona il gruppo del giorno in modo circolare
+            const groupIndex = giornoDellAnno % groupsCount;
+            const startIdx = groupIndex * 3;
+            let artists = allArtists.slice(startIdx, startIdx + 5);
+
+            // Se siamo alla fine dell'array e ne mancano, prendi i primi per completare
+            if (artists.length < 3 && allArtists.length > 3) {
+              const remaining = 3 - artists.length;
+              artists = [...artists, ...allArtists.slice(0, remaining)];
+            }
+            console.log(artists);
             return artists;
           })
         );
+
         setArtists(results);
       } catch (err) {
         console.error("Errore artisti:", err);
@@ -129,8 +140,10 @@ const Esplora = () => {
     } else {
       // Imposta la playlist corrente nel contesto
       setPlaylist(currentPlaylist);
+
       // Imposta l'indice del brano selezionato
       setCurrentIndex(index);
+
       // Imposta la traccia corrente
       setNowPlaying(song);
     }

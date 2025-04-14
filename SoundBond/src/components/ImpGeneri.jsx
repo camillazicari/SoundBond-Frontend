@@ -27,7 +27,6 @@ const ImpGeneri = () => {
   const [genres, setGenres] = useState([]);
   const generiList = [
     "Pop",
-    "Hip Hop",
     "Rap",
     "Rock",
     "Dance",
@@ -56,6 +55,7 @@ const ImpGeneri = () => {
     "Brasiliana",
     "Indiana",
     "Asiatica",
+    "Africana",
   ];
 
   useEffect(() => {
