@@ -34,7 +34,14 @@ const MediaItem = React.memo(({ item, type }) => (
 
 // Componente memoizzato per la card di richiesta ricevuta
 const RequestCard = React.memo(
-  ({ richiesta, match, onAccept, onReject, isLoading }) => {
+  ({
+    richiesta,
+    match,
+    onAccept,
+    onReject,
+    isAcceptLoading,
+    isRejectLoading,
+  }) => {
     const artisti = useMemo(
       () => richiesta.sender?.artisti || [],
       [richiesta.sender]
@@ -46,7 +53,7 @@ const RequestCard = React.memo(
 
     return (
       <div className="flex justify-center px-4">
-        <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center cursor-pointer w-full">
+        <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center w-full">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-4">
               <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
@@ -72,22 +79,77 @@ const RequestCard = React.memo(
             </div>
             <div className="flex items-center justify-center gap-3">
               <button
-                disabled={isLoading}
+                disabled={isAcceptLoading || isRejectLoading}
                 className={`text-[#f7ebfc] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold buttonGradient ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  isAcceptLoading || isRejectLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
                 onClick={() => onAccept(richiesta.sender?.id)}
               >
-                {isLoading ? "PROCESSANDO..." : "ACCETTA"}
+                {isAcceptLoading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-[#f7ebfc]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 0116 0"
+                      ></path>
+                    </svg>
+                  </span>
+                ) : (
+                  "ACCETTA"
+                )}
               </button>
+
               <button
-                disabled={isLoading}
+                disabled={isAcceptLoading || isRejectLoading}
                 className={`text-[#f7ebfc] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold bg-red-600 hover:bg-red-700 transition-colors ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  isAcceptLoading || isRejectLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
                 onClick={() => onReject(richiesta.sender?.id)}
               >
-                RIFIUTA
+                {isRejectLoading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-[#f7ebfc]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 0116 0"
+                      ></path>
+                    </svg>
+                  </span>
+                ) : (
+                  "RIFIUTA"
+                )}
               </button>
             </div>
           </div>
@@ -148,7 +210,7 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
 
   return (
     <div className="flex justify-center px-4">
-      <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center cursor-pointer w-full">
+      <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-x-4">
             <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
@@ -164,8 +226,8 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
             </Avatar>
             <div>
               <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f7ebfc]">
-                {richiesta.receiver?.nome.toUpperCase()}{" "}
-                {richiesta.receiver?.cognome.toUpperCase()}
+                {richiesta.receiver?.nome?.toUpperCase()}{" "}
+                {richiesta.receiver?.cognome?.toUpperCase()}
               </p>
               <p className="text-xs sm:text-sm lg:text-base bioColorata">
                 {richiesta.receiver?.profilo?.bio}
@@ -259,59 +321,91 @@ const Richieste = () => {
 
   // Gestione accettazione richiesta
   const handleAccept = useCallback(
-    async (senderId) => {
-      setLoadingStates((prev) => ({ ...prev, [senderId]: true }));
+    (senderId) => {
+      // Imposta solo lo stato di caricamento per l'accettazione di questo specifico sender
+      setLoadingStates((prev) => ({
+        ...prev,
+        [senderId]: { ...prev[senderId], accept: true },
+      }));
 
-      try {
-        // Optimistic update
-        setLocalRequests((prev) => ({
-          ...prev,
-          ricevute:
-            prev.ricevute?.filter((req) => req.sender.id !== senderId) ||
-            richiesteRicevute?.filter((req) => req.sender.id !== senderId),
-        }));
+      const minDisplayTime = 800;
+      const startTime = Date.now();
 
-        dispatch(postBonder(senderId));
-        dispatch(getRichiesteRicevute());
-      } catch (error) {
-        console.error("Error accepting request:", error);
-        // Rollback in caso di errore
-        setLocalRequests((prev) => ({ ...prev, ricevute: richiesteRicevute }));
-      } finally {
-        setLoadingStates((prev) => ({ ...prev, [senderId]: false }));
-      }
+      dispatch(postBonder(senderId))
+        .then(() => {
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
+
+          setTimeout(() => {
+            dispatch(getRichiesteRicevute());
+            setLocalRequests((prev) => ({
+              ...prev,
+              ricevute:
+                prev.ricevute?.filter((req) => req.sender.id !== senderId) ||
+                richiesteRicevute?.filter((req) => req.sender.id !== senderId),
+            }));
+            // Resetta solo lo stato di caricamento per l'accettazione
+            setLoadingStates((prev) => ({
+              ...prev,
+              [senderId]: { ...prev[senderId], accept: false },
+            }));
+          }, remainingTime);
+        })
+        .catch((error) => {
+          console.error("Error accepting request:", error);
+          setLoadingStates((prev) => ({
+            ...prev,
+            [senderId]: { ...prev[senderId], accept: false },
+          }));
+        });
     },
     [dispatch, richiesteRicevute]
   );
 
-  useEffect(() => {
-    console.log("Richieste inviate:", richiesteInviate);
-    console.log("Richieste ricevute:", richiesteRicevute);
-  }, [richiesteInviate, richiesteRicevute]);
-
   // Gestione rifiuto richiesta
   const handleReject = useCallback(
-    async (senderId) => {
-      setLoadingStates((prev) => ({ ...prev, [senderId]: true }));
+    (senderId) => {
+      // Imposta solo lo stato di caricamento per il rifiuto di questo specifico sender
+      setLoadingStates((prev) => ({
+        ...prev,
+        [senderId]: { ...prev[senderId], reject: true },
+      }));
 
-      try {
-        // Optimistic update
-        setLocalRequests((prev) => ({
-          ...prev,
-          ricevute:
-            prev.ricevute?.filter((req) => req.sender.id !== senderId) ||
-            richiesteRicevute?.filter((req) => req.sender.id !== senderId),
-        }));
+      const minDisplayTime = 800;
+      const startTime = Date.now();
 
-        dispatch(deleteRichiesta(senderId));
-        dispatch(getRichiesteRicevute());
-      } catch (error) {
-        console.error("Error rejecting request:", error);
-        // Rollback in caso di errore
-        setLocalRequests((prev) => ({ ...prev, ricevute: richiesteRicevute }));
-      } finally {
-        setLoadingStates((prev) => ({ ...prev, [senderId]: false }));
-      }
+      // Esegui la chiamata API
+      dispatch(deleteRichiesta(senderId))
+        .then(() => {
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
+
+          setTimeout(() => {
+            dispatch(getRichiesteRicevute());
+            setLocalRequests((prev) => ({
+              ...prev,
+              ricevute:
+                prev.ricevute?.filter((req) => req.sender.id !== senderId) ||
+                richiesteRicevute?.filter((req) => req.sender.id !== senderId),
+            }));
+            // Resetta solo lo stato di caricamento per il rifiuto
+            setLoadingStates((prev) => ({
+              ...prev,
+              [senderId]: { ...prev[senderId], reject: false },
+            }));
+          }, remainingTime);
+        })
+        .catch((error) => {
+          console.error("Error rejecting request:", error);
+          setLocalRequests((prev) => ({
+            ...prev,
+            ricevute: richiesteRicevute,
+          }));
+          setLoadingStates((prev) => ({
+            ...prev,
+            [senderId]: { ...prev[senderId], reject: false },
+          }));
+        });
     },
     [dispatch, richiesteRicevute]
   );
@@ -335,7 +429,9 @@ const Richieste = () => {
   const renderRequestItem = useCallback(
     (richiesta) => {
       const match = matches.find((m) => m.user?.id === richiesta.sender?.id);
-      const isLoading = loadingStates[richiesta.sender?.id];
+      const senderId = richiesta.sender?.id;
+      const isAcceptLoading = loadingStates[senderId]?.accept;
+      const isRejectLoading = loadingStates[senderId]?.reject;
 
       return (
         <RequestCard
@@ -344,7 +440,8 @@ const Richieste = () => {
           match={match}
           onAccept={handleAccept}
           onReject={handleReject}
-          isLoading={isLoading}
+          isAcceptLoading={isAcceptLoading}
+          isRejectLoading={isRejectLoading}
         />
       );
     },

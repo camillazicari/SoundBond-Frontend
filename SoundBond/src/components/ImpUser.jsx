@@ -174,15 +174,6 @@ const ImpUser = () => {
                   </div>
                 </div>
               </div>
-
-              {!editBio && (
-                <button
-                  onClick={() => setEditBio(true)}
-                  className="hover:bg-[#732880]/30 p-2 rounded-2xl"
-                >
-                  <Edit2 size={18} />
-                </button>
-              )}
             </div>
           </Card>
           <Card className="border-0 mt-5">
@@ -193,6 +184,14 @@ const ImpUser = () => {
               >
                 La tua biografia
               </h3>
+              {!editBio && (
+                <button
+                  onClick={() => setEditBio(true)}
+                  className="hover:bg-[#732880]/30 p-2 rounded-2xl"
+                >
+                  <Edit2 size={18} />
+                </button>
+              )}
             </div>
             {editBio ? (
               <div>

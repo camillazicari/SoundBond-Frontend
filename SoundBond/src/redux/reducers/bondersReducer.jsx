@@ -17,6 +17,10 @@ const bondersReducer = (state = initialState, action) => {
         bonders: action.payload,
       };
 
+    case "LOGOUT": {
+      return initialState;
+    }
+
     default:
       return state;
   }

@@ -17,6 +17,10 @@ const braniReducer = (state = initialState, action) => {
         brani: action.payload,
       };
 
+    case "LOGOUT": {
+      return initialState;
+    }
+
     default:
       return state;
   }

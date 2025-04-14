@@ -22,14 +22,13 @@ const accountReducer = (state = initialState, action) => {
         ...state,
         loginSuccess: action.payload,
         logout: false,
+        isLoginError: "",
       };
 
     case "LOGOUT":
       return {
-        ...state,
-        loginSuccess: false,
-        userLogged: null,
-        logout: action.payload,
+        ...initialState,
+        logout: true,
       };
 
     case "REGISTER_ERROR":

@@ -52,8 +52,6 @@ const Esplora = () => {
     setGeneriId(matches.map((m) => m.id));
   }, [genres, generi]);
 
-  console.log(genres);
-
   useEffect(() => {
     if (generiId.length === 0) return;
 
@@ -87,7 +85,6 @@ const Esplora = () => {
               const remaining = 3 - artists.length;
               artists = [...artists, ...allArtists.slice(0, remaining)];
             }
-            console.log(artists);
             return artists;
           })
         );

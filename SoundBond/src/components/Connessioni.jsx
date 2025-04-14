@@ -14,6 +14,7 @@ import {
   getRichiesteRicevute,
   postRichiesta,
 } from "@/redux/actions/richieste.js";
+import { useNavigate } from "react-router-dom";
 
 const Connessioni = () => {
   const user = useSelector((state) => state.account.userLogged);
@@ -31,6 +32,7 @@ const Connessioni = () => {
   const [hoverStates, setHoverStates] = useState({});
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   const {
     nowPlaying,
@@ -372,7 +374,7 @@ const Connessioni = () => {
                                 {artista.nome?.slice(0, 2).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
-                            <p className="text-[11px] sm:text-[13px] md:text-[15px] 2xl:text-lg 2xl:leading-tight text-center mt-1 h-10 sm:h-11 md:h-12 2xl:h-17 overflow-auto">
+                            <p className="text-[11px] sm:text-[13px] md:text-[15px] 2xl:text-lg 2xl:leading-tight text-center mt-1 h-10 sm:h-11 md:h-12 2xl:h-17 overflow-auto flex items-center justify-center">
                               {artista.nome}
                             </p>
                           </div>
@@ -470,12 +472,12 @@ const Connessioni = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center pt-10 pb-8">
+                <div className="flex justify-evenly pt-10 pb-8">
                   {checkIfRequestSent(match.user?.id) ? (
                     <button
                       onMouseEnter={() => handleMouseEnter(match.user?.id)}
                       onMouseLeave={() => handleMouseLeave(match.user?.id)}
-                      className="bg-[#732880] px-5 py-2 rounded-md hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      className="bg-[#732880] px-9 py-2 rounded-xl hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
                       onClick={() => dispatch(deleteRichiesta(match.user?.id))}
                     >
                       {hoverStates[match.user?.id]
@@ -486,14 +488,14 @@ const Connessioni = () => {
                       (req) => req.sender.id === match.user?.id
                     ) ? (
                     <button
-                      className="bg-[#732880] px-5 py-2 rounded-md transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      className="bg-[#732880] px-9 py-2 rounded-xl transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
                       disabled={true}
                     >
                       Da accettare
                     </button>
                   ) : (
                     <button
-                      className="bg-[#b849d6] px-5 py-2 rounded-md hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      className="bg-[#b849d6] px-9 py-2 rounded-xl hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
                       onClick={() => {
                         dispatch(postRichiesta(match.user?.id)),
                           console.log(richiesteInviate);
@@ -502,6 +504,23 @@ const Connessioni = () => {
                       Connetti
                     </button>
                   )}
+                  <button
+                    className="flex items-center justify-center cursor-pointer hover:bg-[#732880]/30 transition-all px-9 rounded-xl"
+                    onClick={() => navigate(`/dettagli/${match.user?.id}`)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="23"
+                      height="23"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                      className="me-2 bi bi-info-circle"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                    </svg>
+                    info
+                  </button>
                 </div>
               </Card>
             ))}

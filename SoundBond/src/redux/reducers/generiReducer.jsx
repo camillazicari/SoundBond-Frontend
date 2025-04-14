@@ -17,6 +17,10 @@ const generiReducer = (state = initialState, action) => {
         generi: action.payload,
       };
 
+    case "LOGOUT": {
+      return initialState;
+    }
+
     default:
       return state;
   }

@@ -17,6 +17,10 @@ const artistiReducer = (state = initialState, action) => {
         artisti: action.payload,
       };
 
+    case "LOGOUT": {
+      return initialState;
+    }
+
     default:
       return state;
   }

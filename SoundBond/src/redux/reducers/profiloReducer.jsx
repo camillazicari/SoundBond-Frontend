@@ -10,6 +10,10 @@ const profiloReducer = (state = initialState, action) => {
         profilo: action.payload,
       };
 
+    case "LOGOUT": {
+      return initialState;
+    }
+
     default:
       return state;
   }

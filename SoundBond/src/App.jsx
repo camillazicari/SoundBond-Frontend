@@ -24,6 +24,8 @@ import Esplora from "./components/Esplora";
 import { getUtenteLoggato } from "./redux/actions/account";
 import Player from "./components/Player";
 import Richieste from "./components/Richieste";
+import Bonders from "./components/Bonders";
+import Dettagli from "./components/Dettagli";
 
 function App() {
   const dispatch = useDispatch();
@@ -159,6 +161,24 @@ function App() {
             element={
               <PrivateRoute>
                 <Richieste />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/bonders"
+            element={
+              <PrivateRoute>
+                <Bonders />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/dettagli/:id"
+            element={
+              <PrivateRoute>
+                <Dettagli />
               </PrivateRoute>
             }
           />

@@ -71,7 +71,6 @@ export const deleteBonder = (id) => {
                 }
             );
             if (response.ok) {
-                dispatch(deleteRichiesta(id))
                 dispatch(getBonders());
             } else throw new Error("errore nella deleteBonder");
         } catch (error) {

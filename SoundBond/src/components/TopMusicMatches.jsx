@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMemo, memo } from "react";
 import { Card } from "../../animations/Card";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +71,7 @@ const UserCard = memo(({ utente, navigate }) => {
   );
 });
 
-const TopMusicMatches = () => {
+const TopMusicMatches = ({ currentUserId }) => {
   const utenti = useSelector((state) => state.account.users);
   const bonders = useSelector((state) => state.bonders.bonders);
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ const TopMusicMatches = () => {
     if (!bonders || !utenti) return [];
     const bonderIds = new Set(bonders.map((bonder) => bonder.otherUser?.id));
     return utenti.filter((match) => !bonderIds.has(match.user?.id));
-  }, [bonders, utenti]);
+  }, [bonders, utenti, currentUserId]);
 
   const displayedUsers = useMemo(
     () => (Array.isArray(nonBonders) ? nonBonders.slice(0, 4) : []),

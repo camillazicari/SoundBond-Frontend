@@ -111,8 +111,10 @@ const Navbar = () => {
 
         <div className="hidden md:flex flex-1 justify-end items-center space-x-4 lg:space-x-6">
           {!isLoggedIn ? (
-            <Link to="/accedi" onClick={() => setMenuOpen(false)}>
+            <div>
               <GradientText
+                to="/accedi"
+                onClick={() => setMenuOpen(false)}
                 colors={["#d489e9", "#b067a3", "#eda7f2", "#8d4a8c", "#f4caf9"]}
                 animationSpeed={5}
                 showBorder={true}
@@ -120,7 +122,7 @@ const Navbar = () => {
               >
                 LOGIN
               </GradientText>
-            </Link>
+            </div>
           ) : (
             <>
               {NotificationBell}
