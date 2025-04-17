@@ -36,7 +36,7 @@ export default function NavAvatar() {
     <div className="flex items-center">
       <Dropdown placement="bottom-center">
         <DropdownTrigger>
-          <div className="border-2 border-[#b849d6] rounded-full">
+          <div className="border-2 border-[#ad42ff] rounded-full">
             {profilo && profilo.immagine ? (
               <img
                 src={profilo.immagine}
@@ -54,9 +54,8 @@ export default function NavAvatar() {
         </DropdownTrigger>
         <DropdownMenu
           aria-label="User Actions"
-          className="flex justify-center p-2 border-[#b849d6] border-[0.5px] rounded-lg"
+          className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
           style={{
-            borderColor: "rgba(184, 73, 214, 0.5)",
             backgroundColor: "rgba(12, 5, 18, 0.5)",
             backdropFilter: "blur(10px)",
           }}
@@ -64,7 +63,7 @@ export default function NavAvatar() {
           <DropdownItem
             key="profile"
             textValue={user ? `@${user.nomeUtente}` : "@Guest"}
-            className="gap-2 border-b-[0.5px] border-[#b849d6] flex justify-center text-center"
+            className="gap-2 border-b-[0.5px] border-[#ad42ff] flex justify-center text-center"
           >
             {user ? (
               <p className="font-bold text-sm">@{user.nomeUtente}</p>
@@ -73,7 +72,7 @@ export default function NavAvatar() {
             )}
           </DropdownItem>
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6] mt-1 flex items-center gap-2"
+            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff] mt-1 flex items-center gap-2"
             key="settings"
             textValue="Settings"
           >
@@ -93,7 +92,26 @@ export default function NavAvatar() {
             </Link>
           </DropdownItem>
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6]"
+            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff]"
+            key="bonders"
+            textValue="bonders"
+          >
+            <Link to={"/bonders"} className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                className="bi bi-heart"
+                viewBox="0 0 16 16"
+              >
+                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+              </svg>
+              <p>Bonders</p>
+            </Link>
+          </DropdownItem>
+          <DropdownItem
+            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff]"
             key="feedback"
             textValue="Feedback"
           >
@@ -103,34 +121,13 @@ export default function NavAvatar() {
                 width="20"
                 height="20"
                 fill="currentColor"
-                className="bi bi-chat-square-text"
+                className="bi bi-star-half"
                 viewBox="0 0 16 16"
               >
-                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                <path d="M5.354 5.119 7.538.792A.52.52 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.54.54 0 0 1 16 6.32a.55.55 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.5.5 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.6.6 0 0 1 .085-.302.51.51 0 0 1 .37-.245zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.56.56 0 0 1 .162-.505l2.907-2.77-4.052-.576a.53.53 0 0 1-.393-.288L8.001 2.223 8 2.226z" />
               </svg>
               <p>Feedback</p>
             </Link>
-          </DropdownItem>
-          <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#b849d6]"
-            key="help"
-            textValue="Help"
-          >
-            <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                className="bi bi-question-circle"
-                viewBox="0 0 16 16"
-              >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94" />
-              </svg>
-              <p>Help</p>
-            </div>
           </DropdownItem>
 
           <DropdownItem

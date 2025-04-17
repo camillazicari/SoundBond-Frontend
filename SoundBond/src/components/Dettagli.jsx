@@ -170,7 +170,7 @@ const Dettagli = () => {
                 {user?.artisti?.map((artist) => (
                   <div
                     key={artist?.id}
-                    className="bg-gradient-to-br from-[#1e0a23] to-[#3d0d45] rounded-lg overflow-hidden group"
+                    className="bg-gradient-to-br from-[#1e0a23] to-[#5d1093] rounded-lg overflow-hidden group"
                   >
                     <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center">
                       {artist?.img ? (
@@ -255,7 +255,7 @@ const Dettagli = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           width="40"
                           height="40"
-                          fill="#b849d6"
+                          fill="#ad42ff"
                           className="bi bi-play-circle-fill"
                           viewBox="0 0 16 16"
                         >

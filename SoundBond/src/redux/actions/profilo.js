@@ -1,7 +1,7 @@
 export const getProfilo = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.65:5220/api/Profilo", {
+            const response = await fetch("http://192.168.1.59:5220/api/Profilo", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export const putProfilo = (immagine, bio) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                `http://192.168.1.65:5220/api/Profilo`, {
+                `http://192.168.1.59:5220/api/Profilo`, {
                 method: "PUT",
                 body: JSON.stringify({
                     immagine: immagine,

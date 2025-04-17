@@ -45,7 +45,7 @@ const ImpUser = () => {
       dispatch(putProfilo(immagine, bio));
       dispatch(getUtenteLoggato());
       toast(
-        <p className=" flex items-center text-white">
+        <p className="flex items-center text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -107,27 +107,27 @@ const ImpUser = () => {
   };
 
   return (
-    <div className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
+    <div className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
       {profilo.immagine ? (
         <>
           {" "}
           <Card className=" border-0">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative group">
-                <Avatar className="w-32 h-32 border-4 border-[#b849d6] transition-all duration-300 group-hover:border-[#d489e9]">
+                <Avatar className="w-32 h-32 border-4 border-[#ad42ff] transition-all duration-300 group-hover:border-[#c476ff]">
                   <AvatarImage
                     src={immagine}
                     alt={profile && profile.nomeUtente}
                   />
-                  <AvatarFallback className="bg-[#732880] text-white text-2xl">
+                  <AvatarFallback className="bg-[#732880] text-2xl">
                     {profile && profile.nomeUtente.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <Dialog>
-                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#b849d6] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#ad42ff] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Camera size={20} />
                   </DialogTrigger>
-                  <DialogContent className="bg-[#3d0d45] border-[#732880]">
+                  <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
                     <DialogHeader>
                       <DialogTitle className="text-[#f7ebfc]">
                         Aggiungi la tua immagine di profilo
@@ -140,10 +140,10 @@ const ImpUser = () => {
                       <Input
                         onChange={(e) => setImmagine(e.target.value)}
                         value={immagine}
-                        className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
+                        className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
                       />
                       <DialogClose
-                        className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#b849d6] hover:bg-[#a43bbe]"
+                        className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#ad42ff] hover:bg-[#7112b7]"
                         onClick={handleImageUpload}
                       >
                         Salva
@@ -163,12 +163,12 @@ const ImpUser = () => {
                 <div>
                   <label
                     className="text-md font-semibold block text-center md:text-start"
-                    style={{ color: "#e4b5f2" }}
+                    style={{ color: "#c476ff" }}
                   >
                     Username
                   </label>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold text-white mb-0">
+                    <h3 className="text-xl font-semibold mb-0">
                       {profile && profile.nomeUtente} &nbsp;
                     </h3>
                   </div>
@@ -180,14 +180,14 @@ const ImpUser = () => {
             <div className="flex items-center justify-between mb-3">
               <h3
                 className="text-lg font-semibold"
-                style={{ color: "#e4b5f2" }}
+                style={{ color: "#c476ff" }}
               >
                 La tua biografia
               </h3>
               {!editBio && (
                 <button
                   onClick={() => setEditBio(true)}
-                  className="hover:bg-[#732880]/30 p-2 rounded-2xl"
+                  className="hover:bg-[#7112b7]/30 p-2 rounded-2xl"
                 >
                   <Edit2 size={18} />
                 </button>
@@ -198,7 +198,7 @@ const ImpUser = () => {
                 <Textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="min-h-[120px] bg-[#3d0d45]/50 border-[#732880] focus:border-[#b849d6]"
+                  className="min-h-[120px] bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
                   placeholder="Racconta qualcosa su di te..."
                   maxLength={500}
                 />
@@ -209,7 +209,7 @@ const ImpUser = () => {
                       onClick={() => {
                         saveBio();
                       }}
-                      className="bg-[#b849d6] hover:bg-[#a43bbe] py-1 px-3 rounded-md"
+                      className="bg-[#ad42ff] hover:bg-[#7112b7] py-1 px-3 rounded-md"
                     >
                       Salva
                     </button>
@@ -218,7 +218,7 @@ const ImpUser = () => {
                         setEditBio(false);
                       }}
                       variant="outline"
-                      className="border-[#732880] hover:bg-[#732880]/30 py-1 px-3 rounded-md"
+                      className="border-[#732880] hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
                     >
                       Annulla
                     </button>

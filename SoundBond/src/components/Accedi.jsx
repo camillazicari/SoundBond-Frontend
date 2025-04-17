@@ -35,7 +35,10 @@ const Accedi = () => {
       .then(() => {
         setIsLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Login fallito:", err);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };

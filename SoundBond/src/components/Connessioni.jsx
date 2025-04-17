@@ -51,7 +51,6 @@ const Connessioni = () => {
         const data = await response.json();
         if (data.data && data.data.length > 0) {
           const firstSong = data.data[0];
-          console.log(firstSong);
           setNowPlaying(firstSong);
           setIsPlaying(true);
 
@@ -62,7 +61,6 @@ const Connessioni = () => {
           newAudio.addEventListener("ended", () => {
             setIsPlaying(false);
             setNowPlaying(null);
-            console.log("fine brano!");
           });
           newAudio.play().catch((err) => {
             console.error("Errore nella riproduzione:", err);
@@ -161,7 +159,7 @@ const Connessioni = () => {
 
   const filteredMatches = getFilteredMatches();
 
-  if (!filteredMatches || filteredMatches.length === 0) {
+  if (!filteredMatches) {
     return <BondSpinner />;
   }
 
@@ -182,7 +180,7 @@ const Connessioni = () => {
 
   return (
     <div className="fade-in container mx-auto grid grid-cols-1 gap-y-6">
-      <Card className="px-6 py-10 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg grid grid-cols-1 gap-5 items-center">
+      <Card className="px-6 py-10 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg grid grid-cols-1 gap-5 items-center">
         <div>
           {user && (
             <h2 className="font-extrabold text-xl sm:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl textGradient">
@@ -237,71 +235,73 @@ const Connessioni = () => {
           </button>
         </div>
       </Card>
-      <div id="search-container" className="my-5">
-        <div className="nebula"></div>
-        <div className="starfield"></div>
-        <div className="cosmic-dust"></div>
-        <div className="cosmic-dust"></div>
-        <div className="cosmic-dust"></div>
+      {filteredMatches.length > 0 && (
+        <div id="search-container" className="my-5">
+          <div className="nebula"></div>
+          <div className="starfield"></div>
+          <div className="cosmic-dust"></div>
+          <div className="cosmic-dust"></div>
+          <div className="cosmic-dust"></div>
 
-        <div className="stardust"></div>
+          <div className="stardust"></div>
 
-        <div className="cosmic-ring"></div>
+          <div className="cosmic-ring"></div>
 
-        <div id="mainCont">
-          <input
-            className="inputSearch"
-            name="text"
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cerca utenti..."
-          />
-          <div id="input-mask"></div>
-          <div id="cosmic-glow"></div>
-          <div className="wormhole-border"></div>
-          <div id="wormhole-icon">
-            <svg
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              stroke="#0C0512"
-              fill="none"
-              height="24"
-              width="24"
-              viewBox="0 0 24 24"
-            >
-              <circle r="10" cy="12" cx="12"></circle>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-              <path d="M2 12h20"></path>
-            </svg>
-          </div>
-          <div id="search-icon">
-            <svg
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              stroke="url(#cosmic-search)"
-              fill="none"
-              height="24"
-              width="24"
-              viewBox="0 0 24 24"
-            >
-              <circle r="8" cy="11" cx="11"></circle>
-              <line y2="16.65" x2="16.65" y1="21" x1="21"></line>
-              <defs>
-                <linearGradient
-                  gradientTransform="rotate(45)"
-                  id="cosmic-search"
-                >
-                  <stop stopColor="#d06bd9" offset="0%"></stop>
-                  <stop stopColor="#b849d6" offset="100%"></stop>
-                </linearGradient>
-              </defs>
-            </svg>
+          <div id="mainCont">
+            <input
+              className="inputSearch"
+              name="text"
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cerca utenti..."
+            />
+            <div id="input-mask"></div>
+            <div id="cosmic-glow"></div>
+            <div className="wormhole-border"></div>
+            <div id="wormhole-icon">
+              <svg
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2"
+                stroke="#0C0512"
+                fill="none"
+                height="24"
+                width="24"
+                viewBox="0 0 24 24"
+              >
+                <circle r="10" cy="12" cx="12"></circle>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                <path d="M2 12h20"></path>
+              </svg>
+            </div>
+            <div id="search-icon">
+              <svg
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2"
+                stroke="url(#cosmic-search)"
+                fill="none"
+                height="24"
+                width="24"
+                viewBox="0 0 24 24"
+              >
+                <circle r="8" cy="11" cx="11"></circle>
+                <line y2="16.65" x2="16.65" y1="21" x1="21"></line>
+                <defs>
+                  <linearGradient
+                    gradientTransform="rotate(45)"
+                    id="cosmic-search"
+                  >
+                    <stop stopColor="#d06bd9" offset="0%"></stop>
+                    <stop stopColor="#ad42ff" offset="100%"></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div>
         {filteredMatches && user?.nome && filteredMatches.length > 0 ? (
@@ -309,16 +309,16 @@ const Connessioni = () => {
             {filteredMatches.slice(0, page * itemsPerPage).map((match) => (
               <Card
                 key={match.user?.id}
-                className="py-3 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg gap-5 items-center"
+                className="py-3 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg gap-5 items-center"
               >
                 <div className="flex justify-between items-center p-4">
                   <div className="flex items-center gap-4">
-                    <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#d489e9]">
+                    <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#7112b7]">
                       <AvatarImage
                         src={match.user?.profilo?.immagine}
                         alt={match.user?.profilo?.nomeUtente}
                       />
-                      <AvatarFallback className="bg-[#732880] text-2xl">
+                      <AvatarFallback className="bg-[#7112b7] text-2xl">
                         {match.user?.profilo?.nomeUtente
                           ?.slice(0, 2)
                           .toUpperCase()}
@@ -337,7 +337,7 @@ const Connessioni = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="bg-[#b849d6] rounded-full h-15 w-15 flex justify-center items-center">
+                  <div className="bg-[#ad42ff] rounded-full h-15 w-15 flex justify-center items-center">
                     <p className=" font-bold">{match.compatibility?.score}%</p>
                   </div>
                 </div>
@@ -362,7 +362,7 @@ const Connessioni = () => {
                                 match.compatibility.details.commonArtists?.includes(
                                   artista.nome?.toLowerCase()
                                 )
-                                  ? "border-[#b849d6] border-3"
+                                  ? "border-[#ad42ff] border-3"
                                   : ""
                               }`}
                             >
@@ -370,7 +370,7 @@ const Connessioni = () => {
                                 src={artista.img}
                                 alt={artista.nome}
                               />
-                              <AvatarFallback className="bg-[#732880] text-2xl">
+                              <AvatarFallback className="bg-[#7112b7] text-2xl">
                                 {artista.nome?.slice(0, 2).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
@@ -433,7 +433,7 @@ const Connessioni = () => {
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="40"
                                     height="40"
-                                    fill="#b849d6"
+                                    fill="#ad42ff"
                                     className="bi bi-play-circle-fill"
                                     viewBox="0 0 16 16"
                                   >
@@ -477,7 +477,7 @@ const Connessioni = () => {
                     <button
                       onMouseEnter={() => handleMouseEnter(match.user?.id)}
                       onMouseLeave={() => handleMouseLeave(match.user?.id)}
-                      className="bg-[#732880] px-9 py-2 rounded-xl hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
+                      className="bg-[#7112b7] px-9 py-2 rounded-xl hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
                       onClick={() => dispatch(deleteRichiesta(match.user?.id))}
                     >
                       {hoverStates[match.user?.id]
@@ -488,24 +488,23 @@ const Connessioni = () => {
                       (req) => req.sender.id === match.user?.id
                     ) ? (
                     <button
-                      className="bg-[#732880] px-9 py-2 rounded-xl transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
+                      className="bg-[#7112b7] px-9 py-2 rounded-xl transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
                       disabled={true}
                     >
                       Da accettare
                     </button>
                   ) : (
                     <button
-                      className="bg-[#b849d6] px-9 py-2 rounded-xl hover:bg-[#732880] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
+                      className="bg-[#ad42ff] px-9 py-2 rounded-xl hover:bg-[#7112b7] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
                       onClick={() => {
-                        dispatch(postRichiesta(match.user?.id)),
-                          console.log(richiesteInviate);
+                        dispatch(postRichiesta(match.user?.id));
                       }}
                     >
                       Connetti
                     </button>
                   )}
                   <button
-                    className="flex items-center justify-center cursor-pointer hover:bg-[#732880]/30 transition-all px-9 rounded-xl"
+                    className="flex items-center justify-center cursor-pointer hover:bg-[#7112b7]/30 transition-all px-9 rounded-xl"
                     onClick={() => navigate(`/dettagli/${match.user?.id}`)}
                   >
                     <svg

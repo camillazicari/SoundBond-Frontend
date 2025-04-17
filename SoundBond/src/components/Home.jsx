@@ -39,7 +39,7 @@ const Home = () => {
 
   return bonders && users.length > 0 ? (
     <div className="fade-in container mx-auto grid grid-cols-1 gap-y-6">
-      <Card className="px-6 py-10 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg grid grid-cols-2 gap-5 items-center">
+      <Card className="px-6 py-10 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg grid grid-cols-2 gap-5 items-center">
         <div>
           {user && (
             <h2 className="font-extrabold text-xl sm:text-3xl lg:text-4xl textGradient">

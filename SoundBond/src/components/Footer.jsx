@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 export function Footer() {
   const location = useLocation();
   return (
+    !location.pathname.startsWith("/chat") &&
     location.pathname !== "/feedback" && (
       <footer className="footer relative">
         <div className="w-full">
@@ -13,7 +14,7 @@ export function Footer() {
             <div>
               <Link to={"/"} className="flex items-center">
                 <img
-                  src="src/assets/SoundBond/SoundBond (100 x 50 px).png"
+                  src="src/assets/SoundBond/SoundBondViola.png"
                   alt=""
                   className=" w-1/3 sm:w-1/2"
                 />

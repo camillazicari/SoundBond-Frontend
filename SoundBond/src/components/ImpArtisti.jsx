@@ -191,15 +191,12 @@ const ImpArtisti = () => {
     }
   };
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
+    <Card className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#9b1fff]/50 rounded-xl shadow-lg">
       {artisti.length > 0 ? (
         <>
           {" "}
           <div className="flex items-center justify-between mb-4">
-            <h3
-              className="text-lg font-semibold text-[#e4b5f2]"
-              style={{ color: "#e4b5f2" }}
-            >
+            <h3 className="text-lg font-semibold text-[#c476ff]">
               I tuoi artisti preferiti
             </h3>
             <Dialog
@@ -211,11 +208,11 @@ const ImpArtisti = () => {
               }}
             >
               <DialogTrigger asChild>
-                <button className="bg-[#b849d6] hover:bg-[#a43bbe] transition-colors py-1.5 px-4 rounded-md flex items-center">
+                <button className="bg-[#ad42ff] hover:bg-[#9b1fff] transition-colors py-1.5 px-4 rounded-md flex items-center">
                   <Plus size={18} className="mr-2" /> Aggiungi
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-[#3d0d45] border-[#732880]">
+              <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
                 <DialogHeader>
                   <DialogTitle className="text-[#f7ebfc]">
                     Aggiungi un artista preferito
@@ -225,21 +222,21 @@ const ImpArtisti = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-2">
-                  <label className="text-sm text-[#e4b5f2]">Nome artista</label>
+                  <label className="text-sm text-[#c476ff]">Nome artista</label>
                   <Input
                     onChange={handleSearchChange}
                     onSubmit={() => {}}
                     value={search}
-                    className="bg-[#60256a] border-[#732880] focus:border-[#b849d6]"
+                    className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
                   />
                   <DialogClose>
                     {searchResults.length > 0 && (
-                      <ul className="bg-[#3d0d45] border-[#732880] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
+                      <ul className="bg-[#170228]  shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
                         {" "}
                         {uniqueArtists.map((artist, index) => (
                           <li
                             key={index}
-                            className="p-2 hover:bg-[#60256a] cursor-pointer flex items-center"
+                            className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
                             onClick={() => handleSelectArtist(artist)}
                           >
                             {artist.image && (
@@ -265,7 +262,7 @@ const ImpArtisti = () => {
                 {artisti.map((artist) => (
                   <div
                     key={artist.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-[#732880]/20 border border-[#732880]/30 hover:bg-[#732880]/30 transition-colors"
+                    className="flex items-center justify-between p-3 rounded-lg bg-[#3f006f]/30 border border-[#7112b7]/50 hover:bg-[#7112B7]/30 transition-colors"
                   >
                     <span className="font-medium text-[#fbf5fe] flex items-center">
                       {artist.img ? (
@@ -283,7 +280,7 @@ const ImpArtisti = () => {
                       onClick={() => handleRemoveArtist(artist)}
                       size="icon"
                       variant="ghost"
-                      className="hover:bg-[#a43bbe]/20 text-[#f7ebfc]"
+                      className="hover:bg-[#9b1fff]/20 text-[#f7ebfc]"
                     >
                       <Trash2 size={18} />
                     </button>

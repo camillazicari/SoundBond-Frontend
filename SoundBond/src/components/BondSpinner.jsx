@@ -4,7 +4,7 @@ const BondSpinner = () => {
   return (
     <DotLottieReact
       className="w-[20%] mx-auto"
-      src="https://lottie.host/3443c6d1-9b79-4bb4-a3fc-e98bea3f9677/majUYnwUZx.lottie"
+      src="https://lottie.host/17898f9f-31dd-484d-8445-cfbe998717ca/b19TGCFQWi.lottie"
       loop
       autoplay
     />

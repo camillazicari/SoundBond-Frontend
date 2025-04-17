@@ -3,9 +3,9 @@ import { TextLoop } from "../../animations/text-loop";
 export function TextLoopBasic() {
   return (
     <TextLoop className="text-4xl md:text-5xl xl:text-6xl font-bold text-center">
-      <span style={{ color: "rgb(138, 46, 157, 1)" }}>ESPLORA.</span>
-      <span style={{ color: "rgb(138, 46, 157, 1)" }}>CONDIVIDI.</span>
-      <span style={{ color: "rgb(138, 46, 157, 1)" }}>CONNETTI.</span>
+      <span className="text-[#9b1fff]">ESPLORA.</span>
+      <span className="text-[#9b1fff]">CONDIVIDI.</span>
+      <span className="text-[#9b1fff]">CONNETTI.</span>
     </TextLoop>
   );
 }

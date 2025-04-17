@@ -24,13 +24,10 @@ const ImpDelete = () => {
   };
 
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#3d0d45]/30 border border-[#732880]/30 rounded-xl shadow-lg">
+    <Card className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
-          <h3
-            className="text-lg font-semibold text-[#e4b5f2] mb-1"
-            style={{ color: "#e4b5f2" }}
-          >
+          <h3 className="text-lg font-semibold text-[#c476ff] mb-1">
             Eliminazione profilo
           </h3>
           <p className="text-sm text-[#efd6f8]">
@@ -46,11 +43,9 @@ const ImpDelete = () => {
               <Trash2 size={18} className="mr-2" /> Elimina profilo
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-[#3d0d45] border-[#732880]">
+          <AlertDialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-[#f7ebfc]">
-                Sei sicuro?
-              </AlertDialogTitle>
+              <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
               <AlertDialogDescription className="text-[#efd6f8]">
                 Questa azione non può essere annullata. <br />
                 Eliminerà definitivamente il tuo profilo e tutti i dati
@@ -58,7 +53,7 @@ const ImpDelete = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-transparent border-[#732880] text-[#f7ebfc] hover:bg-[#732880]/30 py-2 px-3 rounded-md">
+              <AlertDialogCancel className="bg-transparent border-[#732880] hover:bg-[#732880]/30 py-2 px-3 rounded-md">
                 Annulla
               </AlertDialogCancel>
               <AlertDialogAction

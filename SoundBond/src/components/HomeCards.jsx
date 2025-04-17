@@ -11,13 +11,13 @@ const HomeCards = () => {
       >
         Che tu stia cercando nuovi artisti, playlist personalizzate o
         semplicemente un posto dove condividere la tua passione,
-        <span style={{ color: "rgb(138, 46, 157, 1)" }}> SoundBond</span> è il
-        tuo spazio ideale.
+        <span className="text-[#7112b7]"> SoundBond</span> è il tuo spazio
+        ideale.
       </p>
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4 mb-8">
         <SpotlightCard
           className="custom-spotlight-card"
-          spotlightColor="rgba(184, 73, 214, 0.25)"
+          spotlightColor="rgba(173, 66, 255, 0.25)"
           title="ESPLORA LA MUSICA"
           subtitle="Scopri brani e artisti da tutto il mondo."
           svg={
@@ -26,7 +26,7 @@ const HomeCards = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 width="50"
                 height="50"
-                fill="#f7ebfc"
+                fill="#ead0ff"
                 className="bi bi-music-note-beamed"
                 viewBox="0 0 16 16"
               >
@@ -39,16 +39,16 @@ const HomeCards = () => {
         ></SpotlightCard>
         <SpotlightCard
           className="custom-spotlight-card"
-          spotlightColor="rgba(184, 73, 214, 0.25)"
-          title="CREA PLAYLIST"
-          subtitle="Organizza le tue canzoni preferite in playlist uniche."
+          spotlightColor="rgba(173, 66, 255, 0.25)"
+          title="SCOPRI LE PLAYLIST DEL GIORNO"
+          subtitle="Playlist quotidiane su misura per i tuoi gusti."
           svg={
             <div className=" mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="50"
                 height="50"
-                fill="#f7ebfc"
+                fill="#ead0ff"
                 className="bi bi-music-note-list"
                 viewBox="0 0 16 16"
               >
@@ -65,7 +65,7 @@ const HomeCards = () => {
         ></SpotlightCard>
         <SpotlightCard
           className="custom-spotlight-card"
-          spotlightColor="rgba(184, 73, 214, 0.25)"
+          spotlightColor="rgba(173, 66, 255, 0.25)"
           title="CONNETTITI CON ALTRI UTENTI"
           subtitle="Trova nuovi compagni di ascolto."
           svg={
@@ -74,7 +74,7 @@ const HomeCards = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 width="50"
                 height="50"
-                fill="#f7ebfc"
+                fill="#ead0ff"
                 className="bi bi-people-fill"
                 viewBox="0 0 16 16"
               >

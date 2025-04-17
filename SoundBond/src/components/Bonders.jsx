@@ -22,7 +22,7 @@ const Bonders = () => {
       <h1
         className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-1"
         style={{
-          backgroundImage: "linear-gradient(to right, #e4b5f2, #a43bbe)",
+          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -49,7 +49,7 @@ const BonderCard = ({ bonder }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-gradient-to-br from-[#1e0a23] to-[#3d0d45] rounded-xl p-6 shadow-lg border border-[#732880]/30 hover:border-[#d489e9] transition-all">
+    <div className="bg-gradient-to-br from-[#1e0a23] to-[#5d1093] rounded-xl p-6 shadow-lg border border-[#7112b7]/30 hover:border-[#ad42ff] transition-all">
       <div className="flex items-center space-x-4 mb-4">
         <Avatar className="h-16 w-16">
           <AvatarImage src={bonder.profilo?.immagine} />
@@ -64,10 +64,16 @@ const BonderCard = ({ bonder }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <button variant="gradient">Messaggio</button>
+        <button
+          variant="gradient"
+          onClick={() => navigate(`/chat/${bonder?.id}`)}
+          className="cursor-pointer"
+        >
+          Messaggio
+        </button>
         <button
           variant="outline"
-          className=" border-[#732880] hover:bg-[#732880]/20"
+          className="cursor-pointer"
           onClick={() => navigate(`/dettagli/${bonder.id}`)}
         >
           Dettagli

@@ -26,6 +26,9 @@ import Player from "./components/Player";
 import Richieste from "./components/Richieste";
 import Bonders from "./components/Bonders";
 import Dettagli from "./components/Dettagli";
+import Chat from "./components/Chat";
+import ChatWrapper from "./components/ChatWrapper";
+import ChatGenerali from "./components/ChatGenerali";
 
 function App() {
   const dispatch = useDispatch();
@@ -179,6 +182,24 @@ function App() {
             element={
               <PrivateRoute>
                 <Dettagli />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/chat/:id"
+            element={
+              <PrivateRoute>
+                <ChatWrapper />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/generali"
+            element={
+              <PrivateRoute>
+                <ChatGenerali />
               </PrivateRoute>
             }
           />

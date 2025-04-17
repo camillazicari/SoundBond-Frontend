@@ -56,18 +56,13 @@ const SpotlightCard = ({
         }}
       />
       {svg}
-      <h1 className="text-lg font-bold" style={{ color: "#f7ebfc" }}>
-        {title}
-      </h1>
-      <p className=" text-sm opacity-50" style={{ color: "#f7ebfc" }}>
-        {subtitle}
-      </p>
+      <h1 className="text-lg font-bold">{title}</h1>
+      <p className=" text-sm opacity-50">{subtitle}</p>
       <div className="flex  mt-10 mb-5">
         <Link
           to={"/accedi"}
-          className="font-semibold py-2 px-8 rounded-lg transition duration-300"
+          className="font-semibold py-2 px-8 rounded-lg transition duration-300 bg-[#850ee2]"
           id="btnCardsHome"
-          style={{ backgroundColor: "rgba(184, 73, 214, 0.5)" }}
         >
           Scopri
         </Link>

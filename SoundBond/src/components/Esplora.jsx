@@ -155,7 +155,7 @@ const Esplora = () => {
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-1"
             style={{
-              backgroundImage: "linear-gradient(to right, #e4b5f2, #a43bbe)",
+              backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -183,22 +183,21 @@ const Esplora = () => {
                               alt="cover"
                               className="w-50 sm:w-60 lg:w-75 xl:w-90 object-cover rounded-2xl"
                             />
-                            <p className="my-2 md:text-md lg:text-lg font-bold text-[#e4b5f2]">
+                            <p className="my-2 md:text-md lg:text-lg font-bold text-[#daacff]">
                               Il meglio di "{genere?.name}"
                             </p>
                           </div>
                         </DialogTrigger>
                         <DialogContent
                           aria-label={`Playlist ${genere?.name}`}
-                          className="grid grid-cols-1 p-2"
+                          className="grid grid-cols-1 p-2 border-[#ad42ff]/50"
                           style={{
-                            borderColor: "rgba(184, 73, 214, 0.5)",
                             backgroundColor: "rgba(12, 5, 18, 0.5)",
                             backdropFilter: "blur(10px)",
                           }}
                         >
                           <DialogTitle></DialogTitle>
-                          <DialogDescription className="text-lg font-bold text-center text-[#b849d6]">
+                          <DialogDescription className="text-lg font-bold text-center text-[#ad42ff]">
                             Il meglio di "{genere?.name}"
                           </DialogDescription>
                           <div className="h-140 overflow-auto">
@@ -258,7 +257,7 @@ const Esplora = () => {
                                           xmlns="http://www.w3.org/2000/svg"
                                           width="40"
                                           height="40"
-                                          fill="#b849d6"
+                                          fill="#ad42ff"
                                           className="bi bi-play-circle-fill"
                                           viewBox="0 0 16 16"
                                         >

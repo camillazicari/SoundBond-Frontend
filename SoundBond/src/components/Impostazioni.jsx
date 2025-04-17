@@ -12,7 +12,7 @@ const Impostazioni = () => {
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter "
             style={{
-              backgroundImage: "linear-gradient(to right, #e4b5f2, #a43bbe)",
+              backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}

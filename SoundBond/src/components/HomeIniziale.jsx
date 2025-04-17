@@ -9,7 +9,7 @@ const HomeIniziale = () => {
       <HomeCards />
       <div className=" my-11">
         <GradientBig
-          colors={["#d489e9, #b067a3, #eda7f2, #8d4a8c, #f4caf9"]}
+          colors={["#C476FF", "#D29CFF", "#B060F0", "#E2B8FF", "#A94CE6"]}
           animationSpeed={5}
           showBorder={true}
           className="custom-class"
