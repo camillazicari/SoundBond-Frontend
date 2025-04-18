@@ -20,7 +20,7 @@ const MediaItem = React.memo(({ item, type }) => (
         src={item.img}
         alt={type === "artista" ? item.nome : item.titolo}
       />
-      <AvatarFallback className="bg-[#7112b7] text-2xl">
+      <AvatarFallback className="bg-[#ad42ff] text-2xl">
         {(type === "artista" ? item.nome : item.titolo)
           ?.slice(0, 2)
           .toUpperCase()}
@@ -60,7 +60,7 @@ const RequestCard = React.memo(
                   src={richiesta.sender?.profilo?.immagine}
                   alt={richiesta.sender?.nome}
                 />
-                <AvatarFallback className="bg-[#7112b7] text-2xl">
+                <AvatarFallback className="bg-[#ad42ff] text-2xl">
                   {richiesta.sender?.profilo?.nomeUtente
                     ?.slice(0, 2)
                     .toUpperCase()}
@@ -216,7 +216,7 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
                 src={richiesta.receiver?.profilo?.immagine}
                 alt={richiesta.receiver?.nome}
               />
-              <AvatarFallback className="bg-[#7112b7] text-2xl">
+              <AvatarFallback className="bg-[#ad42ff] text-2xl">
                 {richiesta.receiver?.profilo?.nomeUtente
                   ?.slice(0, 2)
                   .toUpperCase()}

@@ -23,19 +23,15 @@ export const getProfilo = () => {
 };
 
 
-export const putProfilo = (immagine, bio) => {
+export const putProfilo = (formdata) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
                 `http://192.168.1.59:5220/api/Profilo`, {
                 method: "PUT",
-                body: JSON.stringify({
-                    immagine: immagine,
-                    bio: bio
-                }),
+                body: formdata,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-                    "Content-type": "application/json; charset=UTF-8",
                 },
             }
             );

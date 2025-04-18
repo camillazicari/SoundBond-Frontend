@@ -36,7 +36,7 @@ const UserCard = memo(({ utente, navigate }) => {
             src={utente.profilo?.immagine}
             alt={utente.profilo?.nomeUtente}
           />
-          <AvatarFallback className="bg-[#732880] text-2xl">
+          <AvatarFallback className="bg-[#ad42ff] text-2xl">
             {utente.profilo?.nomeUtente?.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>

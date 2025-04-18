@@ -3,7 +3,7 @@ import { Card } from "../../animations/Card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../../animations/Avatar";
 import { Edit2, Camera } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "../../animations/Input";
 import { Textarea } from "../../animations/TextArea";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,63 +23,89 @@ import BondSpinner from "./BondSpinner";
 const ImpUser = () => {
   const [bio, setBio] = useState("");
   const [immagine, setImmagine] = useState("");
+  const [imgFile, setImgFile] = useState(null);
+  const [urlMode, setUrlMode] = useState(true);
   const profilo = useSelector((state) => state.profilo.profilo);
   const [editBio, setEditBio] = useState(false);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.account.userLogged);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImgFile(e.target.files[0]);
+      setUrlMode(false);
+
+      const previewUrl = URL.createObjectURL(e.target.files[0]);
+      setImmagine(previewUrl);
+    }
+  };
 
   useEffect(() => {
     dispatch(getProfilo());
     dispatch(getUtenteLoggato());
-    setBio(profilo.bio);
-    setImmagine(profilo.immagine);
   }, []);
 
   useEffect(() => {
-    setBio(profilo.bio);
-    setImmagine(profilo.immagine);
+    if (profilo) {
+      setBio(profilo.bio);
+      setImmagine(profilo.immagine);
+    }
   }, [profilo]);
 
   const handleImageUpload = () => {
-    if (immagine) {
-      dispatch(putProfilo(immagine, bio));
-      dispatch(getUtenteLoggato());
-      toast(
-        <p className="flex items-center text-white">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-circle-check"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>{" "}
-          &nbsp; Immagine di profilo aggiornata!
-        </p>,
-        {
-          style: {
-            background: "rgb(7, 176, 7)",
-            border: "none",
-          },
-        }
-      );
+    const formData = new FormData();
+
+    if (urlMode && immagine) {
+      formData.append("immagine", immagine);
+    } else if (!urlMode && imgFile) {
+      formData.append("imgFile", imgFile);
     } else {
-      toast("Per favore inserisci un URL valido per l'immagine.");
+      toast("Per favore inserisci un'immagine valida.");
+      return;
     }
+
+    dispatch(putProfilo(formData));
+    dispatch(getUtenteLoggato());
+
+    toast(
+      <p className="flex items-center text-white">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-circle-check"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>{" "}
+        &nbsp; Immagine di profilo aggiornata!
+      </p>,
+      {
+        style: {
+          background: "rgb(7, 176, 7)",
+          border: "none",
+        },
+      }
+    );
   };
 
+  // Salva la bio
   const saveBio = () => {
-    dispatch(putProfilo(immagine, bio));
+    const formData = new FormData();
+    formData.append("bio", bio);
+
+    dispatch(putProfilo(formData));
     setEditBio(false);
+
     toast(
-      <p className=" flex items-center text-white">
+      <p className="flex items-center text-white">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -106,21 +132,30 @@ const ImpUser = () => {
     );
   };
 
+  const openFileSelector = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
-      {profilo.immagine ? (
+      {profilo && profilo.immagine ? (
         <>
-          {" "}
-          <Card className=" border-0">
+          <Card className="border-0">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative group">
                 <Avatar className="w-32 h-32 border-4 border-[#ad42ff] transition-all duration-300 group-hover:border-[#c476ff]">
                   <AvatarImage
-                    src={immagine}
+                    src={
+                      immagine && immagine.startsWith("/")
+                        ? `http://192.168.1.59:5220${immagine}`
+                        : immagine
+                    }
                     alt={profile && profile.nomeUtente}
                   />
-                  <AvatarFallback className="bg-[#732880] text-2xl">
-                    {profile && profile.nomeUtente.slice(0, 2).toUpperCase()}
+                  <AvatarFallback className="bg-[#ad42ff] text-2xl">
+                    {profile && profile.nomeUtente?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <Dialog>
@@ -130,18 +165,62 @@ const ImpUser = () => {
                   <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
                     <DialogHeader>
                       <DialogTitle className="text-[#f7ebfc]">
-                        Aggiungi la tua immagine di profilo
+                        Aggiorna la tua immagine di profilo
                       </DialogTitle>
                       <DialogDescription className="text-[#efd6f8]">
-                        Inserisci il link dell'immagine che vuoi aggiungere.
+                        Inserisci un URL o carica un'immagine dal tuo
+                        dispositivo.
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-2">
-                      <Input
-                        onChange={(e) => setImmagine(e.target.value)}
-                        value={immagine}
-                        className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                      <div className="flex justify-between mb-2">
+                        <button
+                          className={`py-1 px-3 rounded-md ${
+                            urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
+                          }`}
+                          onClick={() => setUrlMode(true)}
+                        >
+                          URL
+                        </button>
+                        <button
+                          className={`py-1 px-3 rounded-md ${
+                            !urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
+                          }`}
+                          onClick={openFileSelector}
+                        >
+                          File
+                        </button>
+                      </div>
+
+                      {urlMode ? (
+                        <Input
+                          onChange={(e) => setImmagine(e.target.value)}
+                          value={immagine}
+                          placeholder="Inserisci l'URL dell'immagine"
+                          className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                        />
+                      ) : (
+                        <div className="border border-dashed border-[#ad42ff] rounded-md p-4 text-center">
+                          <p>
+                            {imgFile ? imgFile.name : "Nessun file selezionato"}
+                          </p>
+                          <button
+                            onClick={openFileSelector}
+                            className="mt-2 text-[#ad42ff] hover:text-[#c476ff]"
+                          >
+                            Seleziona un altro file
+                          </button>
+                        </div>
+                      )}
+
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*"
                       />
+
                       <DialogClose
                         className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#ad42ff] hover:bg-[#7112b7]"
                         onClick={handleImageUpload}
@@ -151,12 +230,6 @@ const ImpUser = () => {
                     </div>
                   </DialogContent>
                 </Dialog>
-                <input
-                  type="text"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  accept="image/*"
-                />
               </div>
 
               <div className="flex-1">
@@ -203,22 +276,19 @@ const ImpUser = () => {
                   maxLength={500}
                 />
                 <div className="flex justify-between mt-2">
-                  <span className="text-xs">{bio.length}/500 caratteri</span>
+                  <span className="text-xs">
+                    {bio ? bio.length : 0}/500 caratteri
+                  </span>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => {
-                        saveBio();
-                      }}
+                      onClick={saveBio}
                       className="bg-[#ad42ff] hover:bg-[#7112b7] py-1 px-3 rounded-md"
                     >
                       Salva
                     </button>
                     <button
-                      onClick={() => {
-                        setEditBio(false);
-                      }}
-                      variant="outline"
-                      className="border-[#732880] hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
+                      onClick={() => setEditBio(false)}
+                      className="border border-[#732880] hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
                     >
                       Annulla
                     </button>
@@ -230,7 +300,7 @@ const ImpUser = () => {
                 {profilo && profilo.bio}
               </p>
             )}
-          </Card>{" "}
+          </Card>
         </>
       ) : (
         <BondSpinner />

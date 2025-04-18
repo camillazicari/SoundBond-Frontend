@@ -39,8 +39,12 @@ export default function NavAvatar() {
           <div className="border-2 border-[#ad42ff] rounded-full">
             {profilo && profilo.immagine ? (
               <img
-                src={profilo.immagine}
-                className="rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                src={
+                  profilo?.immagine && profilo?.immagine?.startsWith("/")
+                    ? `http://192.168.1.59:5220${profilo.immagine}`
+                    : profilo?.immagine
+                }
+                className="rounded-full w-[50px] h-[50px] object-cover object-top border-2 border-transparent"
                 alt="user"
               />
             ) : (

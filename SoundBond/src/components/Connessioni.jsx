@@ -318,7 +318,7 @@ const Connessioni = () => {
                         src={match.user?.profilo?.immagine}
                         alt={match.user?.profilo?.nomeUtente}
                       />
-                      <AvatarFallback className="bg-[#7112b7] text-2xl">
+                      <AvatarFallback className="bg-[#ad42ff] text-2xl">
                         {match.user?.profilo?.nomeUtente
                           ?.slice(0, 2)
                           .toUpperCase()}
@@ -370,7 +370,7 @@ const Connessioni = () => {
                                 src={artista.img}
                                 alt={artista.nome}
                               />
-                              <AvatarFallback className="bg-[#7112b7] text-2xl">
+                              <AvatarFallback className="bg-[#ad42ff] text-2xl">
                                 {artista.nome?.slice(0, 2).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>

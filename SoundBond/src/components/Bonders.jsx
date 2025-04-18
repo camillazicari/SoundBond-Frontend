@@ -53,7 +53,7 @@ const BonderCard = ({ bonder }) => {
       <div className="flex items-center space-x-4 mb-4">
         <Avatar className="h-16 w-16">
           <AvatarImage src={bonder.profilo?.immagine} />
-          <AvatarFallback className="bg-[#732880]">
+          <AvatarFallback className="bg-[#ad42ff]">
             {bonder.nome?.charAt(0)}
           </AvatarFallback>
         </Avatar>
