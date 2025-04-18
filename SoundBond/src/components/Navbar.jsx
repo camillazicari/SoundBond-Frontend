@@ -1,73 +1,217 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Bell } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import GradientText from "../../animations/GradientText";
 import NavAvatar from "./NavAvatar";
 import { getRichiesteRicevute } from "@/redux/actions/richieste";
+import { getConversazioni } from "@/redux/actions/chat";
+import * as signalR from "@microsoft/signalr";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hasNewRequests, setHasNewRequests] = useState(false);
+  const [nuoviBonders, setNuoviBonders] = useState([]);
+  const hubConnectionRef = useRef(null);
+
+  const [seenBonders, setSeenBonders] = useState(() => {
+    const saved = localStorage.getItem("seenBonders");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("seenBonders", JSON.stringify(seenBonders));
+  }, [seenBonders]);
 
   const isLoggedIn = useSelector((state) => state.account.loginSuccess);
+  const userId = useSelector((state) => state.account.user?.id);
   const shouldLogout = useSelector((state) => state.account.logout);
+  const conversazioni = useSelector(
+    (state) => state.conversazioni.conversazioni
+  );
   const receivedRequests = useSelector(
     (state) => state.richieste.richiesteRicevute
   );
-  const requestCount = receivedRequests?.length || 0;
+  const bonders = useSelector((state) => state.bonders.bonders);
+
+  const messaggiNonLetti = (conversazioni || []).reduce(
+    (total, conv) => total + (conv.messaggiNonLetti || 0),
+    0
+  );
 
   useEffect(() => {
-    if (shouldLogout);
+    if (!bonders || bonders.length === 0) return;
+
+    const nuovi = bonders.filter((bonder) => !seenBonders.includes(bonder.id));
+
+    if (nuovi.length > 0) {
+      setNuoviBonders(nuovi);
+
+      setTimeout(() => {
+        setSeenBonders((prev) => [...prev, ...nuovi.map((b) => b.id)]);
+      }, 5000);
+    }
+  }, [bonders, seenBonders]);
+
+  const requestCount =
+    (receivedRequests?.length || 0) + messaggiNonLetti + nuoviBonders.length;
+
+  const handleBonderClick = (bonderId) => {
+    setSeenBonders((prev) => [...prev, bonderId]);
+    setNuoviBonders((prev) => prev.filter((b) => b.id !== bonderId));
+    navigate("/bonders");
+  };
+
+  useEffect(() => {
+    if (isLoggedIn && userId) {
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .withAutomaticReconnect()
+        .build();
+
+      hubConnectionRef.current = connection;
+
+      connection.on("ReceiveMessage", (senderId, message) => {
+        console.log(`Nuovo messaggio ricevuto da ${senderId}: ${message}`);
+        dispatch(getConversazioni());
+      });
+
+      connection.on("ReceiveRequest", () => {
+        console.log("Nuova richiesta ricevuta");
+        dispatch(getRichiesteRicevute());
+      });
+
+      connection
+        .start()
+        .then(() => {
+          console.log("SignalR Connected");
+          return connection.invoke("JoinUserGroup", userId);
+        })
+        .then(() => {
+          console.log(`Utente ${userId} collegato al proprio gruppo`);
+        })
+        .catch((err) => console.error("SignalR Connection Error: ", err));
+
+      return () => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+          connection.stop();
+        }
+      };
+    }
+  }, [isLoggedIn, userId, dispatch]);
+
+  useEffect(() => {
+    if (shouldLogout && hubConnectionRef.current) {
+      hubConnectionRef.current.stop();
+    }
   }, [shouldLogout]);
 
-  const fetchRequests = useCallback(async () => {
-    if (isLoggedIn) {
-      try {
-        const result = await dispatch(getRichiesteRicevute());
-        if (result?.payload?.length > requestCount) {
-          setHasNewRequests(true);
-          setTimeout(() => setHasNewRequests(false), 3000);
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (isLoggedIn) {
+        try {
+          await dispatch(getRichiesteRicevute());
+          await dispatch(getConversazioni());
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching requests:", error);
       }
-    }
-  }, [dispatch, isLoggedIn, requestCount]);
+    };
 
-  useEffect(() => {
     fetchRequests();
-    const intervalId = setInterval(fetchRequests, 30000);
+
+    const intervalId = setInterval(fetchRequests, 60000);
+
     return () => clearInterval(intervalId);
-  }, [fetchRequests]);
+  }, [dispatch, isLoggedIn]);
 
-  useEffect(() => {
-    const handleResize = () => window.innerWidth > 768 && setMenuOpen(false);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const NotificationBell = (
-    <div className="relative me-4">
-      <Bell
-        className={`text-[#ad42ff] cursor-pointer transition-all ${
-          hasNewRequests ? "animate-pulse" : ""
-        }`}
-        size={30}
-        onClick={() => {
-          navigate("/richieste");
-          setMenuOpen(false);
-        }}
-      />
-      {requestCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-[#ad42ff] text-[#0C0512] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-          {requestCount > 9 ? "9+" : requestCount}
-        </span>
-      )}
-    </div>
-  );
+  const NotificationBell =
+    requestCount > 0 ? (
+      <div className="relative me-4">
+        <Dropdown>
+          <DropdownTrigger>
+            <div>
+              <Bell
+                className="text-[#ad42ff] cursor-pointer transition-all animate-pulse"
+                size={30}
+                onClick={() => setMenuOpen(false)}
+              />
+              {requestCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#ad42ff] text-[#0C0512] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {requestCount > 9 ? "9+" : requestCount}
+                </span>
+              )}
+            </div>
+          </DropdownTrigger>
+          <DropdownMenu
+            aria-label="Notifiche"
+            className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
+            style={{
+              backgroundColor: "rgba(12, 5, 18, 0.5)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            {receivedRequests && receivedRequests.length > 0 && (
+              <DropdownItem
+                textValue={`${receivedRequests.length} nuove richieste`}
+                className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
+              >
+                <Link to="/richieste">
+                  {receivedRequests.length === 1
+                    ? "Hai 1 nuova richiesta"
+                    : `Hai ${receivedRequests.length} nuove richieste`}
+                </Link>
+              </DropdownItem>
+            )}
+            {messaggiNonLetti > 0 && (
+              <DropdownItem
+                textValue={`${messaggiNonLetti} nuovi messaggi`}
+                className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
+              >
+                <Link to="/generali">
+                  {messaggiNonLetti === 1
+                    ? "Hai 1 nuovo messaggio"
+                    : `Hai ${messaggiNonLetti} nuovi messaggi`}
+                </Link>
+              </DropdownItem>
+            )}
+            {nuoviBonders.length > 0 &&
+              nuoviBonders.map((bonder) => (
+                <DropdownItem
+                  key={bonder.id}
+                  textValue={`Hai 1 nuovo bonder`}
+                  className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
+                >
+                  <Link
+                    to={"/bonders"}
+                    onClick={() => {
+                      handleBonderClick();
+                    }}
+                  >
+                    Hai 1 nuovo bonder: {bonder.otherUser.nome}{" "}
+                    {bonder.otherUser.cognome}
+                  </Link>
+                </DropdownItem>
+              ))}
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+    ) : (
+      <div className="me-4">
+        <Bell
+          className="text-[#ad42ff] transition-all"
+          size={30}
+          onClick={() => setMenuOpen(false)}
+        />
+      </div>
+    );
 
   const navLinks = isLoggedIn
     ? [

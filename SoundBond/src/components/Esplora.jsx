@@ -78,7 +78,7 @@ const Esplora = () => {
             // Seleziona il gruppo del giorno in modo circolare
             const groupIndex = giornoDellAnno % groupsCount;
             const startIdx = groupIndex * 3;
-            let artists = allArtists.slice(startIdx, startIdx + 5);
+            let artists = allArtists.slice(startIdx, startIdx + 3);
 
             // Se siamo alla fine dell'array e ne mancano, prendi i primi per completare
             if (artists.length < 3 && allArtists.length > 3) {
@@ -100,6 +100,7 @@ const Esplora = () => {
 
   useEffect(() => {
     if (artists.length === 0) return;
+    console.log(artists);
     const fetchSongs = async () => {
       try {
         const results = await Promise.all(
@@ -123,6 +124,7 @@ const Esplora = () => {
         console.error("Errore canzoni:", err);
       }
     };
+
     fetchSongs();
   }, [artists]);
 

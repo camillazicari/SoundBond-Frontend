@@ -13,7 +13,11 @@ const Feedback = () => {
           data-scroll
           data-scroll-speed="0.5"
           className="text-8xl font-extrabold text-center"
-          style={{ color: "#b849d6" }}
+          style={{
+            backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
         >
           Dicono di noi
         </h2>{" "}

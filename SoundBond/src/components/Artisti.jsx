@@ -131,7 +131,7 @@ const Artisti = () => {
               {user && (
                 <h2 className="text-xl z-20 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center tracking-tight">
                   {user.nome}, benvenut* nella{" "}
-                  <span style={{ color: "#b849d6" }}>bonders</span> community.
+                  <span style={{ color: "#9b1fff" }}>bonders</span> community.
                   <div className="bg-clip-text text-transparent bg-no-repeat">
                     <span className="">Conosciamoci meglio...</span>
                   </div>{" "}
@@ -176,7 +176,7 @@ const Artisti = () => {
                 {artists.map((artist, index) => (
                   <li
                     className="m-3 py-1.5 px-3 rounded-4xl text-xs lg:text-base text-center cursor-pointer flex items-center justify-between"
-                    style={{ border: "0.5px solid #b849d6" }}
+                    style={{ border: "0.5px solid #9b1fff" }}
                     key={index}
                     onClick={() => handleRemoveArtist(artist)}
                   >
@@ -198,7 +198,7 @@ const Artisti = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       width="23"
                       height="23"
-                      fill="#b849d6"
+                      fill="#9b1fff"
                       className="bi bi-x-circle-fill"
                       viewBox="0 0 16 16"
                     >
@@ -219,7 +219,7 @@ const Artisti = () => {
                 <div
                   className="rounded-lg ms-5 sm:ms-0 sm:rounded-xl h-8 w-1/6 sm:h-10 sm:w-1/5 lg:w-1/4 lg:h-12 flex items-center justify-center absolute top-[4px] group-hover:w-[140px] sm:group-hover:w-[170px] lg:group-hover:w-[184px] z-10 duration-500"
                   style={{
-                    backgroundColor: "#b849d6",
+                    backgroundColor: "#9b1fff",
                   }}
                 >
                   <svg

@@ -446,20 +446,6 @@ const Richieste = () => {
   const ITEMS = useMemo(
     () => [
       {
-        title: "Richieste Inviate",
-        content: (
-          <div key="sent-requests">
-            {requestsToShow.inviate && requestsToShow.inviate?.length > 0 ? (
-              requestsToShow.inviate.map(renderRequestSentItem)
-            ) : (
-              <p className="text-center py-10 text-xl text-[#f4e5ff]">
-                Nessuna richiesta inviata
-              </p>
-            )}
-          </div>
-        ),
-      },
-      {
         title: "Richieste ricevute",
         content: (
           <div key="received-requests">
@@ -468,6 +454,20 @@ const Richieste = () => {
             ) : (
               <p className="text-center py-10 text-xl text-[#f4e5ff]">
                 Nessuna richiesta ricevuta
+              </p>
+            )}
+          </div>
+        ),
+      },
+      {
+        title: "Richieste Inviate",
+        content: (
+          <div key="sent-requests">
+            {requestsToShow.inviate && requestsToShow.inviate?.length > 0 ? (
+              requestsToShow.inviate.map(renderRequestSentItem)
+            ) : (
+              <p className="text-center py-10 text-xl text-[#f4e5ff]">
+                Nessuna richiesta inviata
               </p>
             )}
           </div>

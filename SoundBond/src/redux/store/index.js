@@ -6,6 +6,7 @@ import braniReducer from "../reducers/braniReducer";
 import profiloReducer from "../reducers/profiloReducer";
 import richiesteReducer from "../reducers/richiesteReducer";
 import bondersReducer from "../reducers/bondersReducer";
+import conversazioniReducer from "../reducers/chatReducer";
 
 const mainReducer = combineReducers({
     account: accountReducer,
@@ -14,7 +15,8 @@ const mainReducer = combineReducers({
     brani: braniReducer,
     profilo: profiloReducer,
     richieste: richiesteReducer,
-    bonders: bondersReducer
+    bonders: bondersReducer,
+    conversazioni: conversazioniReducer,
 });
 
 const store = configureStore({

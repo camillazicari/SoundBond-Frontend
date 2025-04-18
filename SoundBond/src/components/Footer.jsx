@@ -7,7 +7,9 @@ export function Footer() {
   const location = useLocation();
   return (
     !location.pathname.startsWith("/chat") &&
-    location.pathname !== "/feedback" && (
+    location.pathname !== "/generi" &&
+    location.pathname !== "/artisti" &&
+    location.pathname !== "/brani" && (
       <footer className="footer relative">
         <div className="w-full">
           <div className="grid gap-8 sm:flex sm:justify-between md:grid-cols-1">

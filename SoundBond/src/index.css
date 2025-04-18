@@ -306,7 +306,7 @@ body {
   cursor: pointer;
   display: flex;
   border: none;
-  background-color: #8a2e9d;
+  background-color: #850ee2;
   overflow: hidden;
   box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 0.2),
     inset 2px 2px 5px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.4),
@@ -1157,7 +1157,7 @@ input[type="range"].time {
   transition: all 0.3s;
 }
 #messageInput {
-  width: 100%;
+  width: 90%;
   height: 100%;
   background-color: transparent;
   outline: none;
@@ -1191,4 +1191,19 @@ input[type="range"].time {
 }
 #sendButton:hover svg path {
   stroke: #f7ebfc;
+}
+
+.borderChat {
+  border-top: 0.1px solid #3f006f;
+}
+
+.borderBottomChat {
+  border-bottom: 0.1px solid #3f006f;
+}
+
+@media screen and (max-width: 639px) {
+  .lucide-plus-icon {
+    width: 15px;
+    height: 15px;
+  }
 }
