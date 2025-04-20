@@ -8,7 +8,7 @@ import { Input } from "../../animations/Input";
 import { Textarea } from "../../animations/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfilo, putProfilo } from "@/redux/actions/profilo";
-import { getUtenteLoggato } from "../redux/actions/account.js";
+import { getUtenteLoggato, putNomeUtente } from "../redux/actions/account.js";
 import {
   DialogTrigger,
   Dialog,
@@ -23,6 +23,7 @@ import BondSpinner from "./BondSpinner";
 const ImpUser = () => {
   const [bio, setBio] = useState("");
   const [immagine, setImmagine] = useState("");
+  const [username, setUsername] = useState("");
   const [imgFile, setImgFile] = useState(null);
   const [urlMode, setUrlMode] = useState(true);
   const profilo = useSelector((state) => state.profilo.profilo);
@@ -30,6 +31,8 @@ const ImpUser = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.account.userLogged);
   const fileInputRef = useRef(null);
+  const utenti = useSelector((state) => state.account.allUsers);
+  const [error, setError] = useState(false);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -51,59 +54,97 @@ const ImpUser = () => {
       setBio(profilo.bio);
       setImmagine(profilo.immagine);
     }
-  }, [profilo]);
+
+    if (profile) {
+      setUsername(profile.nomeUtente);
+    }
+  }, [profilo, profile]);
 
   const handleImageUpload = () => {
     const formData = new FormData();
 
-    if (urlMode && immagine) {
-      formData.append("immagine", immagine);
-    } else if (!urlMode && imgFile) {
-      formData.append("imgFile", imgFile);
+    formData.append("Bio", bio);
+
+    if (urlMode) {
+      if (!immagine) {
+        toast.error("Per favore inserisci un URL valido");
+        return;
+      }
+      formData.append("Immagine", immagine);
+
+      const emptyBlob = new Blob([""], { type: "application/octet-stream" });
+      formData.append("ImgFile", emptyBlob, "empty.txt");
     } else {
-      toast("Per favore inserisci un'immagine valida.");
+      if (!imgFile) {
+        toast.error("Per favore seleziona un file");
+        return;
+      }
+      formData.append("ImgFile", imgFile);
+    }
+
+    dispatch(putProfilo(formData))
+      .then(() => {
+        toast(
+          <p className="flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>{" "}
+            &nbsp; Profilo aggiornato!
+          </p>,
+          {
+            style: {
+              background: "rgb(7, 176, 7)",
+              border: "none",
+            },
+          }
+        );
+        dispatch(getUtenteLoggato());
+      })
+      .catch((error) => {
+        toast.error(error.message || "Errore durante l'aggiornamento");
+      });
+  };
+
+  const saveBio = () => {
+    const formData = new FormData();
+
+    if (imgFile) {
+      formData.append("ImgFile", imgFile);
+    } else if (immagine) {
+      if (immagine.startsWith("http")) {
+        formData.append("Immagine", immagine);
+      } else {
+        formData.append("Immagine", `http://192.168.1.59:5220${immagine}`);
+      }
+    }
+
+    formData.append("Bio", bio);
+
+    const usernameInUso = utenti.find(
+      (u) => u.nomeUtente === username && u.id !== profile.id
+    );
+
+    if (usernameInUso) {
+      setError(true);
+
       return;
     }
 
     dispatch(putProfilo(formData));
-    dispatch(getUtenteLoggato());
-
-    toast(
-      <p className="flex items-center text-white">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-circle-check"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>{" "}
-        &nbsp; Immagine di profilo aggiornata!
-      </p>,
-      {
-        style: {
-          background: "rgb(7, 176, 7)",
-          border: "none",
-        },
-      }
-    );
-  };
-
-  // Salva la bio
-  const saveBio = () => {
-    const formData = new FormData();
-    formData.append("bio", bio);
-
-    dispatch(putProfilo(formData));
     setEditBio(false);
-
+    dispatch(putNomeUtente(username));
     toast(
       <p className="flex items-center text-white">
         <svg
@@ -175,7 +216,7 @@ const ImpUser = () => {
                     <div className="grid gap-2">
                       <div className="flex justify-between mb-2">
                         <button
-                          className={`py-1 px-3 rounded-md ${
+                          className={`py-1 px-3 rounded-md cursor-pointer ${
                             urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
                           }`}
                           onClick={() => setUrlMode(true)}
@@ -183,7 +224,7 @@ const ImpUser = () => {
                           URL
                         </button>
                         <button
-                          className={`py-1 px-3 rounded-md ${
+                          className={`py-1 px-3 rounded-md cursor-pointer ${
                             !urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
                           }`}
                           onClick={openFileSelector}
@@ -233,24 +274,63 @@ const ImpUser = () => {
               </div>
 
               <div className="flex-1">
-                <div>
-                  <label
-                    className="text-md font-semibold block text-center md:text-start"
-                    style={{ color: "#c476ff" }}
-                  >
-                    Username
-                  </label>
+                {!editBio ? (
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold mb-0">
-                      {profile && profile.nomeUtente} &nbsp;
-                    </h3>
+                    <div>
+                      <label
+                        className="text-md font-semibold block text-center md:text-start"
+                        style={{ color: "#c476ff" }}
+                      >
+                        Username
+                      </label>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-semibold mb-0">
+                          {profile && profile.nomeUtente} &nbsp;
+                        </h3>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setEditBio(true)}
+                      className="hover:bg-[#7112b7]/30 p-2 rounded-2xl hidden md:block"
+                    >
+                      <Edit2 size={18} />
+                    </button>
                   </div>
-                </div>
+                ) : (
+                  <div>
+                    <label
+                      className="text-md font-semibold block text-center md:text-start mb-1"
+                      style={{ color: "#c476ff" }}
+                    >
+                      Username
+                    </label>
+                    <Input
+                      value={username}
+                      onChange={(e) => {
+                        setError(false);
+                        setUsername(e.target.value);
+                      }}
+                      className="bg-[#7112b7]/30 border border-[#3f006f] focus:border-[#ad42ff] rounded-sm"
+                      maxLength={10}
+                      minLength={5}
+                    />
+                    <div className="flex justify-between mt-2">
+                      <span className="text-xs">
+                        {username ? username.length : 0}/10 caratteri
+                      </span>
+                    </div>
+                    {error && (
+                      <p className="text-sm text-center Errors">
+                        Username già in uso.
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </Card>
           <Card className="border-0 mt-5">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between">
               <h3
                 className="text-lg font-semibold"
                 style={{ color: "#c476ff" }}
@@ -260,7 +340,7 @@ const ImpUser = () => {
               {!editBio && (
                 <button
                   onClick={() => setEditBio(true)}
-                  className="hover:bg-[#7112b7]/30 p-2 rounded-2xl"
+                  className="hover:bg-[#7112b7]/30 p-2 rounded-2xl block md:hidden"
                 >
                   <Edit2 size={18} />
                 </button>
@@ -288,7 +368,7 @@ const ImpUser = () => {
                     </button>
                     <button
                       onClick={() => setEditBio(false)}
-                      className="border border-[#732880] hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
+                      className="hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
                     >
                       Annulla
                     </button>

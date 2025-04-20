@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/actions/account.js";
+import { getAllUtenti, login } from "../redux/actions/account.js";
 import BondSpinner from "./BondSpinner.jsx";
 
 const Accedi = () => {
@@ -12,6 +12,11 @@ const Accedi = () => {
   const [errorMessages, setErrorMessages] = useState({});
   const errore = useSelector((state) => state.account.isLoginError);
   const [isLoading, setIsLoading] = useState(false);
+  const utenti = useSelector((state) => state.account.allUsers);
+
+  useEffect(() => {
+    dispatch(getAllUtenti());
+  }, [dispatch]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -20,6 +25,12 @@ const Accedi = () => {
 
     if (!email || !password) {
       errors.generic = "Compilare tutti i campi!";
+    }
+
+    const utenteEsistente = utenti.find((u) => u.email === email);
+
+    if (!utenteEsistente) {
+      errors.generic = "Utente inesistente. Registrati per poter accedere.";
     }
 
     if (Object.keys(errors).length > 0 || errore) {
@@ -46,12 +57,12 @@ const Accedi = () => {
   return isLoading ? (
     <BondSpinner />
   ) : (
-    <div className="container mx-auto my-22 flex justify-center fade-in">
+    <div className="container mx-auto my-22 flex-col items-center justify-center fade-in">
       {errorMessages.generic && (
-        <p className="Errors">{errorMessages.generic}</p>
+        <p className="Errors text-center mb-2">{errorMessages.generic}</p>
       )}
-      {errore && <p className="Errors">{errore}</p>}
-      <form className="form signInForm" onSubmit={handleLogin}>
+      {errore && <p className="Errors text-center">{errore}</p>}
+      <form className="form signInForm mx-auto" onSubmit={handleLogin}>
         <p className="title">ACCEDI</p>
         <p className="message">
           Accedi ora ed ottieni accesso completo alla nostra app.{" "}

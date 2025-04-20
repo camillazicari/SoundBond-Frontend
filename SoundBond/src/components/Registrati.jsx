@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { register } from "../redux/actions/account.js";
+import { useEffect, useState } from "react";
+import { getAllUtenti, register } from "../redux/actions/account.js";
 import BondSpinner from "./BondSpinner.jsx";
 
 const Registrati = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const errore = useSelector((state) => state.account.isRegisterError);
+  const utenti = useSelector((state) => state.account.allUsers);
   const [errorMessages, setErrorMessages] = useState({});
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +16,10 @@ const Registrati = () => {
   const [email, setEmail] = useState("");
   const [dataDiNascita, setDataDiNascita] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    dispatch(getAllUtenti());
+  }, [dispatch]);
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -35,12 +39,20 @@ const Registrati = () => {
       errors.username = "Il nome utente deve avere almeno 5 caratteri.";
     }
 
-    if (errore) {
+    const usernameEsistente = utenti.find((u) => u.nomeUtente === username);
+
+    if (usernameEsistente) {
       errors.username = "Nome utente già in uso";
     }
 
     if (!emailRegex.test(email)) {
       errors.email = "Email non valida.";
+    }
+
+    const emailPresente = utenti.find((u) => u.email === email);
+
+    if (emailPresente) {
+      errors.email = "Email già in uso.";
     }
 
     if (!passwordRegex.test(password)) {
@@ -64,7 +76,6 @@ const Registrati = () => {
     setDataDiNascita("");
     setEmail("");
     setErrorMessages({});
-    e.target.reset();
 
     dispatch(
       register(
@@ -103,7 +114,10 @@ const Registrati = () => {
             type="text"
             placeholder=" "
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Nome</span>
@@ -115,7 +129,10 @@ const Registrati = () => {
             type="text"
             placeholder=" "
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Cognome</span>
@@ -130,7 +147,10 @@ const Registrati = () => {
             type="date"
             placeholder=" "
             value={dataDiNascita}
-            onChange={(e) => setDataDiNascita(e.target.value)}
+            onChange={(e) => {
+              setDataDiNascita(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Data di nascita</span>
@@ -142,7 +162,10 @@ const Registrati = () => {
             type="text"
             placeholder=" "
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Username</span>
@@ -157,7 +180,10 @@ const Registrati = () => {
             type="text"
             placeholder=" "
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Email</span>
@@ -172,7 +198,10 @@ const Registrati = () => {
             type="password"
             placeholder=" "
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrorMessages({});
+            }}
             required
           />
           <span>Password</span>

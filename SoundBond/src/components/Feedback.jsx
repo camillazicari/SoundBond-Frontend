@@ -1,6 +1,5 @@
 import { MarqueeDemo } from "./MarqueeDemo";
 import { useRef } from "react";
-import { Footer } from "./Footer";
 import { Rate } from "antd";
 
 const Feedback = () => {

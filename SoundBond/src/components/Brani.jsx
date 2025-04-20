@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { getUtenteLoggato } from "../redux/actions/account.js";
 import { deleteBrano, getBrani, postBrani } from "@/redux/actions/brani";
 import BondSpinner from "./BondSpinner";
+import { postProfilo } from "@/redux/actions/profilo";
 
 const Brani = () => {
   const user = useSelector((state) => state.account.userLogged);
@@ -102,7 +103,8 @@ const Brani = () => {
       await Promise.all(
         songs.map((song) =>
           dispatch(postBrani(song.title, song.name, song.image))
-        )
+        ),
+        dispatch(postProfilo())
       );
       setIsLoading(false);
       navigate("/");
