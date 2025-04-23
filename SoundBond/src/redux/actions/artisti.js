@@ -99,7 +99,7 @@ export const deleteArtista = (nome) => {
       );
       if (response.ok) {
         dispatch(getArtisti());
-      } else throw new Error("errore nella putArtisti");
+      } else throw new Error("errore nella response di deleteArtista");
     } catch (error) {
       console.error("ERRORE:", error);
     }

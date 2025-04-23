@@ -1207,3 +1207,144 @@ input[type="range"].time {
     height: 15px;
   }
 }
+
+/* STELLINE */
+
+/* Colore delle stelle vuote */
+.custom-rate .ant-rate-star-zero .ant-rate-star-second,
+.custom-rate .ant-rate-star-zero .ant-rate-star-first {
+  color: #555 !important;
+}
+
+/* Colore delle stelle piene */
+.custom-rate .ant-rate-star-full,
+.custom-rate .ant-rate-star-half .ant-rate-star-second {
+  color: #fadb14 !important;
+}
+
+/* Colore della mezza stella destra */
+.custom-rate .ant-rate-star-half .ant-rate-star-second {
+  color: #555 !important;
+}
+
+.custom-rate {
+  font-size: 50px !important;
+}
+
+@media screen and (min-width: 640px) {
+  .custom-rate {
+    font-size: 60px !important;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .custom-rate {
+    font-size: 70px !important;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .custom-rate {
+    font-size: 80px !important;
+  }
+}
+
+@media screen and (min-width: 1536px) {
+  .custom-rate {
+    font-size: 90px !important;
+  }
+}
+
+/* BOTTONI RECENSIONE */
+
+.binButton,
+.binButton2 {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  gap: 1px;
+}
+
+.svgIcon {
+  width: 30px;
+  transition-duration: 0.3s;
+}
+
+.svgIcon path {
+  fill: #9b1fff;
+}
+
+.binButton:hover .svgIcon path,
+.binButton2:hover .svgIcon path {
+  fill: white;
+}
+
+.binButton:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+  gap: 0;
+}
+
+.binButton2:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background: linear-gradient(to right, #d1a4ff, #9b1fff);
+  align-items: center;
+  gap: 0;
+}
+
+.binButton:hover .bin-bottom,
+.binButton2:hover .bin-bottom {
+  width: 50px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+}
+.bin-top {
+  transform-origin: bottom right;
+}
+.binButton:hover .bin-top {
+  width: 50px;
+  transition-duration: 0.3s;
+  transform: translateY(60%) rotate(160deg);
+}
+.binButton::before {
+  position: absolute;
+  top: -20px;
+  content: "Elimina";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.binButton2::before {
+  position: absolute;
+  top: -20px;
+  content: "Modifica";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.binButton:hover::before,
+.binButton2:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(35px);
+  transition-duration: 0.3s;
+}

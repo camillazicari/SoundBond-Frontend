@@ -362,7 +362,7 @@ const ImpUser = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={saveBio}
-                      className="bg-[#ad42ff] hover:bg-[#7112b7] py-1 px-3 rounded-md"
+                      className="bg-[#ad42ff] hover:bg-[#7112b7] py-1 px-3 rounded-md transition-colors"
                     >
                       Salva
                     </button>

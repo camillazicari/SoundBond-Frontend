@@ -84,7 +84,7 @@ export const login = (email, password, navigate) => {
                         navigate("/generi");
                     }
                 } else {
-                    throw new Error("Errore nella fetch di userLogged");
+                    throw new Error("Errore nella response di userLogged");
                 }
 
             } else {
@@ -139,7 +139,7 @@ export const getAllUtenti = () => {
                     payload: data.utenti,
                 });
             } else {
-                throw new Error("Errore nella response di getUtenti");
+                throw new Error("Errore nella response di getAllUtenti");
             }
         } catch (error) {
             console.error("ERRORE FETCH:" + error);
@@ -195,7 +195,7 @@ export const getUtenteLoggato = () => {
                 navigate("/homeIniziale");
             }
             else {
-                throw new Error("Errore nella response di getUtente");
+                throw new Error("Errore nella response di getUtenteLoggato");
             }
         } catch (error) {
             console.error("ERRORE FETCH:" + error);
@@ -222,7 +222,7 @@ export const putNomeUtente = (nomeUtente) => {
             if (response.ok) {
                 dispatch(getUtenteLoggato());
             } else {
-                throw new Error("errore nella putNomeUtente");
+                throw new Error("errore nella response di putNomeUtente");
             }
         } catch (error) {
             console.error("ERRORE:", error);
@@ -242,7 +242,7 @@ export const deleteUtente = (navigate) => {
             });
             if (response.ok) {
                 navigate("/homeIniziale")
-            } else throw new Error("errore nella deleteUtente");
+            } else throw new Error("errore nella response di deleteUtente");
         } catch (error) {
             console.error("ERRORE:", error);
         }
