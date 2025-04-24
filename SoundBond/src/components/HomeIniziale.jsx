@@ -7,7 +7,7 @@ const HomeIniziale = () => {
     <div className="fade-in relative">
       <HeroParallaxDemo />
       <HomeCards />
-      <div className=" my-11">
+      <div className="my-11">
         <GradientBig
           colors={["#C476FF", "#D29CFF", "#B060F0", "#E2B8FF", "#A94CE6"]}
           animationSpeed={5}

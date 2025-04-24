@@ -238,7 +238,7 @@ const Navbar = () => {
               <img
                 src="src/assets/SoundBond/SoundBondViola.png"
                 alt="Logo"
-                className="w-32 md:w-40 lg:w-48 h-auto transition-all duration-300"
+                className="w-39 md:w-40 lg:w-48 h-auto transition-all duration-300"
               />
             </Link>
           </div>
@@ -286,7 +286,7 @@ const Navbar = () => {
 
           <button
             type="button"
-            className="md:hidden p-2 rounded-lg border"
+            className="md:hidden p-2"
             style={{
               borderColor: "#ad42ff",
               backgroundColor: "rgba(12, 5, 18, 0.5)",
@@ -296,9 +296,9 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             {menuOpen ? (
-              <X size={24} color="#ad42ff" />
+              <X size={30} color="#ad42ff" />
             ) : (
-              <Menu size={24} color="#ad42ff" />
+              <Menu size={30} color="#ad42ff" />
             )}
           </button>
 

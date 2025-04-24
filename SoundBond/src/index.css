@@ -58,7 +58,6 @@ body {
 
 @media screen and (min-width: 1024px) {
   .shiny-text {
-    font-size: 3.5rem !important;
     line-height: 1;
   }
 }
@@ -154,7 +153,7 @@ body {
 
 .footer {
   background-image: linear-gradient(to top, #9b1fff -150%, #0c0512 100%);
-  padding: 2rem 2rem 0 2rem;
+  padding: 1rem 1rem 0 1rem;
   line-height: 1.3;
 }
 

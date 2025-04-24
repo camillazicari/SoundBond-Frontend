@@ -1,9 +1,22 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { Link } from "react-router-dom";
 
 export const HeroParallax = ({ products = [] }) => {
+  function useIsLargeScreen() {
+    const [isLarge, setIsLarge] = useState(false);
+
+    useEffect(() => {
+      const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
+      checkScreen();
+      window.addEventListener("resize", checkScreen);
+      return () => window.removeEventListener("resize", checkScreen);
+    }, []);
+
+    return isLarge;
+  }
+
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
@@ -14,6 +27,7 @@ export const HeroParallax = ({ products = [] }) => {
   });
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
+  const isLargeScreen = useIsLargeScreen();
 
   const translateX = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, 1000]),
@@ -36,13 +50,17 @@ export const HeroParallax = ({ products = [] }) => {
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(
+      scrollYProgress,
+      [0, 0.2],
+      isLargeScreen ? [-700, 500] : [-700, 200]
+    ),
     springConfig
   );
   return (
     <div
       ref={ref}
-      className="h-[160vh] md:h-[250vh] lg:h-[295vh] pt-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[225vh] lg:h-[277vh] pt-110 md:pt-40 lg:pt-20 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -54,7 +72,7 @@ export const HeroParallax = ({ products = [] }) => {
         }}
         className="relative"
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20 relative">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-10 mb-10 relative">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -63,7 +81,7 @@ export const HeroParallax = ({ products = [] }) => {
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row  mb-20 space-x-20 relative">
+        <motion.div className="flex flex-row  mb-10 space-x-10 relative">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -72,7 +90,7 @@ export const HeroParallax = ({ products = [] }) => {
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 relative">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-10 relative">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
@@ -88,8 +106,8 @@ export const HeroParallax = ({ products = [] }) => {
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-      <h1 className="ms-5 shiny-text font-extrabold leading-10 text-4xl md:text-5xl md:leading-12 lg:leading-15">
+    <div className="relative mx-auto pt-20 md:py-40 px-4 w-full left-0 bottom-65 md:bottom-10 lg:top-8">
+      <h1 className="ms-5 shiny-text font-extrabold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-10 md:leading-12 lg:leading-[5rem]">
         LA TUA MUSICA, <br />
         LE TUE CONNESSIONI
       </h1>
@@ -107,13 +125,11 @@ export const ProductCard = ({ product, translate }) => {
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-[30rem] relative shrink-0"
+      className="group/product h-70 w-85 md:w-95 lg:h-86 lg:w-[30rem] relative shrink-0"
     >
-      <Link to={product.link} className="block group-hover/product:shadow-2xl ">
+      <Link to={product.link} className="block group-hover/product:shadow-2xl">
         <img
           src={product.thumbnail}
-          height="600"
-          width="600"
           className="object-cover object-left-top absolute h-full w-full inset-0"
           alt={product.title}
         />

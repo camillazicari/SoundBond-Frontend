@@ -16,7 +16,7 @@ const HomeCards = () => {
       </p>
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4 mb-8">
         <SpotlightCard
-          className="custom-spotlight-card"
+          className="custom-spotlight-card mx-4 md:mx-0"
           spotlightColor="rgba(173, 66, 255, 0.25)"
           title="ESPLORA LA MUSICA"
           subtitle="Scopri brani e artisti da tutto il mondo."
@@ -38,7 +38,7 @@ const HomeCards = () => {
           }
         ></SpotlightCard>
         <SpotlightCard
-          className="custom-spotlight-card"
+          className="custom-spotlight-card mx-4 md:mx-0"
           spotlightColor="rgba(173, 66, 255, 0.25)"
           title="SCOPRI LE PLAYLIST DEL GIORNO"
           subtitle="Playlist quotidiane su misura per i tuoi gusti."
@@ -64,7 +64,7 @@ const HomeCards = () => {
           }
         ></SpotlightCard>
         <SpotlightCard
-          className="custom-spotlight-card"
+          className="custom-spotlight-card mx-4 md:mx-0"
           spotlightColor="rgba(173, 66, 255, 0.25)"
           title="CONNETTITI CON ALTRI UTENTI"
           subtitle="Trova nuovi compagni di ascolto."
