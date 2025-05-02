@@ -126,7 +126,7 @@ const ImpUser = () => {
       if (immagine.startsWith("http")) {
         formData.append("Immagine", immagine);
       } else {
-        formData.append("Immagine", `http://192.168.1.59:5220${immagine}`);
+        formData.append("Immagine", `http://192.168.1.12:5220${immagine}`);
       }
     }
 
@@ -190,7 +190,7 @@ const ImpUser = () => {
                   <AvatarImage
                     src={
                       immagine && immagine.startsWith("/")
-                        ? `http://192.168.1.59:5220${immagine}`
+                        ? `http://192.168.1.12:5220${immagine}`
                         : immagine
                     }
                     alt={profile && profile.nomeUtente}

@@ -13,9 +13,15 @@ const Accedi = () => {
   const errore = useSelector((state) => state.account.isLoginError);
   const [isLoading, setIsLoading] = useState(false);
   const utenti = useSelector((state) => state.account.allUsers);
+  const [usersLoaded, setUsersLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllUtenti());
+    // Carica gli utenti e imposta il flag quando completato
+    dispatch(getAllUtenti())
+      .then(() => setUsersLoaded(true))
+      .catch((err) =>
+        console.error("Errore nel caricamento degli utenti:", err)
+      );
   }, [dispatch]);
 
   const handleLogin = (e) => {
@@ -23,28 +29,41 @@ const Accedi = () => {
 
     const errors = {};
 
+    // Validazione campi vuoti
     if (!email || !password) {
       errors.generic = "Compilare tutti i campi!";
-    }
-
-    const utenteEsistente = utenti.find((u) => u.email === email);
-
-    if (!utenteEsistente) {
-      errors.generic = "Utente inesistente. Registrati per poter accedere.";
-    }
-
-    if (Object.keys(errors).length > 0 || errore) {
       setErrorMessages(errors);
       return;
     }
+
+    // Verifica se gli utenti sono stati caricati
+    if (!usersLoaded || utenti.length === 0) {
+      errors.generic = "Caricamento utenti in corso, riprova tra un attimo...";
+      setErrorMessages(errors);
+      return;
+    }
+
+    // Cerca l'utente con email corrispondente (case insensitive)
+    const utenteEsistente = utenti.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    // Verifica se l'utente esiste
+    if (!utenteEsistente) {
+      errors.generic = "Utente inesistente. Registrati per poter accedere.";
+      setErrorMessages(errors);
+      return;
+    }
+
+    // Se non ci sono errori, procedi con il login
     setIsLoading(true);
-    setEmail("");
-    setPassword("");
     setErrorMessages({});
-    e.target.reset();
+
     dispatch(login(email, password, navigate))
       .then(() => {
-        setIsLoading(false);
+        setEmail("");
+        setPassword("");
+        e.target.reset();
       })
       .catch((err) => {
         console.error("Login fallito:", err);
@@ -95,7 +114,12 @@ const Accedi = () => {
           <span>Password</span>
         </label>
 
-        <button className="submit text-center">Accedi ora</button>
+        <button
+          className="submit text-center cursor-pointer"
+          disabled={!usersLoaded || utenti.length === 0}
+        >
+          Accedi ora
+        </button>
 
         <p className="signin">
           Non hai un account? <Link to={"/accedi/registrati"}>Registrati</Link>{" "}

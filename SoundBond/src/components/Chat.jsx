@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { getConversazioni } from "@/redux/actions/chat.js";
 
-const API_BASE_URL = "http://192.168.1.59:5220/api";
+const API_BASE_URL = "http://192.168.1.12:5220/api";
 
 const Chat = ({ otherUser }) => {
   const [messages, setMessages] = useState([]);
@@ -291,7 +291,11 @@ const Chat = ({ otherUser }) => {
             <path d="m15 18-6-6 6-6" />
           </svg>
           <img
-            src={ricevente?.profilo?.immagine}
+            src={
+              ricevente?.profilo?.immagine.startsWith("http")
+                ? ricevente?.profilo?.immagine
+                : `http://192.168.1.12:5220${ricevente?.profilo?.immagine}`
+            }
             className="w-10 h-10 md:w-15 md:h-15 object-cover rounded-full me-4"
             alt=""
           />

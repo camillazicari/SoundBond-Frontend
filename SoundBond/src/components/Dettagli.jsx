@@ -86,7 +86,11 @@ const Dettagli = () => {
             <div className="w-34 h-34 rounded-full flex items-center justify-center overflow-hidden mb-4 md:mb-0 md:mr-6">
               {user?.profilo ? (
                 <img
-                  src={user?.profilo?.immagine}
+                  src={
+                    user?.profilo?.immagine.startsWith("http")
+                      ? user?.profilo?.immagine
+                      : `http://192.168.1.12:5220${user?.profilo?.immagine}`
+                  }
                   alt={user?.nome}
                   className="w-full h-full object-cover"
                 />

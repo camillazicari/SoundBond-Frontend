@@ -33,7 +33,11 @@ const UserCard = memo(({ utente, navigate }) => {
       <div className="flex items-center gap-x-4">
         <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
           <AvatarImage
-            src={utente.profilo?.immagine}
+            src={
+              utente?.profilo?.immagine.startsWith("http")
+                ? utente?.profilo?.immagine
+                : `http://192.168.1.12:5220${utente?.profilo?.immagine}`
+            }
             alt={utente.profilo?.nomeUtente}
           />
           <AvatarFallback className="bg-[#ad42ff] text-2xl">

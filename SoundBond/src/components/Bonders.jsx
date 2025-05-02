@@ -52,7 +52,13 @@ const BonderCard = ({ bonder }) => {
     <div className="bg-gradient-to-br from-[#1e0a23] to-[#5d1093] rounded-xl p-6 shadow-lg border border-[#7112b7]/30 hover:border-[#ad42ff] transition-all">
       <div className="flex items-center space-x-4 mb-4">
         <Avatar className="h-16 w-16">
-          <AvatarImage src={bonder.profilo?.immagine} />
+          <AvatarImage
+            src={
+              bonder?.profilo?.immagine.startsWith("http")
+                ? bonder?.profilo?.immagine
+                : `http://192.168.1.12:5220${bonder?.profilo.immagine}`
+            }
+          />
           <AvatarFallback className="bg-[#ad42ff]">
             {bonder.nome?.charAt(0)}
           </AvatarFallback>

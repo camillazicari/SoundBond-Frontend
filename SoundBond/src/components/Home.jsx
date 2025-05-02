@@ -53,13 +53,13 @@ const Home = () => {
         </div>
         <div className="flex flex-col md:flex-row items-center justify-center gap-5">
           <button
-            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient font-semibold"
+            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient font-semibold cursor-pointer"
             onClick={() => navigate("/esplora")}
           >
             Scopri nuova musica
           </button>
           <button
-            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-3 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient font-semibold"
+            className="text-sm sm:text-base rounded-full py-3 md:py-2 px-3 lg:px-5 lg:py-4 xl:px-7 xl:py-5 buttonGradient font-semibold cursor-pointer"
             onClick={() => navigate("/connessioni")}
           >
             Trova nuove connessioni

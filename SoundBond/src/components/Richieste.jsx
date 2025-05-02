@@ -213,7 +213,11 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
           <div className="flex items-center gap-x-4">
             <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
               <AvatarImage
-                src={richiesta.receiver?.profilo?.immagine}
+                src={
+                  richiesta.receiver?.profilo?.immagine.startsWith("http")
+                    ? richiesta.receiver?.profilo?.immagine
+                    : `http://192.168.1.12:5220${richiesta.receiver?.profilo?.immagine}`
+                }
                 alt={richiesta.receiver?.nome}
               />
               <AvatarFallback className="bg-[#ad42ff] text-2xl">

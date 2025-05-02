@@ -202,8 +202,12 @@ const ChatGenerali = () => {
               >
                 <div className="w-1/3 flex items-center justify-start">
                   <img
-                    src={conv?.immagine}
-                    alt=""
+                    src={
+                      conv?.immagine.startsWith("http")
+                        ? conv?.immagine
+                        : `http://192.168.1.12:5220${conv?.immagine}`
+                    }
+                    alt="avatar"
                     className="w-13 h-13 object-cover rounded-full me-4"
                   />
                   <p className=" text-sm md:text-base">

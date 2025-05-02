@@ -315,7 +315,11 @@ const Connessioni = () => {
                   <div className="flex items-center gap-4">
                     <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#7112b7]">
                       <AvatarImage
-                        src={match.user?.profilo?.immagine}
+                        src={
+                          match?.user?.profilo?.immagine.startsWith("http")
+                            ? match?.user?.profilo?.immagine
+                            : `http://192.168.1.12:5220${match?.user?.profilo?.immagine}`
+                        }
                         alt={match.user?.profilo?.nomeUtente}
                       />
                       <AvatarFallback className="bg-[#ad42ff] text-2xl">
