@@ -2,11 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useGetUserMatches } from "./data/matchMaking.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getUtenteLoggato, getUtenti } from "@/redux/actions/account.js";
-import { Card } from "../../animations/Card";
+import { Card } from "../../animations/Card.jsx";
 import BondSpinner from "./BondSpinner.jsx";
-import { Avatar, AvatarFallback, AvatarImage } from "../../animations/Avatar";
-import Badge from "../../animations/Badge";
-import { usePlayer } from "../context/PlayerContext";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../animations/Avatar.jsx";
+import Badge from "../../animations/Badge.jsx";
+import { usePlayer } from "../context/PlayerContext.jsx";
 import { getBonders } from "@/redux/actions/bonders.js";
 import {
   deleteRichiesta,

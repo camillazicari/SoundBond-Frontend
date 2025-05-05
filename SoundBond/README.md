@@ -1,12 +1,91 @@
-# React + Vite
+<p align="center">
+  <img src="src/assets/SoundBond/SoundBondViola.png" alt="Logo" width="180"/>
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h2 align="center">La tua musica, le tue connessioni.</h2>
 
-Currently, two official plugins are available:
+**SoundBond** è un social network musicale che abbina utenti in base ai loro gusti. Ascolta brani, esplora nuove playlist, invia richieste e chatta con chi condivide la tua passione.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🚀 Funzionalità principali
 
-## Expanding the ESLint configuration
+- 🔒 Registrazione e login sicuri tramite ASP.NET Identity
+- 🎵 Playlist personalizzate in base ai gusti musicali
+- 🎧 Player musicale con preview via API Deezer
+- 🤝 Sistema di match tra utenti compatibili
+- 📝 Creazione profilo musicale con generi, artisti e brani preferiti
+- 💬 Chat in tempo reale tramite SignalR
+- 🌟 Feedback sull’esperienza utente
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+<hr/>
+
+### 🛠️ Tech Stack
+
+**Frontend**
+
+- React + Vite
+- TailwindCSS
+- Redux Toolkit
+- React Router DOM
+
+**Backend**
+
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- ASP.NET Identity
+- SignalR
+
+**Servizi esterni**
+
+- Deezer API
+
+<hr/>
+
+### 💻 Installazione e setup
+
+**Prerequisiti**
+
+- Node.js
+
+- .NET 8 SDK
+
+- SQL Server
+
+- Visual Studio 2022 o superiore
+
+**Frontend**
+
+Apri il terminale ed esegui i seguenti comandi:
+
+```bash
+$ git clone https://github.com/camillazicari/CAPSTONE.git
+$ cd CAPSTONE
+$ npm install
+$ npm run dev
+```
+
+**Backend**
+
+1. Apri SoundBond.API con Visual Studio
+
+2. Configura appsettings.json con la tua stringa di connessione per SQL Server
+
+3. Applica le migration (se necessario) eseguendo i comandi:
+
+```bash
+$ dotnet ef database update
+```
+
+4. Avvia il progetto (assicurati che usi HTTP)
+
+<hr/>
+
+### 🔮 Funzionalità future
+
+Notifiche real-time
+
+Modalità ascolto condiviso
+
+Miglioramenti all'algoritmo di match
+
+Integrazione Spotify
