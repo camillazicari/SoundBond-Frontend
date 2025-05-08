@@ -1,5 +1,5 @@
 import React from "react";
-import { BsFacebook, BsGithub, BsInstagram, BsTwitter } from "react-icons/bs";
+import { BsFacebook, BsGithub, BsInstagram, BsDiscord } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -49,7 +49,10 @@ export function Footer() {
                 </h5>
                 <ul>
                   <li>
-                    <a href="#" className="text-sm lg:text-base">
+                    <a
+                      href="https://github.com/camillazicari"
+                      className="text-sm lg:text-base"
+                    >
                       Github
                     </a>
                   </li>
@@ -98,13 +101,13 @@ export function Footer() {
                 <a href="#">
                   <BsFacebook size={24} />
                 </a>
-                <a href="#">
+                <a href="https://www.instagram.com/camiuzinwonderland/">
                   <BsInstagram size={24} />
                 </a>
                 <a href="#">
-                  <BsTwitter size={24} />
+                  <BsDiscord size={24} />
                 </a>
-                <a href="#">
+                <a href="https://github.com/camillazicari">
                   <BsGithub size={24} />
                 </a>
               </div>
