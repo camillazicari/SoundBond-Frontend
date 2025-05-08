@@ -32,6 +32,12 @@ const accountReducer = (state = initialState, action) => {
         logout: true,
       };
 
+    case "RESET_LOGOUT":
+      return {
+        ...state,
+        logout: false,
+      };
+
     case "REGISTER_ERROR":
       return {
         ...state,

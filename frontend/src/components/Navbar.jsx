@@ -69,49 +69,69 @@ const Navbar = () => {
     navigate("/bonders");
   };
 
-  useEffect(() => {
-    if (isLoggedIn && userId) {
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/chatHub")
-        .withAutomaticReconnect()
-        .build();
-
-      hubConnectionRef.current = connection;
-
-      connection.on("ReceiveMessage", (senderId, message) => {
-        console.log(`Nuovo messaggio ricevuto da ${senderId}: ${message}`);
-        dispatch(getConversazioni());
-      });
-
-      connection.on("ReceiveRequest", () => {
-        console.log("Nuova richiesta ricevuta");
-        dispatch(getRichiesteRicevute());
-      });
-
-      connection
-        .start()
-        .then(() => {
-          console.log("SignalR Connected");
-          return connection.invoke("JoinUserGroup", userId);
-        })
-        .then(() => {
-          console.log(`Utente ${userId} collegato al proprio gruppo`);
-        })
-        .catch((err) => console.error("SignalR Connection Error: ", err));
-
-      return () => {
-        if (connection.state === signalR.HubConnectionState.Connected) {
-          connection.stop();
-        }
-      };
+  const closeSignalRConnection = async () => {
+    if (
+      hubConnectionRef.current &&
+      hubConnectionRef.current.state === signalR.HubConnectionState.Connected
+    ) {
+      console.log("Closing SignalR connection");
+      try {
+        await hubConnectionRef.current.stop();
+        console.log("SignalR connection closed successfully");
+        hubConnectionRef.current = null;
+      } catch (err) {
+        console.error("Error closing SignalR connection:", err);
+      }
     }
+  };
+
+  useEffect(() => {
+    const setupConnection = async () => {
+      await closeSignalRConnection();
+
+      if (isLoggedIn && userId) {
+        console.log(`Setting up new SignalR connection for user: ${userId}`);
+        const connection = new signalR.HubConnectionBuilder()
+          .withUrl("/chatHub")
+          .withAutomaticReconnect()
+          .build();
+
+        hubConnectionRef.current = connection;
+
+        connection.on("ReceiveMessage", (senderId, message) => {
+          console.log(`Nuovo messaggio ricevuto da ${senderId}: ${message}`);
+          dispatch(getConversazioni());
+        });
+
+        connection.on("ReceiveRequest", () => {
+          console.log("Nuova richiesta ricevuta");
+          dispatch(getRichiesteRicevute());
+        });
+
+        try {
+          await connection.start();
+          console.log("SignalR Connected");
+          await connection.invoke("JoinUserGroup", userId);
+          console.log(`Utente ${userId} collegato al proprio gruppo`);
+        } catch (err) {
+          console.error("SignalR Connection Error: ", err);
+        }
+      }
+    };
+
+    setupConnection();
+
+    return () => {
+      closeSignalRConnection();
+    };
   }, [isLoggedIn, userId, dispatch]);
 
   useEffect(() => {
-    if (shouldLogout && hubConnectionRef.current) {
-      hubConnectionRef.current.stop();
+    if (shouldLogout) {
+      closeSignalRConnection();
+      dispatch({ type: "RESET_LOGOUT" });
     }
-  }, [shouldLogout]);
+  }, [shouldLogout, dispatch]);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -192,7 +212,7 @@ const Navbar = () => {
                   <Link
                     to={"/bonders"}
                     onClick={() => {
-                      handleBonderClick();
+                      handleBonderClick(bonder.id);
                     }}
                   >
                     Hai 1 nuovo bonder: {bonder.otherUser.nome}{" "}

@@ -29,6 +29,7 @@ import Dettagli from "./components/Dettagli";
 import Chat from "./components/Chat";
 import ChatWrapper from "./components/ChatWrapper";
 import ChatGenerali from "./components/ChatGenerali";
+import NotFound from "./components/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -203,6 +204,8 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Player />

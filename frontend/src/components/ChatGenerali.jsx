@@ -57,20 +57,15 @@ const ChatGenerali = () => {
         fetchConversazioni();
       });
 
+      connection.on("MessaggiLetti", (otherUserId) => {
+        console.log(`Messaggi di ${otherUserId} marcati come letti`);
+        fetchConversazioni();
+      });
+
       connection
         .start()
-        .then(() => {
-          console.log("ChatGenerali: SignalR Connected");
-          return connection.invoke("JoinUserGroup", userId);
-        })
-        .then(() => {
-          console.log(
-            `ChatGenerali: Utente ${userId} collegato al proprio gruppo`
-          );
-        })
-        .catch((err) =>
-          console.error("ChatGenerali: SignalR Connection Error: ", err)
-        );
+        .then(() => connection.invoke("JoinUserGroup", userId))
+        .catch((err) => console.error("SignalR Error:", err));
 
       return () => {
         if (connection.state === signalR.HubConnectionState.Connected) {

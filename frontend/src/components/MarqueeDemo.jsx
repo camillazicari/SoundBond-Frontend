@@ -16,7 +16,11 @@ const ReviewCard = ({ recensione }) => (
       <img
         className="rounded-full object-cover w-10 h-10"
         alt=""
-        src={recensione.imgUser}
+        src={
+          recensione.imgUser.startsWith("http")
+            ? recensione.imgUser
+            : `http://192.168.1.12:5220${recensione.imgUser}`
+        }
       />
       <div className="flex flex-col">
         <figcaption className="text-sm font-medium dark:text-white">

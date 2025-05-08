@@ -24,7 +24,7 @@ const Bonders = () => {
   return (
     <div className="container mx-auto fade-in">
       <h1
-        className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-1"
+        className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-3"
         style={{
           backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
           WebkitBackgroundClip: "text",
