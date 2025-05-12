@@ -1,7 +1,7 @@
 export const getRichiesteInviate = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.12:5220/api/Richiesta/inviate", {
+            const response = await fetch("http://192.168.1.61:5220/api/Richiesta/inviate", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const getRichiesteInviate = () => {
 export const getRichiesteRicevute = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.12:5220/api/Richiesta/ricevute", {
+            const response = await fetch("http://192.168.1.61:5220/api/Richiesta/ricevute", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export const postRichiesta = (id) => {
                 payload: tempRequest
             });
 
-            const response = await fetch("http://192.168.1.12:5220/api/Richiesta", {
+            const response = await fetch("http://192.168.1.61:5220/api/Richiesta", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -110,7 +110,7 @@ export const deleteRichiesta = (id) => {
             });
 
             const response = await fetch(
-                "http://192.168.1.12:5220/api/Richiesta?id=" + id,
+                "http://192.168.1.61:5220/api/Richiesta?id=" + id,
                 {
                     method: "DELETE",
                     headers: {

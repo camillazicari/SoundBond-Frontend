@@ -220,7 +220,7 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
                 src={
                   richiesta.receiver?.profilo?.immagine.startsWith("http")
                     ? richiesta.receiver?.profilo?.immagine
-                    : `http://192.168.1.12:5220${richiesta.receiver?.profilo?.immagine}`
+                    : `http://192.168.1.61:5220${richiesta.receiver?.profilo?.immagine}`
                 }
                 alt={richiesta.receiver?.nome}
               />

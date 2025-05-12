@@ -40,7 +40,7 @@ const UserCard = memo(({ utente, navigate }) => {
             src={
               utente?.profilo?.immagine.startsWith("http")
                 ? utente?.profilo?.immagine
-                : `http://192.168.1.12:5220${utente?.profilo?.immagine}`
+                : `http://192.168.1.61:5220${utente?.profilo?.immagine}`
             }
             alt={utente.profilo?.nomeUtente}
           />

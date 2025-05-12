@@ -26,7 +26,6 @@ app.get("/api/search", async (req, res) => {
 });
 
 app.get("/api/genres", async (req, res) => {
-
     try {
         const response = await fetch(`https://api.deezer.com/genre`);
         const data = await response.json();

@@ -200,7 +200,7 @@ const ChatGenerali = () => {
                     src={
                       conv?.immagine.startsWith("http")
                         ? conv?.immagine
-                        : `http://192.168.1.12:5220${conv?.immagine}`
+                        : `http://192.168.1.61:5220${conv?.immagine}`
                     }
                     alt="avatar"
                     className="w-13 h-13 object-cover rounded-full me-4"
