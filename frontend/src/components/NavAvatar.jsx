@@ -41,7 +41,7 @@ export default function NavAvatar() {
               <img
                 src={
                   profilo?.immagine && profilo?.immagine?.startsWith("/")
-                    ? `http://192.168.1.61:5220${profilo.immagine}`
+                    ? `http://192.168.1.60:5220${profilo.immagine}`
                     : profilo?.immagine
                 }
                 className="rounded-full w-[50px] h-[50px] object-cover object-top border-2 border-transparent"

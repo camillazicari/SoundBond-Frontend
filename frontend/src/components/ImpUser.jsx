@@ -130,7 +130,7 @@ const ImpUser = () => {
       if (immagine.startsWith("http")) {
         formData.append("Immagine", immagine);
       } else {
-        formData.append("Immagine", `http://192.168.1.61:5220${immagine}`);
+        formData.append("Immagine", `http://192.168.1.60:5220${immagine}`);
       }
     }
 
@@ -194,7 +194,7 @@ const ImpUser = () => {
                   <AvatarImage
                     src={
                       immagine && immagine.startsWith("/")
-                        ? `http://192.168.1.61:5220${immagine}`
+                        ? `http://192.168.1.60:5220${immagine}`
                         : immagine
                     }
                     alt={profile && profile.nomeUtente}
@@ -204,7 +204,7 @@ const ImpUser = () => {
                   </AvatarFallback>
                 </Avatar>
                 <Dialog>
-                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#ad42ff] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#ad42ff] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
                     <Camera size={20} />
                   </DialogTrigger>
                   <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
@@ -295,7 +295,7 @@ const ImpUser = () => {
                     </div>
                     <button
                       onClick={() => setEditBio(true)}
-                      className="hover:bg-[#7112b7]/30 p-2 rounded-2xl hidden md:block"
+                      className="hover:bg-[#7112b7]/30 p-2 rounded-2xl hidden md:block cursor-pointer"
                     >
                       <Edit2 size={18} />
                     </button>

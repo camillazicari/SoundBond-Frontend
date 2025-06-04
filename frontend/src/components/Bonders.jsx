@@ -60,7 +60,7 @@ const BonderCard = ({ bonder }) => {
             src={
               bonder?.profilo?.immagine.startsWith("http")
                 ? bonder?.profilo?.immagine
-                : `http://192.168.1.61:5220${bonder?.profilo.immagine}`
+                : `http://192.168.1.60:5220${bonder?.profilo.immagine}`
             }
           />
           <AvatarFallback className="bg-[#ad42ff]">

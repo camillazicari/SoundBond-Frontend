@@ -1,7 +1,7 @@
 export const postProfilo = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.61:5220/api/Profilo", {
+            const response = await fetch("http://192.168.1.60:5220/api/Profilo", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export const postProfilo = () => {
 export const getProfilo = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.61:5220/api/Profilo", {
+            const response = await fetch("http://192.168.1.60:5220/api/Profilo", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const putProfilo = (formdata) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                `http://192.168.1.61:5220/api/Profilo`, {
+                `http://192.168.1.60:5220/api/Profilo`, {
                 method: "PUT",
                 body: formdata,
                 headers: {

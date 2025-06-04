@@ -27,8 +27,8 @@ const Registrati = () => {
     const confirmPassword = e.target.elements.confirmPassword.value;
 
     // Regex per validazione
-    const usernameRegex = /^[a-zA-Z0-9._-]{5,}$/; // Almeno 5 caratteri, include ., -, _
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/; // Almeno 8 caratteri, maiuscole, minuscole, numeri
+    const usernameRegex = /^[a-zA-Z0-9._-]{5,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!firstName || !lastName || !username || !password || !confirmPassword) {

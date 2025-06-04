@@ -322,7 +322,7 @@ const Connessioni = () => {
                         src={
                           match?.user?.profilo?.immagine.startsWith("http")
                             ? match?.user?.profilo?.immagine
-                            : `http://192.168.1.61:5220${match?.user?.profilo?.immagine}`
+                            : `http://192.168.1.60:5220${match?.user?.profilo?.immagine}`
                         }
                         alt={match.user?.profilo?.nomeUtente}
                       />

@@ -1,7 +1,7 @@
 export const getBrani = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.61:5220/api/Brani", {
+            const response = await fetch("http://192.168.1.60:5220/api/Brani", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const getBrani = () => {
 export const postBrani = (titolo, artista, img) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.61:5220/api/Brani", {
+            const response = await fetch("http://192.168.1.60:5220/api/Brani", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export const putBrani = (titolo, artista, img) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                `http://192.168.1.61:5220/api/Brani/titolo/${encodeURIComponent(titolo)}/artista/${encodeURIComponent(artista)}`, {
+                `http://192.168.1.60:5220/api/Brani/titolo/${encodeURIComponent(titolo)}/artista/${encodeURIComponent(artista)}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     titolo: titolo,
@@ -89,7 +89,7 @@ export const deleteBrano = (titolo, artista) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                `http://192.168.1.61:5220/api/Brani/titolo/${encodeURIComponent(titolo)}/artista/${encodeURIComponent(artista)}`,
+                `http://192.168.1.60:5220/api/Brani/titolo/${encodeURIComponent(titolo)}/artista/${encodeURIComponent(artista)}`,
                 {
                     method: "DELETE",
                     headers: {
