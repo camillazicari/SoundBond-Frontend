@@ -200,7 +200,7 @@ const ChatGenerali = () => {
                     src={
                       conv?.immagine.startsWith("http")
                         ? conv?.immagine
-                        : `http://192.168.1.60:5220${conv?.immagine}`
+                        : `http://192.168.1.63:5220${conv?.immagine}`
                     }
                     alt="avatar"
                     className="w-13 h-13 object-cover rounded-full me-4"
@@ -234,7 +234,7 @@ const ChatGenerali = () => {
             );
           })
         ) : (
-          <div className="place-items-center my-7">
+          <div className="grid place-items-center my-7">
             <div className="bg-[#9b1fff] p-6 rounded-full flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

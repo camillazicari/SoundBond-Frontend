@@ -2,7 +2,7 @@
 export const register = (nome, cognome, email, dataDiNascita, nomeUtente, password, navigate) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/register", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/register", {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -44,7 +44,7 @@ export const register = (nome, cognome, email, dataDiNascita, nomeUtente, passwo
 export const login = (email, password, navigate) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/login", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/login", {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -58,7 +58,7 @@ export const login = (email, password, navigate) => {
                 const data = await response.json();
                 localStorage.setItem("jwtToken", data.token);
                 dispatch({ type: "LOGIN_SUCCESS", payload: true });
-                const userResponse = await fetch("http://192.168.1.60:5220/api/Account/userLogged", {
+                const userResponse = await fetch("http://192.168.1.63:5220/api/Account/userLogged", {
                     headers: {
                         Authorization: "Bearer " + data.token,
                         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export const login = (email, password, navigate) => {
 export const getUtenti = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/utenti", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/utenti", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -125,7 +125,7 @@ export const getUtenti = () => {
 export const getAllUtenti = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/utentiGenerali", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/utentiGenerali", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -150,7 +150,7 @@ export const getAllUtenti = () => {
 export const getUtente = (id) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/utente" + id, {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/utente" + id, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export const getUtente = (id) => {
 export const getUtenteLoggato = () => {
     return async (dispatch, navigate) => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/userLogged", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/userLogged", {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -207,7 +207,7 @@ export const putNomeUtente = (nomeUtente) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                "http://192.168.1.60:5220/api/Account/nomeUtente",
+                "http://192.168.1.63:5220/api/Account/nomeUtente",
                 {
                     method: "PUT",
                     body: JSON.stringify({
@@ -234,7 +234,7 @@ export const putNomeUtente = (nomeUtente) => {
 export const deleteUtente = (navigate) => {
     return async () => {
         try {
-            const response = await fetch("http://192.168.1.60:5220/api/Account/utente", {
+            const response = await fetch("http://192.168.1.63:5220/api/Account/utente", {
                 method: "DELETE",
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),

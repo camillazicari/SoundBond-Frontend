@@ -19,7 +19,7 @@ const ReviewCard = ({ recensione }) => (
         src={
           recensione.imgUser.startsWith("http")
             ? recensione.imgUser
-            : `http://192.168.1.60:5220${recensione.imgUser}`
+            : `http://192.168.1.63:5220${recensione.imgUser}`
         }
       />
       <div className="flex flex-col">

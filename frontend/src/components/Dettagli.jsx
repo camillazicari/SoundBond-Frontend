@@ -89,7 +89,7 @@ const Dettagli = () => {
                   src={
                     user?.profilo?.immagine.startsWith("http")
                       ? user?.profilo?.immagine
-                      : `http://192.168.1.60:5220${user?.profilo?.immagine}`
+                      : `http://192.168.1.63:5220${user?.profilo?.immagine}`
                   }
                   alt={user?.nome}
                   className="w-full h-full object-cover"
