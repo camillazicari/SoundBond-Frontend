@@ -1,5 +1,5 @@
 import { API_URL } from "../config";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Logo from "./Logo";
@@ -19,6 +19,7 @@ import {
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const navListRef = useRef(null);
   const reduceMotion = useReducedMotion();
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -253,13 +254,16 @@ const Navbar = () => {
       ];
 
   const isActive = (to) =>
-    to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+    to === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(to) ||
+        (to === "/generali" && location.pathname.startsWith("/chat"));
   const spring = reduceMotion
     ? { duration: 0 }
     : { type: "spring", bounce: 0, duration: 0.35 };
 
   return (
-    !location.pathname.startsWith("/chat") && (
+    (
       <header className="sticky top-0 z-30 px-4 pt-3 md:pt-4">
         <nav className="glass mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full pr-2 pl-5">
           <Link
@@ -271,7 +275,8 @@ const Navbar = () => {
             <Logo />
           </Link>
 
-          <ul className="hidden items-center gap-1 md:flex">
+          <ul ref={navListRef} className="relative hidden items-center gap-1 md:flex">
+            <NavPill listRef={navListRef} enabled={isLoggedIn} transition={spring} />
             {navLinks.map(({ to, label }) => {
               const active = isLoggedIn && isActive(to);
               return (
@@ -286,13 +291,6 @@ const Navbar = () => {
                   >
                     {label}
                   </Link>
-                  {active && (
-                    <motion.span
-                      layoutId="nav-active"
-                      transition={spring}
-                      className="absolute inset-0 rounded-full bg-white/[0.07]"
-                    />
-                  )}
                 </li>
               );
             })}
@@ -379,5 +377,50 @@ const Navbar = () => {
     )
   );
 };
+
+/*
+  Indicatore della pagina attiva: un solo elemento che resta montato e si sposta
+  solo in orizzontale. Con layoutId veniva rimontato a ogni cambio pagina e, se la
+  pagina era scrollata, arrivava dal basso.
+*/
+function NavPill({ listRef, enabled, transition }) {
+  const [box, setBox] = useState(null);
+  const shown = useRef(false);
+
+  // Misura dopo ogni render: il link attivo può comparire dopo il login o il caricamento dei dati
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const link = enabled ? list?.querySelector('a[aria-current="page"]') : null;
+    let next = null;
+    if (list && link) {
+      const l = list.getBoundingClientRect();
+      const r = link.getBoundingClientRect();
+      next = { x: Math.round(r.left - l.left), width: Math.round(r.width) };
+    }
+    setBox((prev) =>
+      prev?.x === next?.x && prev?.width === next?.width ? prev : next
+    );
+  });
+
+  useEffect(() => {
+    const onResize = () => setBox((b) => (b ? { ...b } : b));
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const instant = !shown.current;
+  if (box) shown.current = true;
+  else shown.current = false;
+
+  return (
+    <motion.span
+      aria-hidden="true"
+      className="pointer-events-none absolute top-0 left-0 h-full rounded-full bg-white/[0.07]"
+      initial={false}
+      animate={box ? { x: box.x, width: box.width, opacity: 1 } : { opacity: 0 }}
+      transition={instant ? { duration: 0 } : transition}
+    />
+  );
+}
 
 export default Navbar;

@@ -82,6 +82,7 @@ export default function MatchCard({
   actions,
   onSongClick,
   playingTitle,
+  compact = false,
 }) {
   const { user, compatibility } = match;
   const details = compatibility?.details ?? {};
@@ -95,7 +96,7 @@ export default function MatchCard({
   ];
 
   return (
-    <article className="surface relative isolate flex h-full flex-col overflow-hidden p-6">
+    <article className={`surface relative isolate flex h-full flex-col overflow-hidden ${compact ? "p-5" : "p-6"}`}>
       {user?.artisti?.[0]?.img && (
         <div aria-hidden="true" className="ambient pointer-events-none absolute -inset-x-16 -top-32 -z-10 h-96 opacity-60">
           <div className="flex h-full scale-110 blur-[60px] saturate-[1.8]">
@@ -105,9 +106,57 @@ export default function MatchCard({
           </div>
         </div>
       )}
-      <UserHeader user={user} score={compatibility?.score} />
+      <UserHeader user={user} score={compatibility?.score} size={compact ? "sm" : "lg"} />
 
-      {shared.length > 0 && (
+      {compact && (
+        <div className="mt-5 flex flex-col gap-4 text-sm">
+          {user?.artisti?.length > 0 && (
+            <div className="flex items-center gap-3">
+              <div className="flex shrink-0 -space-x-2">
+                {user.artisti.slice(0, 4).map((a) => (
+                  <img
+                    key={a.id}
+                    src={a.img}
+                    alt=""
+                    className={`size-9 rounded-full object-cover ring-2 ${isCommon(details.commonArtists, a.nome) ? "ring-accent" : "ring-surface"}`}
+                  />
+                ))}
+              </div>
+              <p className="min-w-0 truncate text-muted">
+                {user.artisti.map((a, i) => (
+                  <span key={a.id} className={isCommon(details.commonArtists, a.nome) ? "font-medium text-accent" : ""}>
+                    {i > 0 && ", "}
+                    {a.nome}
+                  </span>
+                ))}
+              </p>
+            </div>
+          )}
+          {user?.brani?.length > 0 && (
+            <ul className="flex flex-col gap-1.5">
+              {user.brani.slice(0, 2).map((b) => (
+                <li key={b.id} className="flex items-center gap-2.5">
+                  <img src={b.img} alt="" className="size-7 rounded-md object-cover" />
+                  <span className="min-w-0 truncate">
+                    {b.titolo} <span className="text-subtle">· {b.artista}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {user?.generi?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {user.generi.map((g) => (
+                <span key={g.id} className={`chip ${isCommon(details.commonGenres, g.nome) ? "border-accent/25 bg-accent-soft text-fg" : ""}`}>
+                  {g.nome}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {!compact && shared.length > 0 && (
         <div className="mt-5 flex flex-wrap items-center gap-1.5">
           <span className="mr-1 text-xs text-subtle">In comune</span>
           {shared.map((name) => (
@@ -121,7 +170,7 @@ export default function MatchCard({
         </div>
       )}
 
-      {user?.artisti?.length > 0 && (
+      {!compact && user?.artisti?.length > 0 && (
         <section className="mt-6">
           <h3 className="mb-3 text-xs font-medium text-subtle">Artisti</h3>
           <ul className="flex gap-4 overflow-x-auto pb-1">
@@ -152,11 +201,11 @@ export default function MatchCard({
         </section>
       )}
 
-      {user?.brani?.length > 0 && (
+      {!compact && user?.brani?.length > 0 && (
         <section className="mt-6">
           <h3 className="mb-2 text-xs font-medium text-subtle">Brani</h3>
-          <ul className="-mx-2 max-h-44 overflow-y-auto">
-            {user.brani.map((brano) => {
+          <ul className={`-mx-2 ${compact ? "" : "max-h-44 overflow-y-auto"}`}>
+            {(compact ? user.brani.slice(0, 3) : user.brani).map((brano) => {
               const playing = playingTitle === brano.titolo;
               return (
                 <li
@@ -205,7 +254,7 @@ export default function MatchCard({
         </section>
       )}
 
-      {user?.generi?.length > 0 && (
+      {!compact && user?.generi?.length > 0 && (
         <section className="mt-6">
           <h3 className="mb-2 text-xs font-medium text-subtle">Generi</h3>
           <div className="flex flex-wrap gap-1.5">
@@ -227,8 +276,8 @@ export default function MatchCard({
 
       {actions && (
         <>
-          <div className="min-h-6 flex-1" />
-          <div className="flex gap-2 border-t border-line pt-5">{actions}</div>
+          <div className={`flex-1 ${compact ? "min-h-4" : "min-h-6"}`} />
+          <div className={`flex gap-2 border-t border-line ${compact ? "pt-4" : "pt-5"}`}>{actions}</div>
         </>
       )}
     </article>

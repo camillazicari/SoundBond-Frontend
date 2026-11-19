@@ -206,7 +206,7 @@ const Connessioni = () => {
       return (
         <button
           type="button"
-          onClick={() => navigate("/richieste")}
+          onClick={() => navigate(`/chat/${id}`)}
           className="btn btn-ghost flex-1"
         >
           Ti ha scritto: rispondi

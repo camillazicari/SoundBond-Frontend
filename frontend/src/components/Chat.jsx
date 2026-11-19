@@ -255,8 +255,9 @@ const Chat = ({ otherUser }) => {
   }, [messages, currentUserId, formatDate, formatTime]);
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col bg-ink">
-      <header className="glass relative z-10 mx-auto mt-3 flex w-[calc(100%-1.5rem)] max-w-3xl items-center gap-3 rounded-full py-2 pr-2 pl-2">
+    <div className="mx-auto flex h-[calc(100dvh-5.5rem)] w-full max-w-4xl flex-col px-4 pt-4 pb-4 md:h-[calc(100dvh-6rem)]">
+      <div className="surface flex min-h-0 flex-1 flex-col overflow-hidden">
+      <header className="flex items-center gap-3 border-b border-line p-3">
         <button
           type="button"
           onClick={() => navigate("/generali")}
@@ -308,7 +309,7 @@ const Chat = ({ otherUser }) => {
         {isLoading ? (
           <BondSpinner label="Caricamento dei messaggi" />
         ) : (
-          <ol className="mx-auto max-w-3xl px-4 pt-6 pb-4" aria-live="polite">
+          <ol className="px-4 pt-2 pb-4 md:px-6" aria-live="polite">
             {messages.length === 0 && (
               <li className="py-20 text-center">
                 <p className="display text-3xl font-bold">Rompi il ghiaccio.</p>
@@ -322,7 +323,7 @@ const Chat = ({ otherUser }) => {
       </div>
 
       <form
-        className="mx-auto mb-3 flex w-[calc(100%-1.5rem)] max-w-3xl items-center gap-2 rounded-full border border-line-strong bg-surface p-1.5 pl-5 focus-within:border-accent/60"
+        className="m-3 flex items-center gap-2 rounded-full border border-line-strong bg-white/[0.03] p-1.5 pl-5 focus-within:border-accent/60"
         onSubmit={(e) => {
           e.preventDefault();
           sendMessage();
@@ -346,6 +347,7 @@ const Chat = ({ otherUser }) => {
           <SendHorizontal size={18} />
         </button>
       </form>
+      </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
   getRichiesteRicevute,
 } from "../redux/actions/richieste.js";
 import { postBonder } from "../redux/actions/bonders.js";
+import { getUtenteLoggato, getUtenti } from "../redux/actions/account.js";
 import BondSpinner from "./BondSpinner";
 import MatchCard from "./MatchCard.jsx";
 import PageHeader from "./ui/PageHeader.jsx";
@@ -24,6 +25,7 @@ const RequestCard = React.memo(
     const name = richiesta.sender?.nome;
     return (
       <MatchCard
+        compact
         match={asMatch(richiesta.sender, match)}
         actions={
           <>
@@ -54,6 +56,7 @@ const RequestCard = React.memo(
 
 const RequestSentCard = React.memo(({ richiesta, match }) => (
   <MatchCard
+    compact
     match={asMatch(richiesta.receiver, match)}
     actions={
       <p className="flex flex-1 items-center gap-2 py-2 text-sm text-muted">
@@ -86,6 +89,7 @@ const Richieste = () => {
   const fetchRequests = useCallback(async () => {
     try {
       await Promise.all([
+        dispatch(getUtenti()),
         dispatch(getRichiesteInviate()),
         dispatch(getRichiesteRicevute()),
       ]);
@@ -95,6 +99,7 @@ const Richieste = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(getUtenteLoggato());
     fetchRequests();
   }, [fetchRequests]);
 
