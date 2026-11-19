@@ -86,14 +86,6 @@ export default function MatchCard({
 }) {
   const { user, compatibility } = match;
   const details = compatibility?.details ?? {};
-  const shared = [
-    ...(user?.generi ?? [])
-      .filter((g) => isCommon(details.commonGenres, g.nome))
-      .map((g) => g.nome),
-    ...(user?.artisti ?? [])
-      .filter((a) => isCommon(details.commonArtists, a.nome))
-      .map((a) => a.nome),
-  ];
 
   return (
     <article className={`surface relative isolate flex h-full flex-col overflow-hidden ${compact ? "p-5" : "p-6"}`}>
@@ -156,19 +148,6 @@ export default function MatchCard({
         </div>
       )}
 
-      {!compact && shared.length > 0 && (
-        <div className="mt-5 flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs text-subtle">In comune</span>
-          {shared.map((name) => (
-            <span
-              key={name}
-              className="chip border-accent/25 bg-accent-soft text-fg"
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      )}
 
       {!compact && user?.artisti?.length > 0 && (
         <section className="mt-6">
