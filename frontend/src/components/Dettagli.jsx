@@ -148,7 +148,6 @@ const Dettagli = () => {
                       className={`aspect-square w-full rounded-full object-cover ${isCommon(a.nome) ? "ring-2 ring-accent ring-offset-4 ring-offset-ink" : "ring-1 ring-line"}`}
                     />
                     <p className="mt-3 line-clamp-2 text-sm">{a.nome}</p>
-                    {isCommon(a.nome) && <p className="text-xs text-accent">In comune</p>}
                   </li>
                 ))}
               </ul>
