@@ -9,11 +9,6 @@ const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      '/api': 'http://192.168.1.65:5220',
-    },
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

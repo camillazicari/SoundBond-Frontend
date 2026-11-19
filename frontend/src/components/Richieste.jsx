@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -218,9 +219,9 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
             <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
               <AvatarImage
                 src={
-                  richiesta.receiver?.profilo?.immagine.startsWith("http")
+                  richiesta.receiver?.profilo?.immagine?.startsWith("http")
                     ? richiesta.receiver?.profilo?.immagine
-                    : `http://192.168.1.63:5220${richiesta.receiver?.profilo?.immagine}`
+                    : `${API_URL}${richiesta.receiver?.profilo?.immagine}`
                 }
                 alt={richiesta.receiver?.nome}
               />

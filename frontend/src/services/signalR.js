@@ -1,7 +1,8 @@
+import { API_URL } from "../config";
 import * as signalR from "@microsoft/signalr";
 
 const connection = new signalR.HubConnectionBuilder()
-  .withUrl("http://192.168.1.63:5220/chatHub", {
+  .withUrl(`${API_URL}/chatHub`, {
     accessTokenFactory: () => {
       return localStorage.getItem("jwtToken");
     },

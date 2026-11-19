@@ -1,10 +1,15 @@
+import process from "node:process";
 import express from "express"
 import cors from "cors"
 import fetch from "node-fetch";
 const app = express();
 
+// Origini ammesse separate da virgola, es. ALLOWED_ORIGINS=https://soundbond.vercel.app
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "http://localhost:5173").split(",");
+const port = process.env.PORT ?? 5002;
+
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type"],
 }));
@@ -17,7 +22,7 @@ app.get("/api/search", async (req, res) => {
     }
 
     try {
-        const response = await fetch(`https://api.deezer.com/search?q=${q}`);
+        const response = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(q)}`);
         const data = await response.json();
         res.json(data);
     } catch (error) {
@@ -69,4 +74,4 @@ app.get("/api/songs", async (req, res) => {
 
 
 
-app.listen(5002, () => console.log("Server in ascolto su porta 5002"));
+app.listen(port, () => console.log(`Server in ascolto su porta ${port}`));

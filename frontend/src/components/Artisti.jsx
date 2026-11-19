@@ -1,3 +1,4 @@
+import { DEEZER_PROXY_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { BackgroundBeamsWithCollision } from "./personalizedComponents/BgBeams";
@@ -43,7 +44,7 @@ const Artisti = () => {
       return;
     }
 
-    const url = `http://localhost:5002/api/search?q=${query}`;
+    const url = `${DEEZER_PROXY_URL}/api/search?q=${query}`;
     try {
       const response = await fetch(url);
       if (response.ok) {

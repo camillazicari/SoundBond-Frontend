@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Card } from "./personalizedComponents/Card";
 import { toast } from "sonner";
@@ -130,7 +131,7 @@ const ImpUser = () => {
       if (immagine.startsWith("http")) {
         formData.append("Immagine", immagine);
       } else {
-        formData.append("Immagine", `http://192.168.1.63:5220${immagine}`);
+        formData.append("Immagine", `${API_URL}${immagine}`);
       }
     }
 
@@ -194,7 +195,7 @@ const ImpUser = () => {
                   <AvatarImage
                     src={
                       immagine && immagine.startsWith("/")
-                        ? `http://192.168.1.63:5220${immagine}`
+                        ? `${API_URL}${immagine}`
                         : immagine
                     }
                     alt={profile && profile.nomeUtente}

@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Bell } from "lucide-react";
@@ -92,7 +93,9 @@ const Navbar = () => {
       if (isLoggedIn && userId) {
         console.log(`Setting up new SignalR connection for user: ${userId}`);
         const connection = new signalR.HubConnectionBuilder()
-          .withUrl("/chatHub")
+          .withUrl(`${API_URL}/chatHub`, {
+          accessTokenFactory: () => localStorage.getItem("jwtToken"),
+        })
           .withAutomaticReconnect()
           .build();
 

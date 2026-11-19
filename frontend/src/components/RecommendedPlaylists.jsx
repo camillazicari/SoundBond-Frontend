@@ -1,3 +1,5 @@
+import { playlistCovers } from "../assets/playlistCovers";
+import { DEEZER_PROXY_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -17,16 +19,16 @@ const RecommendedPlaylists = () => {
   }, []);
 
   const covers = [
-    { id: 1, img: "/src/assets/PLAYLISTS/P1.jpeg" },
-    { id: 2, img: "/src/assets/PLAYLISTS/P2.jpeg" },
-    { id: 3, img: "/src/assets/PLAYLISTS/P3.jpeg" },
-    { id: 4, img: "/src/assets/PLAYLISTS/P4.jpeg" },
-    { id: 5, img: "/src/assets/PLAYLISTS/P5.jpeg" },
-    { id: 6, img: "/src/assets/PLAYLISTS/P6.jpeg" },
-    { id: 7, img: "/src/assets/PLAYLISTS/P7.jpeg" },
-    { id: 8, img: "/src/assets/PLAYLISTS/P8.jpeg" },
-    { id: 9, img: "/src/assets/PLAYLISTS/P9.jpeg" },
-    { id: 10, img: "/src/assets/PLAYLISTS/P10.jpeg" },
+    { id: 1, img: playlistCovers[0] },
+    { id: 2, img: playlistCovers[1] },
+    { id: 3, img: playlistCovers[2] },
+    { id: 4, img: playlistCovers[3] },
+    { id: 5, img: playlistCovers[4] },
+    { id: 6, img: playlistCovers[5] },
+    { id: 7, img: playlistCovers[6] },
+    { id: 8, img: playlistCovers[7] },
+    { id: 9, img: playlistCovers[8] },
+    { id: 10, img: playlistCovers[9] },
   ];
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const RecommendedPlaylists = () => {
 
   const fetchGenres = async () => {
     try {
-      const response = await fetch("http://localhost:5002/api/genres");
+      const response = await fetch(`${DEEZER_PROXY_URL}/api/genres`);
       if (!response.ok) throw new Error("Errore nel recupero dei dati");
       const data = await response.json();
       setGenres(data.data);

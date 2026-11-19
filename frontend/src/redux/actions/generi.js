@@ -1,7 +1,8 @@
+import { API_URL } from "../../config";
 export const getGeneri = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Generi", {
+            const response = await fetch(`${API_URL}/api/Generi`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export const getGeneri = () => {
 export const postGeneri = (nome) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Generi", {
+            const response = await fetch(`${API_URL}/api/Generi`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -62,7 +63,7 @@ export const putGeneri = (
     return async (dispatch) => {
         try {
             const response = await fetch(
-                "http://192.168.1.63:5220/api/Generi/genere?nome=" + encodeURIComponent(nome),
+                `${API_URL}/api/Generi/genere?nome=` + encodeURIComponent(nome),
                 {
                     method: "PUT",
                     body: JSON.stringify({
@@ -88,7 +89,7 @@ export const putGeneri = (
 export const deleteGenere = (nome) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Generi/genere?nome=" + encodeURIComponent(nome), {
+            const response = await fetch(`${API_URL}/api/Generi/genere?nome=` + encodeURIComponent(nome), {
                 method: "DELETE",
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),

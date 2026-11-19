@@ -1,3 +1,4 @@
+import { API_URL, DEEZER_PROXY_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getUtenti } from "../redux/actions/account.js";
 import { useEffect, useState } from "react";
@@ -31,7 +32,7 @@ const Dettagli = () => {
   } = usePlayer();
 
   const getSongs = async (titolo, artista) => {
-    const url = `http://localhost:5002/api/search?q=${titolo}%20${artista}`;
+    const url = `${DEEZER_PROXY_URL}/api/search?q=${titolo}%20${artista}`;
     try {
       const response = await fetch(url);
       if (response.ok) {
@@ -87,9 +88,9 @@ const Dettagli = () => {
               {user?.profilo ? (
                 <img
                   src={
-                    user?.profilo?.immagine.startsWith("http")
+                    user?.profilo?.immagine?.startsWith("http")
                       ? user?.profilo?.immagine
-                      : `http://192.168.1.63:5220${user?.profilo?.immagine}`
+                      : `${API_URL}${user?.profilo?.immagine}`
                   }
                   alt={user?.nome}
                   className="w-full h-full object-cover"

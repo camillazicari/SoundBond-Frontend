@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import { cn } from "../lib/utils";
 import { Marquee } from "./personalizedComponents/marquee";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,9 +18,9 @@ const ReviewCard = ({ recensione }) => (
         className="rounded-full object-cover w-10 h-10"
         alt=""
         src={
-          recensione.imgUser.startsWith("http")
+          recensione.imgUser?.startsWith("http")
             ? recensione.imgUser
-            : `http://192.168.1.63:5220${recensione.imgUser}`
+            : `${API_URL}${recensione.imgUser}`
         }
       />
       <div className="flex flex-col">

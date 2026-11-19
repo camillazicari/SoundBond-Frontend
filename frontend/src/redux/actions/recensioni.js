@@ -1,7 +1,8 @@
+import { API_URL } from "../../config";
 export const getAllRecensioni = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Recensioni/recensioni", {
+            const response = await fetch(`${API_URL}/api/Recensioni/recensioni`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export const getAllRecensioni = () => {
 export const getMiaRecensione = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Recensioni/recensione", {
+            const response = await fetch(`${API_URL}/api/Recensioni/recensione`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -49,7 +50,7 @@ export const getMiaRecensione = () => {
 export const postRecensione = (testo, voto) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Recensioni", {
+            const response = await fetch(`${API_URL}/api/Recensioni`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -85,7 +86,7 @@ export const putRecensione = (testo, voto) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                "http://192.168.1.63:5220/api/Recensioni",
+                `${API_URL}/api/Recensioni`,
                 {
                     method: "PUT",
                     body: JSON.stringify({
@@ -114,7 +115,7 @@ export const deleteRecensione = () => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                "http://192.168.1.63:5220/api/Recensioni",
+                `${API_URL}/api/Recensioni`,
                 {
                     method: "DELETE",
                     headers: {

@@ -1,9 +1,10 @@
+import { API_URL } from "../../config";
 import { deleteRichiesta } from "./richieste";
 
 export const getBonders = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Bonders", {
+            const response = await fetch(`${API_URL}/api/Bonders`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -27,7 +28,7 @@ export const getBonders = () => {
 export const postBonder = (id) => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Bonders", {
+            const response = await fetch(`${API_URL}/api/Bonders`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",
@@ -62,7 +63,7 @@ export const deleteBonder = (id) => {
     return async (dispatch) => {
         try {
             const response = await fetch(
-                "http://192.168.1.63:5220/api/Bonders?id=" + id,
+                `${API_URL}/api/Bonders?id=` + id,
                 {
                     method: "DELETE",
                     headers: {

@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getProfilo } from "../redux/actions/profilo.js";
 import { getUtenteLoggato } from "../redux/actions/account.js";
@@ -41,7 +42,7 @@ export default function NavAvatar() {
               <img
                 src={
                   profilo?.immagine && profilo?.immagine?.startsWith("/")
-                    ? `http://192.168.1.63:5220${profilo.immagine}`
+                    ? `${API_URL}${profilo.immagine}`
                     : profilo?.immagine
                 }
                 className="rounded-full w-[50px] h-[50px] object-cover object-top border-2 border-transparent"
