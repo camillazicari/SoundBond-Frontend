@@ -83,7 +83,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100vh]">
+    <div className="grain flex min-h-[100dvh] flex-col">
       <Navbar />
       <main className="flex flex-1 flex-col">
         <Routes>

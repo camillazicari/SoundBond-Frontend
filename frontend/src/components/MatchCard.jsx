@@ -18,8 +18,20 @@ const initials = (text = "") => text.slice(0, 2).toUpperCase();
 // Affinità: numero grande, colore pieno solo sopra il 40%
 export function Affinity({ score = 0, size = "lg" }) {
   const strong = score >= 40;
+  const r = 14;
+  const d = 2 * r * (1 - score / 100); // distanza tra i centri: 0 = gusti identici
   return (
-    <div className="text-right">
+    <div className="flex flex-col items-end">
+      <svg
+        width={2 * r + 2 * r + 4}
+        height={2 * r + 4}
+        viewBox={`0 0 ${4 * r + 4} ${2 * r + 4}`}
+        aria-hidden="true"
+        className="mb-2"
+      >
+        <circle cx={2 + r + (2 * r - d) / 2} cy={r + 2} r={r} fill="none" stroke="var(--color-fg)" strokeOpacity="0.55" strokeWidth="1.5" />
+        <circle cx={2 + r + (2 * r - d) / 2 + d} cy={r + 2} r={r} fill="var(--color-accent)" fillOpacity="0.22" stroke="var(--color-accent)" strokeWidth="1.5" />
+      </svg>
       <p
         className={`font-mono leading-none font-semibold tracking-tight ${
           size === "lg" ? "text-3xl" : "text-xl"
@@ -83,7 +95,16 @@ export default function MatchCard({
   ];
 
   return (
-    <article className="surface flex h-full flex-col p-6">
+    <article className="surface relative isolate flex h-full flex-col overflow-hidden p-6">
+      {user?.artisti?.[0]?.img && (
+        <div aria-hidden="true" className="ambient pointer-events-none absolute -inset-x-16 -top-32 -z-10 h-96 opacity-60">
+          <div className="flex h-full scale-110 blur-[60px] saturate-[1.8]">
+            {user.artisti.slice(0, 3).map((a) => (
+              <img key={a.id} src={a.img} alt="" className="h-full flex-1 object-cover" />
+            ))}
+          </div>
+        </div>
+      )}
       <UserHeader user={user} score={compatibility?.score} />
 
       {shared.length > 0 && (

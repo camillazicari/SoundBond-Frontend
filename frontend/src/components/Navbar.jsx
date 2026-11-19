@@ -261,7 +261,7 @@ const Navbar = () => {
   return (
     !location.pathname.startsWith("/chat") && (
       <header className="sticky top-0 z-30 px-4 pt-3 md:pt-4">
-        <nav className="glass mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pr-2 pl-5">
+        <nav className="glass mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full pr-2 pl-5">
           <Link
             to="/"
             onClick={() => setMenuOpen(false)}

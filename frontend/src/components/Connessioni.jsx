@@ -230,7 +230,7 @@ const Connessioni = () => {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-6">
       <header className="max-w-2xl">
-        <h1 className="text-4xl font-semibold tracking-[-0.035em] md:text-5xl">
+        <h1 className="display text-6xl font-bold md:text-8xl">
           Connessioni
         </h1>
         <p className="mt-3 text-muted">
