@@ -29,7 +29,7 @@ const Registrati = () => {
     const errors = {};
     const confirmPassword = e.target.elements.confirmPassword.value;
 
-    // Regex per validazione
+    // regole per username, password ed email
     const usernameRegex = /^[a-zA-Z0-9._-]{5,}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

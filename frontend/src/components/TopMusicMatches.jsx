@@ -10,7 +10,7 @@ import {
   AvatarImage,
 } from "./personalizedComponents/Avatar";
 
-// Componente memorizzato per gli item artista/brano
+// avatar artista/brano
 const MediaItem = memo(({ item, type }) => (
   <Avatar className="w-9 h-9 md:w-11 md:h-11 lg:w-13 lg:h-13 m-[-10px] object-cover border-2 border-[#1C0721]">
     <AvatarImage
@@ -25,7 +25,7 @@ const MediaItem = memo(({ item, type }) => (
   </Avatar>
 ));
 
-// Componente memorizzato per la card utente
+// card utente
 const UserCard = memo(({ utente, navigate }) => {
   const artisti = useMemo(() => utente?.artisti?.slice(0, 5) || [], [utente]);
   const brani = useMemo(() => utente?.brani?.slice(0, 5) || [], [utente]);

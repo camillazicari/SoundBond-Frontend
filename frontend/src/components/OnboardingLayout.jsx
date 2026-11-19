@@ -5,10 +5,7 @@ import SyncWaves from "./SyncWaves";
 
 const STEPS = ["Generi", "Artisti", "Brani"];
 
-/*
-  Onboarding in tre passi. Le onde in alto si avvicinano a ogni scelta:
-  il profilo "entra in sintonia" man mano che lo completi.
-*/
+// onboarding in 3 passi: le onde si uniscono man mano che scegli
 export default function OnboardingLayout({
   step,
   name,

@@ -31,7 +31,7 @@ import ChatWrapper from "./components/ChatWrapper";
 import ChatGenerali from "./components/ChatGenerali";
 import NotFound from "./components/NotFound";
 
-// Ogni cambio di pagina riparte dall'alto
+// quando cambio pagina torno in cima
 function ScrollToTop() {
   const { pathname } = useLocation();
   useLayoutEffect(() => {

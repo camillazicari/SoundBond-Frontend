@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "motion/react";
 
-/*
-  Due forme d'onda, una per persona. `progress` (MotionValue 0..1) le porta
-  in sintonia: a 0 hanno frequenza e fase diverse, a 1 coincidono.
-  I path vengono aggiornati fuori dal ciclo di render di React.
-*/
+// due onde, una per persona: con progress a 1 diventano uguali
 const W = 1600;
 const H = 420;
 const N = 180;

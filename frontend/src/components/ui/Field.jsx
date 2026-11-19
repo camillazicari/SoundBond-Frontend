@@ -1,6 +1,6 @@
 import { forwardRef, useId } from "react";
 
-/* Campo di testo con etichetta sopra, suggerimento ed errore collegati via aria */
+// input con etichetta ed errore
 const Field = forwardRef(function Field(
   { label, hint, error, className = "", id, children, ...props },
   ref

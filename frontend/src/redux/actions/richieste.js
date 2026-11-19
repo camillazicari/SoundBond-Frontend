@@ -63,7 +63,7 @@ export const postRichiesta = (id) => {
                 isTemp: true
             };
 
-            // Aggiornamento ottimistico IMMEDIATO
+            // aggiorno subito la lista
             dispatch({
                 type: "ADD_RICHIESTA_INVIATA_OTTIMISTIC",
                 payload: tempRequest

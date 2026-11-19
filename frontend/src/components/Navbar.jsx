@@ -378,16 +378,12 @@ const Navbar = () => {
   );
 };
 
-/*
-  Indicatore della pagina attiva: un solo elemento che resta montato e si sposta
-  solo in orizzontale. Con layoutId veniva rimontato a ogni cambio pagina e, se la
-  pagina era scrollata, arrivava dal basso.
-*/
+// pill della pagina attiva, si sposta solo in orizzontale
 function NavPill({ listRef, enabled, transition }) {
   const [box, setBox] = useState(null);
   const shown = useRef(false);
 
-  // Misura dopo ogni render: il link attivo può comparire dopo il login o il caricamento dei dati
+  // misuro il link attivo
   useLayoutEffect(() => {
     const list = listRef.current;
     const link = enabled ? list?.querySelector('a[aria-current="page"]') : null;

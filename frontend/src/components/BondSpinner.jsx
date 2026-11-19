@@ -1,4 +1,4 @@
-/* Caricamento: cinque barre d'equalizzatore, statiche con animazioni ridotte */
+// barre che salgono e scendono mentre carica
 const BondSpinner = ({ label = "Caricamento" }) => (
   <div role="status" className="grid flex-1 place-items-center py-24">
     <div className="flex h-10 items-end gap-1.5" aria-hidden="true">

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useMotionValue } from "motion/react";
 import SyncWaves from "./SyncWaves";
 
-/* 404: onde fuori fase, perché la pagina non è in sintonia con nulla */
+// pagina 404
 const NotFound = () => {
   const offbeat = useMotionValue(0);
   return (

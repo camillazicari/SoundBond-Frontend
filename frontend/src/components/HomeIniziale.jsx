@@ -31,7 +31,7 @@ function Reveal({ children, delay = 0, className = "", y = 32 }) {
   );
 }
 
-// Percentuale di sintonia: aggiornata direttamente nel DOM, senza re-render
+// percentuale che sale
 function SyncCounter({ progress }) {
   const ref = useRef(null);
   useMotionValueEvent(progress, "change", (v) => {
@@ -51,12 +51,12 @@ function Hero() {
     target: ref,
     offset: ["start start", "end end"],
   });
-  // Scorrendo le due onde entrano in sintonia
+  // scorrendo le onde si uniscono
   const raw = useTransform(scrollYProgress, [0.04, 0.72], [0, 1], { clamp: true });
   const spring = useSpring(raw, { stiffness: 110, damping: 28 });
   const still = useMotionValue(1);
   const progress = reduce ? still : spring;
-  // ...e le due metà del nome si avvicinano, fino a formare un blocco unico
+  // e SOUND e BOND si avvicinano
   const soundX = useTransform(progress, [0, 1], ["0vw", "9vw"]);
   const bondX = useTransform(progress, [0, 1], ["0vw", "-9vw"]);
   const outOfSync = useTransform(progress, [0.55, 0.85], [1, 0]);
@@ -175,7 +175,7 @@ function Simulator() {
   const toggle = (list, set) => (v) =>
     set(list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
-  // Stessa funzione usata dall'app per la pagina Connessioni
+  // stessa funzione delle connessioni
   const result = useMemo(() => {
     if (!generi.length || !artisti.length) return { score: 0, details: {} };
     return calculateCompatibility(

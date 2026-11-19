@@ -20,7 +20,7 @@ const Player = () => {
   const [isHidden, setIsHidden] = useState(false);
   const location = useLocation();
 
-  // Handler per andare al brano precedente
+  // brano prima
   const handlePrev = () => {
     if (playlist && currentIndex > 0) {
       const prevIndex = currentIndex - 1;
@@ -29,7 +29,7 @@ const Player = () => {
     }
   };
 
-  // Handler per andare al brano successivo
+  // brano dopo
   const handleNext = () => {
     if (playlist && currentIndex < playlist.length - 1) {
       const nextIndex = currentIndex + 1;
@@ -40,20 +40,20 @@ const Player = () => {
 
   useEffect(() => {
     if (nowPlaying) {
-      // Ferma l'eventuale audio precedente
+      // fermo quello di prima
       if (audio) {
         audio.pause();
       }
       const newAudio = new Audio(nowPlaying.preview);
 
       newAudio.onended = () => {
-        // Se nella playlist esiste una traccia successiva, riproducila
+        // se c'è un brano dopo lo faccio partire
         if (playlist && currentIndex < playlist.length - 1) {
           const nextSong = playlist[currentIndex + 1];
           setCurrentIndex(currentIndex + 1);
           setNowPlaying(nextSong);
         } else {
-          // Altrimenti, stoppa il player o gestisci il replay
+          // altrimenti mi fermo
           setIsPlaying(false);
           setAudio(null);
         }
@@ -151,7 +151,7 @@ const Player = () => {
             </p>
           </div>
 
-          {/* Forma d'onda: le barre si colorano con l'avanzamento, il range sopra la rende trascinabile */}
+          {/* barra di avanzamento a onda */}
           <div className="relative mt-1.5 h-7">
             <div aria-hidden="true" className="flex h-full items-center gap-[3px]">
               {bars.map((h, i) => (
@@ -219,7 +219,7 @@ const Player = () => {
   );
 };
 
-/* Copertina a disco: fuori dal Player, così non viene ricreata a ogni frame */
+// copertina a forma di disco (fuori dal Player sennò il click non funziona)
 function Disc({ cover, spinning, size }) {
   return (
     <span className={`relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line-strong ${size}`}>
@@ -234,7 +234,7 @@ function Disc({ cover, spinning, size }) {
   );
 }
 
-/* Barre pseudo-casuali ma stabili per ogni brano (stessa canzone, stessa forma) */
+// altezze delle barre, sempre uguali per lo stesso brano
 function waveform(seed, n = 56) {
   let h = 2166136261;
   for (const c of String(seed)) h = Math.imul(h ^ c.charCodeAt(0), 16777619);

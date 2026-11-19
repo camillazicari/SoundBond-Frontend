@@ -1,9 +1,4 @@
-/*
-  SoundBond design tokens.
-  Tema unico scuro (app musicale, uso serale), un solo accento viola del brand.
-  I pannelli traslucidi sono un'approssimazione web dei materiali Apple
-  (backdrop-filter + bordo luminoso), non un pacchetto ufficiale.
-*/
+/* colori e font dell'app */
 @theme {
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, monospace;
@@ -49,14 +44,14 @@
 }
 
 @layer components {
-  /* Superficie elevata: usata solo dove serve gerarchia */
+  /* card */
   .surface {
     background: var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
   }
 
-  /* Materiale traslucido per barre e pannelli flottanti */
+  /* sfondo trasparente sfocato */
   .glass {
     background: rgb(20 18 27 / 0.62);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
@@ -115,7 +110,7 @@
   }
 }
 
-/* Sfuma i bordi della striscia di copertine */
+/* bordi sfumati delle copertine */
 .marquee-mask {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
@@ -125,7 +120,7 @@
   to { transform: translateX(-50%); }
 }
 
-/* Titoli espressivi: Bricolage con asse di larghezza e dimensione ottica */
+/* titoli grandi */
 .display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
@@ -134,7 +129,7 @@
   line-height: 0.92;
 }
 
-/* Grana leggera su tutta la pagina: elemento fisso, nessun repaint in scroll */
+/* effetto grana */
 .grain::after {
   content: "";
   position: fixed;
@@ -145,7 +140,7 @@
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
-/* Solchi del vinile */
+/* vinile */
 .vinyl {
   background:
     radial-gradient(circle, transparent 0 17%, rgb(0 0 0 / 0) 17%),
@@ -157,16 +152,16 @@
 }
 .display.uppercase { letter-spacing: -0.045em; line-height: 0.86; }
 
-/* Luce ambientale delle card: sfuma verso il basso senza bordi netti */
+/* luce colorata delle card */
 .ambient {
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 85%);
   mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 85%);
 }
 
-/* Barre del caricamento */
+/* caricamento */
 .sb-eq { height: 40%; animation: sb-eq 0.9s ease-in-out infinite alternate; }
 @keyframes sb-eq { from { height: 20%; } to { height: 100%; } }
 @media (prefers-reduced-motion: reduce) { .sb-eq { animation: none; height: 60%; } }
 
-/* Copertina del player che gira come un disco */
+/* disco del player */
 @keyframes sb-spin { to { transform: rotate(360deg); } }

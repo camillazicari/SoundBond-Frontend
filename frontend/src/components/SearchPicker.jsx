@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { Search } from "lucide-react";
 
-/* Ricerca con elenco risultati accessibile (combobox semplice) */
+// ricerca con lista dei risultati
 export default function SearchPicker({ label, placeholder, value, onChange, results, onPick, renderItem }) {
   const id = useId();
   const [active, setActive] = useState(0);

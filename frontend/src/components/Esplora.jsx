@@ -55,7 +55,7 @@ const Esplora = () => {
     setGeneriId(matches.map((m) => m.id));
   }, [genres, generi]);
 
-  // Per ogni genere: classifica dei brani del genere, 15 brani che cambiano ogni giorno
+  // 15 brani per genere, cambiano ogni giorno
   useEffect(() => {
     if (generiId.length === 0) return;
     const giornoDellAnno = Math.floor(
@@ -89,18 +89,15 @@ const Esplora = () => {
     usePlayer();
 
   const handleSongSelect = (song, index, currentPlaylist) => {
-    // Se il brano cliccato è già in riproduzione, fermarlo
+    // se sta già suonando lo fermo
     if (nowPlaying?.id === song.id) {
       setAudio(null);
       setNowPlaying(null);
     } else {
-      // Imposta la playlist corrente nel contesto
       setPlaylist(currentPlaylist);
 
-      // Imposta l'indice del brano selezionato
       setCurrentIndex(index);
 
-      // Imposta la traccia corrente
       setNowPlaying(song);
     }
   };

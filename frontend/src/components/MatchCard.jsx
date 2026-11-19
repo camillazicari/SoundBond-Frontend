@@ -15,11 +15,11 @@ export const profileImage = (immagine) =>
 
 const initials = (text = "") => text.slice(0, 2).toUpperCase();
 
-// Affinità: numero grande, colore pieno solo sopra il 40%
+// affinità: due cerchi che si sovrappongono di più se siete simili
 export function Affinity({ score = 0, size = "lg" }) {
   const strong = score >= 40;
   const r = 14;
-  const d = 2 * r * (1 - score / 100); // distanza tra i centri: 0 = gusti identici
+  const d = 2 * r * (1 - score / 100); // 0 = gusti uguali
   return (
     <div className="flex flex-col items-end">
       <svg

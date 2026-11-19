@@ -2,10 +2,7 @@ import { useEffect } from "react";
 import { useMotionValue, useSpring } from "motion/react";
 import SyncWaves from "./SyncWaves";
 
-/*
-  Pagine di accesso: modulo a sinistra, onde a destra.
-  Le onde entrano in sintonia man mano che il modulo si completa (`progress` 0..1).
-*/
+// layout di accedi e registrati: le onde si uniscono mentre compili
 export default function AuthLayout({ eyebrow, title, accent, intro, progress = 0, aside, children }) {
   const raw = useMotionValue(progress);
   const synced = useSpring(raw, { stiffness: 90, damping: 22 });

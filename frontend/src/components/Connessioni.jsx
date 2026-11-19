@@ -138,7 +138,7 @@ const Connessioni = () => {
         const username = match.user?.profilo?.nomeUtente?.toLowerCase();
         const searchLower = search?.toLowerCase();
 
-        // Controllo se il nome, cognome, nome utente, generi o artisti corrispondono al testo di ricerca
+        // cerco per nome, username, generi o artisti
         const genresMatch = match.user?.generi?.some((genere) =>
           genere.nome.toLowerCase().includes(searchLower)
         );
@@ -146,7 +146,6 @@ const Connessioni = () => {
           artista.nome?.toLowerCase().includes(searchLower)
         );
 
-        // Verifica se nome, cognome, nome utente, generi o artisti corrispondono alla ricerca
         return (
           userName?.includes(searchLower) ||
           username?.includes(searchLower) ||

@@ -1,4 +1,4 @@
-/* Intestazione di pagina: occhiello, titolo display, sottotitolo, azioni a destra */
+// titolo delle pagine
 export default function PageHeader({ eyebrow, title, accent, children, actions }) {
   return (
     <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

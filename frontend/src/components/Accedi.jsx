@@ -19,7 +19,7 @@ const Accedi = () => {
   const [usersLoaded, setUsersLoaded] = useState(false);
 
   useEffect(() => {
-    // Carica gli utenti e imposta il flag quando completato
+    // carico gli utenti
     dispatch(getAllUtenti())
       .then(() => setUsersLoaded(true))
       .catch((err) =>
@@ -32,33 +32,33 @@ const Accedi = () => {
 
     const errors = {};
 
-    // Validazione campi vuoti
+    // campi vuoti
     if (!email || !password) {
       errors.generic = "Compilare tutti i campi!";
       setErrorMessages(errors);
       return;
     }
 
-    // Verifica se gli utenti sono stati caricati
+    // utenti non ancora caricati
     if (!usersLoaded || utenti.length === 0) {
       errors.generic = "Caricamento utenti in corso, riprova tra un attimo...";
       setErrorMessages(errors);
       return;
     }
 
-    // Cerca l'utente con email corrispondente (case insensitive)
+    // cerco l'utente con questa email
     const utenteEsistente = utenti.find(
       (u) => u.email.toLowerCase() === email.toLowerCase()
     );
 
-    // Verifica se l'utente esiste
+    // non esiste
     if (!utenteEsistente) {
       errors.generic = "Utente inesistente. Registrati per poter accedere.";
       setErrorMessages(errors);
       return;
     }
 
-    // Se non ci sono errori, procedi con il login
+    // tutto ok, login
     setIsLoading(true);
     setErrorMessages({});
 

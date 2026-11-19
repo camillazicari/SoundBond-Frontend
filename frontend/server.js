@@ -56,8 +56,7 @@ app.get("/api/artists", async (req, res) => {
     }
 });
 
-// Brani più ascoltati di un genere. /genre/{id}/artists restituisce la classifica
-// generale (non filtrata per genere), quindi le playlist usano la classifica del genere.
+// brani più ascoltati di un genere (genre/artists non filtra per genere)
 app.get("/api/genre-tracks", async (req, res) => {
     const { genre_id } = req.query;
 
