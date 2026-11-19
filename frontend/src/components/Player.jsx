@@ -119,27 +119,15 @@ const Player = () => {
   const hasPrev = playlist?.length > 0 && currentIndex > 0;
   const hasNext = playlist?.length > 0 && currentIndex < playlist.length - 1;
 
-  const Disc = ({ size }) => (
-    <span className={`relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line-strong ${size}`}>
-      <img
-        src={cover}
-        alt=""
-        className="size-full object-cover motion-safe:animate-[sb-spin_6s_linear_infinite]"
-        style={{ animationPlayState: isPlaying ? "running" : "paused" }}
-      />
-      <span className="absolute top-1/2 left-1/2 size-[18%] -translate-1/2 rounded-full bg-ink ring-1 ring-white/20" />
-    </span>
-  );
-
   if (isHidden) {
     return (
       <button
         type="button"
         onClick={() => setIsHidden(false)}
         aria-label={`Mostra il player: ${nowPlaying?.title}`}
-        className="glass fixed right-4 bottom-4 z-50 cursor-pointer rounded-full p-1.5 transition-transform active:scale-95"
+        className="glass fixed right-4 bottom-4 z-50 cursor-pointer rounded-full p-2 transition-transform hover:scale-105 active:scale-95"
       >
-        <Disc size="size-12" />
+        <Disc cover={cover} spinning={isPlaying} size="size-14" />
       </button>
     );
   }
@@ -150,7 +138,7 @@ const Player = () => {
       className="glass fixed inset-x-3 bottom-3 z-50 mx-auto max-w-3xl rounded-[1.75rem] p-2.5 pr-3 md:bottom-4"
     >
       <div className="flex items-center gap-3">
-        <Disc size="size-12 md:size-14" />
+        <Disc cover={cover} spinning={isPlaying} size="size-12 md:size-14" />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
@@ -230,6 +218,21 @@ const Player = () => {
     </section>
   );
 };
+
+/* Copertina a disco: fuori dal Player, così non viene ricreata a ogni frame */
+function Disc({ cover, spinning, size }) {
+  return (
+    <span className={`relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line-strong ${size}`}>
+      <img
+        src={cover}
+        alt=""
+        className="size-full object-cover motion-safe:animate-[sb-spin_6s_linear_infinite]"
+        style={{ animationPlayState: spinning ? "running" : "paused" }}
+      />
+      <span className="absolute top-1/2 left-1/2 size-[18%] -translate-1/2 rounded-full bg-ink ring-1 ring-white/20" />
+    </span>
+  );
+}
 
 /* Barre pseudo-casuali ma stabili per ogni brano (stessa canzone, stessa forma) */
 function waveform(seed, n = 56) {
