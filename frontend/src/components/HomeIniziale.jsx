@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -10,7 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ArrowRight, Check, RefreshCw } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { calculateCompatibility } from "./data/matchMaking";
 import SyncWaves from "./SyncWaves";
 import { playlistCovers } from "../assets/playlistCovers";
@@ -45,45 +44,24 @@ function SyncCounter({ progress }) {
   );
 }
 
-const demoPeople = [
-  { name: "Giulia", score: 82 },
-  { name: "Marco", score: 67 },
-  { name: "Sara", score: 91 },
-  { name: "Luca", score: 58 },
-];
-const syncEase = [0.65, 0, 0.35, 1];
-
 function Hero() {
+  const ref = useRef(null);
   const reduce = useReducedMotion();
-  const [index, setIndex] = useState(0);
-  const person = demoPeople[index];
-  // Avanzamento della sintonia: parte da 0 e si ferma sul punteggio della persona
-  const progress = useMotionValue(reduce ? person.score / 100 : 0);
-  // Le due metà del nome si avvicinano man mano che le onde entrano in sintonia
-  const soundX = useTransform(progress, [0, 1], ["-7%", "0%"]);
-  const bondX = useTransform(progress, [0, 1], ["7%", "0%"]);
-
-  useEffect(() => {
-    if (reduce) return;
-    const controls = animate(progress, demoPeople[0].score / 100, {
-      delay: 0.9,
-      duration: 2.8,
-      ease: syncEase,
-    });
-    return () => controls.stop();
-  }, [progress, reduce]);
-
-  const nextMatch = () => {
-    const next = (index + 1) % demoPeople.length;
-    setIndex(next);
-    const target = demoPeople[next].score / 100;
-    if (reduce) return progress.set(target);
-    animate(progress, [progress.get(), 0.06, target], {
-      duration: 2.6,
-      times: [0, 0.3, 1],
-      ease: syncEase,
-    });
-  };
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  // Scorrendo le due onde entrano in sintonia
+  const raw = useTransform(scrollYProgress, [0.04, 0.72], [0, 1], { clamp: true });
+  const spring = useSpring(raw, { stiffness: 110, damping: 28 });
+  const still = useMotionValue(1);
+  const progress = reduce ? still : spring;
+  // ...e le due metà del nome si avvicinano, fino a formare un blocco unico
+  const soundX = useTransform(progress, [0, 1], ["0vw", "9vw"]);
+  const bondX = useTransform(progress, [0, 1], ["0vw", "-9vw"]);
+  const outOfSync = useTransform(progress, [0.55, 0.85], [1, 0]);
+  const inSync = useTransform(progress, [0.8, 1], [0, 1]);
+  const inSyncY = useTransform(progress, [0.8, 1], [12, 0]);
 
   const intro = (i) => ({
     initial: reduce ? false : { opacity: 0, y: 60 },
@@ -92,8 +70,8 @@ function Hero() {
   });
 
   return (
-    <section className="relative">
-      <div className="relative flex min-h-[100dvh] flex-col justify-between overflow-hidden px-4 pt-28 pb-8 md:pt-32">
+    <section ref={ref} className={reduce ? "relative" : "relative h-[220vh]"}>
+      <div className="sticky top-0 flex min-h-[100dvh] flex-col justify-between overflow-hidden px-4 pt-28 pb-8 md:pt-32">
         <h1 className="display relative mx-auto w-full max-w-7xl text-[clamp(5.5rem,19vw,17rem)] font-extrabold uppercase select-none">
           <motion.span {...intro(0)} className="block">
             <motion.span className="inline-block" style={{ x: soundX }}>
@@ -133,35 +111,23 @@ function Hero() {
             </div>
           </motion.div>
 
-          <motion.div {...intro(3)} className="md:text-right">
-            <p className="text-sm text-muted" aria-live="polite">
-              Tu e {person.name}, in sintonia al
-            </p>
-            <p className="display mt-1 text-7xl font-bold text-fg md:text-8xl">
-              <SyncCounter progress={progress} />
-              <span className="text-accent">%</span>
-            </p>
-            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted md:justify-end">
-              <span className="flex items-center gap-2">
-                <span className="h-0.5 w-6 rounded-full bg-accent" />
-                tu
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="h-0.5 w-6 rounded-full bg-fg/80" />
-                {person.name}
-              </span>
-              <button
-                type="button"
-                onClick={nextMatch}
-                className="group flex cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-fg transition-[background-color,transform] hover:bg-white/[0.06] active:scale-95"
-              >
-                <RefreshCw
-                  size={14}
-                  className="transition-transform duration-500 group-hover:rotate-180"
-                />
-                Un altro match
-              </button>
-            </div>
+          <motion.div
+            {...intro(3)}
+            className="relative grid min-w-64 md:justify-items-end"
+            aria-hidden="true"
+          >
+            <motion.p
+              style={{ opacity: outOfSync }}
+              className="display col-start-1 row-start-1 text-5xl font-bold text-muted md:text-6xl"
+            >
+              Fuori fase.
+            </motion.p>
+            <motion.p
+              style={{ opacity: inSync, y: inSyncY }}
+              className="display col-start-1 row-start-1 text-5xl font-bold md:text-6xl"
+            >
+              In <span className="text-accent">sintonia.</span>
+            </motion.p>
           </motion.div>
         </div>
       </div>
@@ -415,36 +381,34 @@ function Covers() {
 function Closing() {
   const synced = useMotionValue(1);
   return (
-    <section className="relative overflow-hidden px-4 py-32 md:py-44">
+    <section className="relative overflow-hidden px-4 py-32 text-center md:py-48">
       <SyncWaves
         progress={synced}
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-64 w-full -translate-y-1/2 opacity-40 mix-blend-screen md:h-96"
+        className="pointer-events-none absolute inset-x-0 top-[42%] h-72 w-full -translate-y-1/2 opacity-50 mix-blend-screen md:h-[28rem]"
       />
       <div className="relative mx-auto max-w-7xl">
         <Reveal>
-          <h2 className="display max-w-5xl text-[clamp(3.5rem,9vw,8.5rem)] font-bold">
-            Chi ascolta quello che ascolti{" "}
-            <span className="text-accent">tu?</span>
+          <h2 className="display text-[clamp(2.75rem,12.5vw,12rem)] font-extrabold uppercase">
+            Trova chi
+            <br />
+            suona{" "}
+            <span className="whitespace-nowrap text-accent">come te.</span>
           </h2>
         </Reveal>
-        <Reveal
-          delay={0.12}
-          className="mt-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
-        >
-          <p className="max-w-md text-lg text-muted">
-            Imposta generi e artisti in pochi minuti e scopri subito con chi
-            sei in sintonia.
-          </p>
+        <Reveal delay={0.12} className="mt-12 flex flex-col items-center gap-5">
           <Link
             to="/accedi/registrati"
-            className="btn btn-primary group self-start px-8 py-4 text-lg md:self-auto"
+            className="btn btn-primary group px-10 py-5 text-lg md:text-xl"
           >
             Crea un account
             <ArrowRight
-              size={20}
+              size={22}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
+          <p className="text-muted">
+            Scegli i tuoi artisti e vedi subito con chi sei in sintonia.
+          </p>
         </Reveal>
       </div>
     </section>
