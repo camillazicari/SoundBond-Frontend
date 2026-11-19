@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function GradientBig({
   children,
-  colors = ["#C476FF", "#D29CFF", "#B060F0", "#E2B8FF", "#A94CE6"],
+  colors = ["#a98bff", "#c4b2ff", "#a98bff", "#d9cfff", "#a98bff"],
   animationSpeed = 8,
   showBorder = true,
 }) {

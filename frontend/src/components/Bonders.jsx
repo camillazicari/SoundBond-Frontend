@@ -27,7 +27,7 @@ const Bonders = () => {
       <h1
         className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-3"
         style={{
-          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+          backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -54,7 +54,7 @@ const BonderCard = ({ bonder }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-gradient-to-br from-[#1e0a23] to-[#5d1093] rounded-xl p-6 shadow-lg border border-[#7112b7]/30 hover:border-[#ad42ff] transition-all">
+    <div className="bg-gradient-to-br from-[#14121b] to-[#2c2738] rounded-xl p-6 shadow-lg border border-[#3a3449]/30 hover:border-[#a98bff] transition-all">
       <div className="flex items-center space-x-4 mb-4">
         <Avatar className="h-16 w-16">
           <AvatarImage
@@ -64,13 +64,13 @@ const BonderCard = ({ bonder }) => {
                 : `${API_URL}${bonder?.profilo.immagine}`
             }
           />
-          <AvatarFallback className="bg-[#ad42ff]">
+          <AvatarFallback className="bg-[#a98bff]">
             {bonder.nome?.charAt(0)}
           </AvatarFallback>
         </Avatar>
         <div>
           <h3 className="text-xl font-semibold ">{bonder?.nome}</h3>
-          <p className="text-[#d489e9]">{bonder.profilo?.bio}</p>
+          <p className="text-[#a98bff]">{bonder.profilo?.bio}</p>
         </div>
       </div>
 

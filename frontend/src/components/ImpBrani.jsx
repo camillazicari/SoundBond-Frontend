@@ -213,9 +213,9 @@ const ImpBrani = () => {
   };
 
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
+    <Card className="p-6 backdrop-blur-lg bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold" style={{ color: "#c476ff" }}>
+        <h3 className="text-lg font-semibold" style={{ color: "#a98bff" }}>
           I tuoi brani preferiti
         </h3>
         <Dialog
@@ -227,16 +227,16 @@ const ImpBrani = () => {
           }}
         >
           <DialogTrigger asChild>
-            <button className="bg-[#ad42ff] hover:bg-[#9b1fff] py-1.5 px-4 rounded-md flex items-center transition-colors">
+            <button className="bg-[#a98bff] hover:bg-[#a98bff] py-1.5 px-4 rounded-md flex items-center transition-colors">
               <Plus size={18} className="mr-2" /> Aggiungi
             </button>
           </DialogTrigger>
-          <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
+          <DialogContent className="bg-[#1c1925]/30 border border-[#3a3449]/50">
             <DialogHeader>
-              <DialogTitle className="text-[#f7ebfc]">
+              <DialogTitle className="text-[#f2f0f7]">
                 Aggiungi un brano preferito
               </DialogTitle>
-              <DialogDescription className="text-[#efd6f8]">
+              <DialogDescription className="text-[#f2f0f7]">
                 Inserisci il titolo del brano che vuoi aggiungere.
               </DialogDescription>
             </DialogHeader>
@@ -247,16 +247,16 @@ const ImpBrani = () => {
                   onChange={handleSearchChange}
                   onSubmit={() => {}}
                   value={search}
-                  className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                  className="bg-[#3a3449]/30 border-[#1c1925] focus:border-[#a98bff]"
                 />
               </div>
               <DialogClose>
                 {searchResults.length > 0 && (
-                  <ul className="bg-[#170228] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-42 z-50">
+                  <ul className="bg-[#14121b] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-42 z-50">
                     {searchResults.map((song, index) => (
                       <li
                         key={index}
-                        className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
+                        className="p-2 hover:bg-[#3a3449]/30 cursor-pointer flex items-center"
                         onClick={() => handleSelectSong(song)}
                       >
                         {song.image && (
@@ -283,7 +283,7 @@ const ImpBrani = () => {
             {brani.map((song) => (
               <div
                 key={song.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-[#3f006f]/30 border border-[#7112b7]/50 hover:bg-[#7112B7]/30  transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg bg-[#1c1925]/30 border border-[#3a3449]/50 hover:bg-[#3a3449]/30  transition-colors"
               >
                 <div className="flex items-center">
                   {song.img ? (
@@ -299,17 +299,17 @@ const ImpBrani = () => {
                     <p>No image available</p>
                   )}
                   <div>
-                    <h4 className="font-medium text-[#fbf5fe]">
+                    <h4 className="font-medium text-[#f2f0f7]">
                       {song.titolo}
                     </h4>
-                    <p className="text-sm text-[#efd6f8]">{song.artista}</p>
+                    <p className="text-sm text-[#f2f0f7]">{song.artista}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => handleRemoveSong(song)}
                   size="icon"
                   variant="ghost"
-                  className="hover:bg-[#9b1fff]/20 text-[#f7ebfc]"
+                  className="hover:bg-[#a98bff]/20 text-[#f2f0f7]"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -318,7 +318,7 @@ const ImpBrani = () => {
           </div>
         ) : (
           <div className="h-full flex items-center justify-center">
-            <p className="text-[#efd6f8] italic">
+            <p className="text-[#f2f0f7] italic">
               Non hai ancora aggiunto brani preferiti
             </p>
           </div>

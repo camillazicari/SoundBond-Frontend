@@ -123,7 +123,7 @@ const Player = () => {
           : "fixed bottom-0 left-0 right-0 z-50 mx-2"
       }`}
     >
-      <div className="cardPlayer border-1 border-[#ad42ff]/50 relative">
+      <div className="cardPlayer border-1 border-[#a98bff]/50 relative">
         <button
           className="cursor-pointer absolute top-0 right-2"
           onClick={() => setIsHidden(!isHidden)}
@@ -133,7 +133,7 @@ const Player = () => {
               xmlns="http://www.w3.org/2000/svg"
               width="25"
               height="25"
-              fill="#ad42ff"
+              fill="#a98bff"
               className="bi bi-arrow-up-short"
               viewBox="0 0 16 16"
             >
@@ -147,7 +147,7 @@ const Player = () => {
               xmlns="http://www.w3.org/2000/svg"
               width="25"
               height="25"
-              fill="#ad42ff"
+              fill="#a98bff"
               className="bi bi-arrow-down-short"
               viewBox="0 0 16 16"
             >

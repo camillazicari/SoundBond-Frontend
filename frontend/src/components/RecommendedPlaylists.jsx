@@ -88,7 +88,7 @@ const RecommendedPlaylists = () => {
                   alt="cover"
                   className="w-[100%] h-60 md:h-70 lg:h-90 xl:h-110 object-cover rounded-2xl"
                 />
-                <p className="text-center my-2 md:text-md lg:text-lg font-bold text-[#daacff]">
+                <p className="text-center my-2 md:text-md lg:text-lg font-bold text-[#d9cfff]">
                   {genere?.name}
                 </p>
               </div>

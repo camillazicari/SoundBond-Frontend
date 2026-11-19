@@ -1,9 +1,10 @@
 import { API_URL } from "../config";
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Logo from "./Logo";
 import { Menu, X, Bell } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import GradientText from "./personalizedComponents/GradientText";
 import NavAvatar from "./NavAvatar";
 import { getRichiesteRicevute } from "../redux/actions/richieste.js";
 import { getConversazioni } from "../redux/actions/chat.js";
@@ -17,6 +18,8 @@ import {
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const [nuoviBonders, setNuoviBonders] = useState([]);
@@ -155,85 +158,82 @@ const Navbar = () => {
     return () => clearInterval(intervalId);
   }, [dispatch, isLoggedIn]);
 
+  const bellButton = (
+    <span className="relative grid size-10 place-items-center rounded-full border border-line bg-white/[0.04] text-fg transition-colors hover:bg-white/[0.08]">
+      <Bell size={18} strokeWidth={1.75} />
+      {requestCount > 0 && (
+        <span className="absolute -top-0.5 -right-0.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-accent px-1 text-[10px] font-semibold text-accent-ink">
+          {requestCount > 9 ? "9+" : requestCount}
+        </span>
+      )}
+    </span>
+  );
+
   const NotificationBell =
     requestCount > 0 ? (
-      <div className="relative me-4">
-        <Dropdown>
-          <DropdownTrigger>
-            <div>
-              <Bell
-                className="text-[#ad42ff] cursor-pointer transition-all animate-pulse"
-                size={30}
-                onClick={() => setMenuOpen(false)}
-              />
-              {requestCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#ad42ff] text-[#0C0512] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {requestCount > 9 ? "9+" : requestCount}
-                </span>
-              )}
-            </div>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Notifiche"
-            className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
-            style={{
-              backgroundColor: "rgba(12, 5, 18, 0.5)",
-              backdropFilter: "blur(10px)",
-            }}
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <button
+            type="button"
+            aria-label={`Notifiche: ${requestCount}`}
+            onClick={() => setMenuOpen(false)}
+            className="cursor-pointer"
           >
-            {receivedRequests && receivedRequests.length > 0 && (
+            {bellButton}
+          </button>
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Notifiche"
+          className="glass min-w-64 rounded-2xl p-1.5"
+        >
+          {receivedRequests && receivedRequests.length > 0 && (
+            <DropdownItem
+              key="richieste"
+              textValue={`${receivedRequests.length} nuove richieste`}
+              className="rounded-xl px-3 py-2.5 text-sm data-[hover=true]:bg-white/[0.06]"
+            >
+              <Link to="/richieste">
+                {receivedRequests.length === 1
+                  ? "Hai 1 nuova richiesta"
+                  : `Hai ${receivedRequests.length} nuove richieste`}
+              </Link>
+            </DropdownItem>
+          )}
+          {messaggiNonLetti > 0 && (
+            <DropdownItem
+              key="messaggi"
+              textValue={`${messaggiNonLetti} nuovi messaggi`}
+              className="rounded-xl px-3 py-2.5 text-sm data-[hover=true]:bg-white/[0.06]"
+            >
+              <Link to="/generali">
+                {messaggiNonLetti === 1
+                  ? "Hai 1 nuovo messaggio"
+                  : `Hai ${messaggiNonLetti} nuovi messaggi`}
+              </Link>
+            </DropdownItem>
+          )}
+          {nuoviBonders.length > 0 &&
+            nuoviBonders.map((bonder) => (
               <DropdownItem
-                textValue={`${receivedRequests.length} nuove richieste`}
-                className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
+                key={bonder.id}
+                textValue="Nuovo bonder"
+                className="rounded-xl px-3 py-2.5 text-sm data-[hover=true]:bg-white/[0.06]"
               >
-                <Link to="/richieste">
-                  {receivedRequests.length === 1
-                    ? "Hai 1 nuova richiesta"
-                    : `Hai ${receivedRequests.length} nuove richieste`}
-                </Link>
-              </DropdownItem>
-            )}
-            {messaggiNonLetti > 0 && (
-              <DropdownItem
-                textValue={`${messaggiNonLetti} nuovi messaggi`}
-                className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
-              >
-                <Link to="/generali">
-                  {messaggiNonLetti === 1
-                    ? "Hai 1 nuovo messaggio"
-                    : `Hai ${messaggiNonLetti} nuovi messaggi`}
-                </Link>
-              </DropdownItem>
-            )}
-            {nuoviBonders.length > 0 &&
-              nuoviBonders.map((bonder) => (
-                <DropdownItem
-                  key={bonder.id}
-                  textValue={`Hai 1 nuovo bonder`}
-                  className="hover:bg-[#ad42ff] cursor-pointer rounded-sm"
+                <Link
+                  to={"/bonders"}
+                  onClick={() => {
+                    handleBonderClick(bonder.id);
+                  }}
                 >
-                  <Link
-                    to={"/bonders"}
-                    onClick={() => {
-                      handleBonderClick(bonder.id);
-                    }}
-                  >
-                    Hai 1 nuovo bonder: {bonder.otherUser.nome}{" "}
-                    {bonder.otherUser.cognome}
-                  </Link>
-                </DropdownItem>
-              ))}
-          </DropdownMenu>
-        </Dropdown>
-      </div>
+                  Nuovo bonder: {bonder.otherUser.nome}{" "}
+                  {bonder.otherUser.cognome}
+                </Link>
+              </DropdownItem>
+            ))}
+        </DropdownMenu>
+      </Dropdown>
     ) : (
-      <div className="me-4">
-        <Bell
-          className="text-[#ad42ff] transition-all"
-          size={30}
-          onClick={() => setMenuOpen(false)}
-        />
-      </div>
+      <span aria-label="Nessuna notifica">{bellButton}</span>
     );
 
   const navLinks = isLoggedIn
@@ -252,53 +252,57 @@ const Navbar = () => {
         { to: "/accedi", label: "Chat" },
       ];
 
+  const isActive = (to) =>
+    to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+  const spring = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring", bounce: 0, duration: 0.35 };
+
   return (
     !location.pathname.startsWith("/chat") && (
-      <header className="w-full sticky top-0 z-30 bg-transparent py-3 md:py-4">
-        <nav className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex-1 md:flex-initial md:w-1/3">
-            <Link to="/" onClick={() => setMenuOpen(false)}>
-              <img
-                src="src/assets/SoundBond/SoundBondViola.png"
-                alt="Logo"
-                className="w-39 md:w-40 lg:w-48 h-auto transition-all duration-300"
-              />
-            </Link>
-          </div>
+      <header className="sticky top-0 z-30 px-4 pt-3 md:pt-4">
+        <nav className="glass mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pr-2 pl-5">
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="shrink-0"
+            aria-label="SoundBond, home"
+          >
+            <Logo />
+          </Link>
 
-          <div className="hidden md:flex flex-1 justify-center items-center space-x-2 lg:space-x-4 border-[0.5px] border-[#ad42ff] rounded-4xl px-4 py-2 bg-[#0C0512]/50 backdrop-blur-lg">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={label}
-                to={to}
-                onClick={() => setMenuOpen(false)}
-                className="font-medium text-sm lg:text-base text-[#ad42ff] hover:text-[#c476ff] transition-colors px-1 py-2 rounded-lg"
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
+          <ul className="hidden items-center gap-1 md:flex">
+            {navLinks.map(({ to, label }) => {
+              const active = isLoggedIn && isActive(to);
+              return (
+                <li key={label} className="relative">
+                  <Link
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={`relative z-10 block rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      active ? "text-fg" : "text-muted hover:text-fg"
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active"
+                      transition={spring}
+                      className="absolute inset-0 rounded-full bg-white/[0.07]"
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
 
-          <div className="hidden md:flex flex-1 justify-end items-center space-x-4 lg:space-x-6">
+          <div className="hidden items-center gap-2 md:flex">
             {!isLoggedIn ? (
-              <div>
-                <GradientText
-                  to="/accedi"
-                  onClick={() => setMenuOpen(false)}
-                  colors={[
-                    "#C476FF",
-                    "#D29CFF",
-                    "#B060F0",
-                    "#E2B8FF",
-                    "#A94CE6",
-                  ]}
-                  animationSpeed={5}
-                  showBorder={true}
-                  className="text-base"
-                >
-                  LOGIN
-                </GradientText>
-              </div>
+              <Link to="/accedi" className="btn btn-primary">
+                Accedi
+              </Link>
             ) : (
               <>
                 {NotificationBell}
@@ -309,76 +313,68 @@ const Navbar = () => {
 
           <button
             type="button"
-            className="md:hidden p-2"
-            style={{
-              borderColor: "#ad42ff",
-              backgroundColor: "rgba(12, 5, 18, 0.5)",
-              backdropFilter: "blur(10px)",
-            }}
+            className="grid size-11 place-items-center rounded-full text-fg md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
+            aria-expanded={menuOpen}
           >
-            {menuOpen ? (
-              <X size={30} color="#ad42ff" />
-            ) : (
-              <Menu size={30} color="#ad42ff" />
-            )}
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
+        </nav>
 
+        <AnimatePresence>
           {menuOpen && (
-            <div className="md:hidden fixed inset-0 top-19 bg-[#0C0512]/95 backdrop-blur-lg z-20 overflow-y-auto">
-              <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-col items-center space-y-6">
-                  {navLinks.map(({ to, label }) => (
+            <motion.div
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+              transition={reduceMotion ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.3 }}
+              style={{ transformOrigin: "top right" }}
+              className="glass absolute inset-x-4 top-[5.25rem] z-20 rounded-3xl p-3 md:hidden"
+            >
+              <ul className="flex flex-col">
+                {navLinks.map(({ to, label }) => (
+                  <li key={label}>
                     <Link
-                      key={label}
                       to={to}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuOpen(false);
-                      }}
-                      className="font-medium text-lg text-[#ad42ff] hover:text-[#c476ff] transition-colors px-1 py-2 rounded-lg"
+                      onClick={() => setMenuOpen(false)}
+                      className={`block rounded-2xl px-4 py-3 text-base font-medium ${
+                        isLoggedIn && isActive(to)
+                          ? "bg-white/[0.07] text-fg"
+                          : "text-muted"
+                      }`}
                     >
                       {label}
                     </Link>
-                  ))}
-
-                  {!isLoggedIn ? (
-                    <Link to="/accedi" onClick={() => setMenuOpen(false)}>
-                      <GradientText
-                        colors={[
-                          "#C476FF",
-                          "#D29CFF",
-                          "#B060F0",
-                          "#E2B8FF",
-                          "#A94CE6",
-                        ]}
-                        animationSpeed={5}
-                        showBorder={true}
-                        className="text-xl"
-                      >
-                        LOGIN
-                      </GradientText>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-2 flex items-center justify-between border-t border-line px-2 pt-3">
+                {!isLoggedIn ? (
+                  <Link
+                    to="/accedi"
+                    onClick={() => setMenuOpen(false)}
+                    className="btn btn-primary w-full"
+                  >
+                    Accedi
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/richieste"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 text-sm text-muted"
+                    >
+                      {bellButton}
+                      Notifiche
                     </Link>
-                  ) : (
-                    <div className="flex items-center justify-center space-x-8 pt-4">
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/richieste");
-                          setMenuOpen(false);
-                        }}
-                      >
-                        {NotificationBell}
-                      </div>
-                      <NavAvatar />
-                    </div>
-                  )}
-                </div>
+                    <NavAvatar />
+                  </>
+                )}
               </div>
-            </div>
+            </motion.div>
           )}
-        </nav>
+        </AnimatePresence>
       </header>
     )
   );

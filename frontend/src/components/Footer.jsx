@@ -1,121 +1,42 @@
-import soundBondTesto from "../assets/SoundBond/SoundBondTesto.png";
-import React from "react";
-import { BsFacebook, BsGithub, BsInstagram, BsDiscord } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { BsGithub, BsInstagram } from "react-icons/bs";
+import Logo from "./Logo";
 
 export function Footer() {
   const location = useLocation();
+  const hidden =
+    location.pathname.startsWith("/chat") ||
+    ["/generi", "/artisti", "/brani"].includes(location.pathname);
+  if (hidden) return null;
+
   return (
-    !location.pathname.startsWith("/chat") &&
-    location.pathname !== "/generi" &&
-    location.pathname !== "/artisti" &&
-    location.pathname !== "/brani" && (
-      <footer className="footer relative">
-        <div className="w-full">
-          <div className="grid gap-8 sm:flex sm:justify-between md:grid-cols-1">
-            <Link to={"/"}>
-              <img
-                src="src/assets/SoundBond/SoundBondViola.png"
-                alt=""
-                className="w-1/3 sm:w-1/2"
-              />
-            </Link>
-
-            {/* Footer Links */}
-            <div className="grid grid-cols-3 gap-6 sm:mt-4">
-              {/* About */}
-              <div className="footerText">
-                <h5 className="text-base lg:text-lg font-semibold mb-2">
-                  About
-                </h5>
-                <ul>
-                  <li>
-                    <Link to={"/"} className="text-sm lg:text-base">
-                      SoundBond
-                    </Link>
-                  </li>
-                  <li>
-                    <a href="#" className="text-sm lg:text-base">
-                      Musica
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Follow Us */}
-              <div>
-                <h5 className="text-base lg:text-lg font-semibold mb-2">
-                  Follow Us
-                </h5>
-                <ul>
-                  <li>
-                    <a
-                      href="https://github.com/camillazicari"
-                      className="text-sm lg:text-base"
-                    >
-                      Github
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-sm lg:text-base">
-                      Discord
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Legal */}
-              <div>
-                <h5 className="text-base lg:text-lg font-semibold mb-2">
-                  Legal
-                </h5>
-                <ul>
-                  <li>
-                    <a href="#" className="text-sm lg:text-base">
-                      Privacy Policy
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-sm lg:text-base">
-                      Terms &amp; Conditions
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[#5d1093] mt-8 pt-4">
-            <div className="w-full sm:flex sm:items-center sm:justify-between">
-              <p className="text-center sm:text-left text-sm flex items-center">
-                &copy; {new Date().getFullYear()} &nbsp;
-                <img
-                  src={soundBondTesto}
-                  className="w-1/4"
-                  alt=""
-                />
-                ™. &nbsp;All Rights Reserved.
-              </p>
-
-              <div className="mt-2 flex space-x-6 sm:mt-0 sm:justify-center mb-2 sm:mb-0">
-                <a href="#">
-                  <BsFacebook size={24} />
-                </a>
-                <a href="https://www.instagram.com/camiuzinwonderland/">
-                  <BsInstagram size={24} />
-                </a>
-                <a href="#">
-                  <BsDiscord size={24} />
-                </a>
-                <a href="https://github.com/camillazicari">
-                  <BsGithub size={24} />
-                </a>
-              </div>
-            </div>
-          </div>
+    <footer className="mt-16 border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-2">
+          <Link to="/" aria-label="SoundBond, home">
+            <Logo />
+          </Link>
+          <p className="text-sm text-subtle">
+            Progetto di Camilla Zicari. Dati musicali forniti da Deezer.
+          </p>
         </div>
-      </footer>
-    )
+        <div className="flex items-center gap-2">
+          <a
+            href="https://github.com/camillazicari"
+            aria-label="GitHub"
+            className="grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.06] hover:text-fg"
+          >
+            <BsGithub size={18} />
+          </a>
+          <a
+            href="https://www.instagram.com/camiuzinwonderland/"
+            aria-label="Instagram"
+            className="grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.06] hover:text-fg"
+          >
+            <BsInstagram size={18} />
+          </a>
+        </div>
+      </div>
+    </footer>
   );
 }

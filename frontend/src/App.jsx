@@ -85,7 +85,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-[100vh]">
       <Navbar />
-      <main className="flex-grow-1 flex flex-col justify-center">
+      <main className="flex flex-1 flex-col">
         <Routes>
           {!loginSuccess ? (
             <Route path="/" element={<HomeIniziale />} />

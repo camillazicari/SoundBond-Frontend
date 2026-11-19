@@ -1,0 +1,125 @@
+/*
+  SoundBond design tokens.
+  Tema unico scuro (app musicale, uso serale), un solo accento viola del brand.
+  I pannelli traslucidi sono un'approssimazione web dei materiali Apple
+  (backdrop-filter + bordo luminoso), non un pacchetto ufficiale.
+*/
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --color-ink: #0b0a10;
+  --color-surface: #14121b;
+  --color-surface-2: #1c1925;
+  --color-surface-3: #242030;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.14);
+  --color-fg: #f2f0f7;
+  --color-muted: #a7a1b6;
+  --color-subtle: #757086;
+  --color-accent: #a98bff;
+  --color-accent-strong: #8f6bff;
+  --color-accent-ink: #120d1f;
+  --color-accent-soft: rgb(169 139 255 / 0.14);
+
+  --radius-card: 1.25rem;
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-ink);
+    color: var(--color-fg);
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  ::selection { background: rgb(169 139 255 / 0.35); color: var(--color-fg); }
+}
+
+@layer components {
+  /* Superficie elevata: usata solo dove serve gerarchia */
+  .surface {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* Materiale traslucido per barre e pannelli flottanti */
+  .glass {
+    background: rgb(20 18 27 / 0.62);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--color-line);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 12px 40px rgb(5 4 10 / 0.45);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    border-radius: 999px;
+    font-weight: 550;
+    font-size: 0.9375rem;
+    padding: 0.7rem 1.35rem;
+    cursor: pointer;
+    transition:
+      transform 160ms var(--ease-out-quint),
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--color-accent); color: var(--color-accent-ink); }
+  .btn-primary:hover { background: #b9a0ff; }
+  .btn-ghost {
+    background: rgb(255 255 255 / 0.04);
+    color: var(--color-fg);
+    border: 1px solid var(--color-line-strong);
+  }
+  .btn-ghost:hover { background: rgb(255 255 255 / 0.08); }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    background: rgb(255 255 255 / 0.04);
+    border: 1px solid var(--color-line);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Sfuma i bordi della striscia di copertine */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+@keyframes sb-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

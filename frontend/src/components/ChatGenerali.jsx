@@ -106,7 +106,7 @@ const ChatGenerali = () => {
       <h1
         className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-1 mb-1"
         style={{
-          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+          backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -142,10 +142,10 @@ const ChatGenerali = () => {
               </DialogTrigger>
             </div>
 
-            <DialogContent className="bg-[#170228] border border-[#7112b7]/50">
+            <DialogContent className="bg-[#14121b] border border-[#3a3449]/50">
               <DialogHeader>
-                <DialogTitle className="text-[#f7ebfc]">Bonders</DialogTitle>
-                <DialogDescription className="text-[#efd6f8]">
+                <DialogTitle className="text-[#f2f0f7]">Bonders</DialogTitle>
+                <DialogDescription className="text-[#f2f0f7]">
                   Scegli il bonder con il quale iniziare una chat.
                 </DialogDescription>
               </DialogHeader>
@@ -155,7 +155,7 @@ const ChatGenerali = () => {
                     {nuoveConversazioni.map((bonder) => (
                       <li
                         key={bonder?.id}
-                        className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
+                        className="p-2 hover:bg-[#3a3449]/30 cursor-pointer flex items-center"
                         onClick={() =>
                           navigate(`/chat/${bonder?.otherUser?.id}`)
                         }
@@ -214,7 +214,7 @@ const ChatGenerali = () => {
                 </div>
                 <p
                   className={`w-1/3 text-center text-sm md:text-base truncate ${
-                    !conv.letto && "text-[#ad42ff]"
+                    !conv.letto && "text-[#a98bff]"
                   }`}
                 >
                   {conv.ultimoMessaggio}
@@ -222,12 +222,12 @@ const ChatGenerali = () => {
                 <div className="w-1/3">
                   <p
                     className={`text-xs flex items-center justify-end ${
-                      !conv.letto && "text-[#ad42ff]"
+                      !conv.letto && "text-[#a98bff]"
                     }`}
                   >
                     {orario}{" "}
                     {!conv.letto && (
-                      <span className="w-5 h-5 flex justify-center items-center text-xs text-[#f4e5ff] rounded-full bg-[#ad42ff] ms-2">
+                      <span className="w-5 h-5 flex justify-center items-center text-xs text-[#f2f0f7] rounded-full bg-[#a98bff] ms-2">
                         {conv.messaggiNonLetti}
                       </span>
                     )}
@@ -238,7 +238,7 @@ const ChatGenerali = () => {
           })
         ) : (
           <div className="grid place-items-center my-7">
-            <div className="bg-[#9b1fff] p-6 rounded-full flex items-center justify-center">
+            <div className="bg-[#a98bff] p-6 rounded-full flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="60"
@@ -262,10 +262,10 @@ const ChatGenerali = () => {
                   Inizia una chat
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-[#170228] border border-[#7112b7]/50">
+              <DialogContent className="bg-[#14121b] border border-[#3a3449]/50">
                 <DialogHeader>
-                  <DialogTitle className="text-[#f7ebfc]">Bonders</DialogTitle>
-                  <DialogDescription className="text-[#efd6f8]">
+                  <DialogTitle className="text-[#f2f0f7]">Bonders</DialogTitle>
+                  <DialogDescription className="text-[#f2f0f7]">
                     Scegli il bonder con il quale iniziare una chat.
                   </DialogDescription>
                 </DialogHeader>
@@ -275,7 +275,7 @@ const ChatGenerali = () => {
                       {bonders.map((bonder) => (
                         <li
                           key={bonder?.id}
-                          className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
+                          className="p-2 hover:bg-[#3a3449]/30 cursor-pointer flex items-center"
                           onClick={() =>
                             navigate(`/chat/${bonder?.otherUser?.id}`)
                           }

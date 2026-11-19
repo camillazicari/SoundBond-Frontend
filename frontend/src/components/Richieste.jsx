@@ -19,13 +19,13 @@ import {
 import { useGetUserMatches } from "./data/matchMaking";
 
 const MediaItem = React.memo(({ item, type }) => (
-  <div className="flex flex-col items-center justify-center mx-2 text-[#f4e5ff] w-16 sm:w-20 md:w-23 lg:w-18 xl:w-23 2xl:w-28">
+  <div className="flex flex-col items-center justify-center mx-2 text-[#f2f0f7] w-16 sm:w-20 md:w-23 lg:w-18 xl:w-23 2xl:w-28">
     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-23 md:h-23 lg:w-18 lg:h-18 xl:w-23 xl:h-23 2xl:w-28 2xl:h-28 object-cover">
       <AvatarImage
         src={item.img}
         alt={type === "artista" ? item.nome : item.titolo}
       />
-      <AvatarFallback className="bg-[#ad42ff] text-2xl">
+      <AvatarFallback className="bg-[#a98bff] text-2xl">
         {(type === "artista" ? item.nome : item.titolo)
           ?.slice(0, 2)
           .toUpperCase()}
@@ -57,22 +57,22 @@ const RequestCard = React.memo(
 
     return (
       <div className="flex justify-center px-4">
-        <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg gap-5 items-center w-full">
+        <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg gap-5 items-center w-full">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-4">
-              <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
+              <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#a98bff]">
                 <AvatarImage
                   src={richiesta.sender?.profilo?.immagine}
                   alt={richiesta.sender?.nome}
                 />
-                <AvatarFallback className="bg-[#ad42ff] text-2xl">
+                <AvatarFallback className="bg-[#a98bff] text-2xl">
                   {richiesta.sender?.profilo?.nomeUtente
                     ?.slice(0, 2)
                     .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4e5ff]">
+                <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f2f0f7]">
                   {richiesta.sender?.nome?.toUpperCase()}{" "}
                   {richiesta.sender?.cognome?.toUpperCase()}
                 </p>
@@ -84,7 +84,7 @@ const RequestCard = React.memo(
             <div className="flex items-center justify-center gap-3">
               <button
                 disabled={isAcceptLoading || isRejectLoading}
-                className={`text-[#f4e5ff] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold buttonGradient ${
+                className={`text-[#f2f0f7] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold buttonGradient ${
                   isAcceptLoading || isRejectLoading
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
@@ -94,7 +94,7 @@ const RequestCard = React.memo(
                 {isAcceptLoading ? (
                   <div className="flex justify-center items-center">
                     <svg
-                      className="animate-spin h-5 w-5 text-[#f4e5ff]"
+                      className="animate-spin h-5 w-5 text-[#f2f0f7]"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -121,7 +121,7 @@ const RequestCard = React.memo(
 
               <button
                 disabled={isAcceptLoading || isRejectLoading}
-                className={`text-[#f4e5ff] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold bg-red-600 hover:bg-red-700 transition-colors ${
+                className={`text-[#f2f0f7] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold bg-red-600 hover:bg-red-700 transition-colors ${
                   isAcceptLoading || isRejectLoading
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
@@ -131,7 +131,7 @@ const RequestCard = React.memo(
                 {isRejectLoading ? (
                   <span className="flex justify-center items-center">
                     <svg
-                      className="animate-spin h-5 w-5 text-[#f4e5ff]"
+                      className="animate-spin h-5 w-5 text-[#f2f0f7]"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -213,10 +213,10 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
 
   return (
     <div className="flex justify-center px-4">
-      <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg gap-5 items-center w-full">
+      <Card className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg gap-5 items-center w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-x-4">
-            <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
+            <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#a98bff]">
               <AvatarImage
                 src={
                   richiesta.receiver?.profilo?.immagine?.startsWith("http")
@@ -225,14 +225,14 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
                 }
                 alt={richiesta.receiver?.nome}
               />
-              <AvatarFallback className="bg-[#ad42ff] text-2xl">
+              <AvatarFallback className="bg-[#a98bff] text-2xl">
                 {richiesta.receiver?.profilo?.nomeUtente
                   ?.slice(0, 2)
                   .toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4e5ff]">
+              <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f2f0f7]">
                 {richiesta.receiver?.nome?.toUpperCase()}{" "}
                 {richiesta.receiver?.cognome?.toUpperCase()}
               </p>
@@ -242,7 +242,7 @@ const RequestSentCard = React.memo(({ richiesta, match }) => {
             </div>
           </div>
           <div className="flex items-center justify-center gap-3">
-            <button className="text-[#f4e5ff] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold bg-[#7112b7]">
+            <button className="text-[#f2f0f7] text-xs sm:text-sm md:text-base 2xl:text-2xl rounded-xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold bg-[#3a3449]">
               IN ATTESA
             </button>
           </div>
@@ -461,7 +461,7 @@ const Richieste = () => {
             {requestsToShow.ricevute && requestsToShow.ricevute?.length > 0 ? (
               requestsToShow.ricevute.map(renderRequestItem)
             ) : (
-              <p className="text-center py-10 text-xl text-[#f4e5ff]">
+              <p className="text-center py-10 text-xl text-[#f2f0f7]">
                 Nessuna richiesta ricevuta
               </p>
             )}
@@ -475,7 +475,7 @@ const Richieste = () => {
             {requestsToShow.inviate && requestsToShow.inviate?.length > 0 ? (
               requestsToShow.inviate.map(renderRequestSentItem)
             ) : (
-              <p className="text-center py-10 text-xl text-[#f4e5ff]">
+              <p className="text-center py-10 text-xl text-[#f2f0f7]">
                 Nessuna richiesta inviata
               </p>
             )}
@@ -495,7 +495,7 @@ const Richieste = () => {
       <h1
         className="text-4xl md:text-5xl lg:text-5xl font-extrabold tracking-tighter text-center mb-5"
         style={{
-          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+          backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -510,8 +510,8 @@ const Richieste = () => {
             onClick={() => setActiveIndex(index)}
             className={`rounded-md px-3 py-3 text-xs sm:text-sm lg:text-base ms-2 mb-1 cursor-pointer ${
               activeIndex === index
-                ? "bg-[#9b1fff] text-[#f4e5ff]"
-                : "text-zinc-600 bg-[#7112b7]/30 dark:text-zinc-400"
+                ? "bg-[#a98bff] text-[#f2f0f7]"
+                : "text-zinc-600 bg-[#3a3449]/30 dark:text-zinc-400"
             }`}
           >
             {item.title}

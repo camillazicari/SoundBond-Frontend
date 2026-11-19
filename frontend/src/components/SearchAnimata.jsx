@@ -9,7 +9,7 @@ export function SearchAnimata(props) {
     <div className="flex flex-col justify-center items-center">
       <h5
         className="mb-4 md:text-xl lg:text-2xl text-center"
-        style={{ color: "#9b1fff" }}
+        style={{ color: "#a98bff" }}
       >
         {props.text}
       </h5>

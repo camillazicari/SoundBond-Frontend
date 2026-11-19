@@ -35,9 +35,9 @@ export default function NavAvatar() {
 
   return (
     <div className="flex items-center">
-      <Dropdown placement="bottom-center">
+      <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <div className="border-2 border-[#ad42ff] rounded-full">
+          <button type="button" aria-label="Menu account" className="cursor-pointer rounded-full ring-1 ring-line-strong transition-transform active:scale-95">
             {profilo && profilo.immagine ? (
               <img
                 src={
@@ -45,30 +45,26 @@ export default function NavAvatar() {
                     ? `${API_URL}${profilo.immagine}`
                     : profilo?.immagine
                 }
-                className="rounded-full w-[50px] h-[50px] object-cover object-top border-2 border-transparent"
+                className="rounded-full size-10 object-cover object-top"
                 alt="user"
               />
             ) : (
               <img
                 src="https://cdn1.iconfinder.com/data/icons/avatars-55/100/avatar_profile_user_music_headphones_shirt_cool-512.png"
-                className="rounded-full w-[50px] h-[50px] object-cover border-2 border-transparent"
+                className="rounded-full size-10 object-cover"
                 alt="user"
               />
             )}
-          </div>
+          </button>
         </DropdownTrigger>
         <DropdownMenu
           aria-label="User Actions"
-          className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
-          style={{
-            backgroundColor: "rgba(12, 5, 18, 0.5)",
-            backdropFilter: "blur(10px)",
-          }}
+          className="glass min-w-52 rounded-2xl p-1.5"
         >
           <DropdownItem
             key="profile"
             textValue={user ? `@${user.nomeUtente}` : "@Guest"}
-            className="gap-2 border-b-[0.5px] border-[#ad42ff] flex justify-center text-center"
+            className="mb-1 rounded-none border-b border-line px-3 pb-2.5 text-muted"
           >
             {user ? (
               <p className="font-bold text-sm">@{user.nomeUtente}</p>
@@ -77,7 +73,7 @@ export default function NavAvatar() {
             )}
           </DropdownItem>
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff] mt-1 flex items-center gap-2"
+            className="text-sm text-start py-2.5 px-3 rounded-xl data-[hover=true]:bg-white/[0.06] mt-1 flex items-center gap-2"
             key="settings"
             textValue="Settings"
           >
@@ -97,7 +93,7 @@ export default function NavAvatar() {
             </Link>
           </DropdownItem>
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff]"
+            className="text-sm text-start py-2.5 px-3 rounded-xl data-[hover=true]:bg-white/[0.06]"
             key="bonders"
             textValue="bonders"
           >
@@ -116,7 +112,7 @@ export default function NavAvatar() {
             </Link>
           </DropdownItem>
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-[#ad42ff]"
+            className="text-sm text-start py-2.5 px-3 rounded-xl data-[hover=true]:bg-white/[0.06]"
             key="feedback"
             textValue="Feedback"
           >
@@ -136,7 +132,7 @@ export default function NavAvatar() {
           </DropdownItem>
 
           <DropdownItem
-            className="text-sm text-start py-2 px-12 rounded-sm hover:bg-red-500"
+            className="text-sm text-start py-2.5 px-3 rounded-xl hover:bg-red-500"
             key="logout"
             color="danger"
             textValue="Logout"

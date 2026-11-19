@@ -185,13 +185,13 @@ const ImpUser = () => {
   };
 
   return (
-    <div className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
+    <div className="p-6 backdrop-blur-lg bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg">
       {profilo && profilo.immagine ? (
         <>
           <Card className="border-0">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative group">
-                <Avatar className="w-32 h-32 border-4 border-[#ad42ff] transition-all duration-300 group-hover:border-[#c476ff]">
+                <Avatar className="w-32 h-32 border-4 border-[#a98bff] transition-all duration-300 group-hover:border-[#a98bff]">
                   <AvatarImage
                     src={
                       immagine && immagine.startsWith("/")
@@ -200,20 +200,20 @@ const ImpUser = () => {
                     }
                     alt={profile && profile.nomeUtente}
                   />
-                  <AvatarFallback className="bg-[#ad42ff] text-2xl">
+                  <AvatarFallback className="bg-[#a98bff] text-2xl">
                     {profile && profile.nomeUtente?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <Dialog>
-                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#ad42ff] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                  <DialogTrigger className="absolute bottom-0 right-0 bg-[#a98bff] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
                     <Camera size={20} />
                   </DialogTrigger>
-                  <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
+                  <DialogContent className="bg-[#1c1925]/30 border border-[#3a3449]/50">
                     <DialogHeader>
-                      <DialogTitle className="text-[#f7ebfc]">
+                      <DialogTitle className="text-[#f2f0f7]">
                         Aggiorna la tua immagine di profilo
                       </DialogTitle>
-                      <DialogDescription className="text-[#efd6f8]">
+                      <DialogDescription className="text-[#f2f0f7]">
                         Inserisci un URL o carica un'immagine dal tuo
                         dispositivo.
                       </DialogDescription>
@@ -222,7 +222,7 @@ const ImpUser = () => {
                       <div className="flex justify-between mb-2">
                         <button
                           className={`py-1 px-3 rounded-md cursor-pointer ${
-                            urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
+                            urlMode ? "bg-[#a98bff]" : "bg-[#3a3449]/30"
                           }`}
                           onClick={() => setUrlMode(true)}
                         >
@@ -230,7 +230,7 @@ const ImpUser = () => {
                         </button>
                         <button
                           className={`py-1 px-3 rounded-md cursor-pointer ${
-                            !urlMode ? "bg-[#ad42ff]" : "bg-[#7112b7]/30"
+                            !urlMode ? "bg-[#a98bff]" : "bg-[#3a3449]/30"
                           }`}
                           onClick={openFileSelector}
                         >
@@ -243,16 +243,16 @@ const ImpUser = () => {
                           onChange={(e) => setImmagine(e.target.value)}
                           value={immagine}
                           placeholder="Inserisci l'URL dell'immagine"
-                          className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                          className="bg-[#3a3449]/30 border-[#1c1925] focus:border-[#a98bff]"
                         />
                       ) : (
-                        <div className="border border-dashed border-[#ad42ff] rounded-md p-4 text-center">
+                        <div className="border border-dashed border-[#a98bff] rounded-md p-4 text-center">
                           <p>
                             {imgFile ? imgFile.name : "Nessun file selezionato"}
                           </p>
                           <button
                             onClick={openFileSelector}
-                            className="mt-2 text-[#ad42ff] hover:text-[#c476ff]"
+                            className="mt-2 text-[#a98bff] hover:text-[#a98bff]"
                           >
                             Seleziona un altro file
                           </button>
@@ -268,7 +268,7 @@ const ImpUser = () => {
                       />
 
                       <DialogClose
-                        className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#ad42ff] hover:bg-[#7112b7]"
+                        className="btn cursor-pointer w-[20%] mx-auto mt-2 py-1.5 rounded-md bg-[#a98bff] hover:bg-[#3a3449]"
                         onClick={handleImageUpload}
                       >
                         Salva
@@ -284,7 +284,7 @@ const ImpUser = () => {
                     <div>
                       <label
                         className="text-md font-semibold block text-center md:text-start"
-                        style={{ color: "#c476ff" }}
+                        style={{ color: "#a98bff" }}
                       >
                         Username
                       </label>
@@ -296,7 +296,7 @@ const ImpUser = () => {
                     </div>
                     <button
                       onClick={() => setEditBio(true)}
-                      className="hover:bg-[#7112b7]/30 p-2 rounded-2xl hidden md:block cursor-pointer"
+                      className="hover:bg-[#3a3449]/30 p-2 rounded-2xl hidden md:block cursor-pointer"
                     >
                       <Edit2 size={18} />
                     </button>
@@ -305,7 +305,7 @@ const ImpUser = () => {
                   <div>
                     <label
                       className="text-md font-semibold block text-center md:text-start mb-1"
-                      style={{ color: "#c476ff" }}
+                      style={{ color: "#a98bff" }}
                     >
                       Username
                     </label>
@@ -315,7 +315,7 @@ const ImpUser = () => {
                         setError(false);
                         setUsername(e.target.value);
                       }}
-                      className="bg-[#7112b7]/30 border border-[#3f006f] focus:border-[#ad42ff] rounded-sm"
+                      className="bg-[#3a3449]/30 border border-[#1c1925] focus:border-[#a98bff] rounded-sm"
                       maxLength={10}
                       minLength={5}
                     />
@@ -338,14 +338,14 @@ const ImpUser = () => {
             <div className="flex items-center justify-between">
               <h3
                 className="text-lg font-semibold"
-                style={{ color: "#c476ff" }}
+                style={{ color: "#a98bff" }}
               >
                 La tua biografia
               </h3>
               {!editBio && (
                 <button
                   onClick={() => setEditBio(true)}
-                  className="hover:bg-[#7112b7]/30 p-2 rounded-2xl block md:hidden"
+                  className="hover:bg-[#3a3449]/30 p-2 rounded-2xl block md:hidden"
                 >
                   <Edit2 size={18} />
                 </button>
@@ -356,7 +356,7 @@ const ImpUser = () => {
                 <Textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="min-h-[120px] bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                  className="min-h-[120px] bg-[#3a3449]/30 border-[#1c1925] focus:border-[#a98bff]"
                   placeholder="Racconta qualcosa su di te..."
                   maxLength={500}
                 />
@@ -367,13 +367,13 @@ const ImpUser = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={saveBio}
-                      className="bg-[#ad42ff] hover:bg-[#7112b7] py-1 px-3 rounded-md transition-colors"
+                      className="bg-[#a98bff] hover:bg-[#3a3449] py-1 px-3 rounded-md transition-colors"
                     >
                       Salva
                     </button>
                     <button
                       onClick={() => setEditBio(false)}
-                      className="hover:bg-[#7112b7]/30 py-1 px-3 rounded-md"
+                      className="hover:bg-[#3a3449]/30 py-1 px-3 rounded-md"
                     >
                       Annulla
                     </button>
@@ -381,7 +381,7 @@ const ImpUser = () => {
                 </div>
               </div>
             ) : (
-              <p className="text-[#fbf5fe] leading-relaxed">
+              <p className="text-[#f2f0f7] leading-relaxed">
                 {profilo && profilo.bio}
               </p>
             )}

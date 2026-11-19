@@ -17,7 +17,7 @@ const MediaItem = memo(({ item, type }) => (
       src={item.img}
       alt={type === "artista" ? item.nome : item.titolo}
     />
-    <AvatarFallback className="bg-[#732880] text-2xl">
+    <AvatarFallback className="bg-[#3a3449] text-2xl">
       {(type === "artista" ? item.nome : item.titolo)
         ?.slice(0, 2)
         .toUpperCase()}
@@ -33,10 +33,10 @@ const UserCard = memo(({ utente, navigate }) => {
   return (
     <Card
       onClick={() => navigate("/connessioni")}
-      className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg gap-5 items-center cursor-pointer"
+      className="px-3 sm:px-6 py-6 backdrop-blur-lg m-3 xxl:mx-0 bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg gap-5 items-center cursor-pointer"
     >
       <div className="flex items-center gap-x-4">
-        <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
+        <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#a98bff]">
           <AvatarImage
             src={
               utente?.profilo?.immagine?.startsWith("http")
@@ -45,7 +45,7 @@ const UserCard = memo(({ utente, navigate }) => {
             }
             alt={utente.profilo?.nomeUtente}
           />
-          <AvatarFallback className="bg-[#ad42ff] text-2xl">
+          <AvatarFallback className="bg-[#a98bff] text-2xl">
             {utente.profilo?.nomeUtente?.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>

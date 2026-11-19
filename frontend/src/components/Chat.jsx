@@ -229,8 +229,8 @@ const Chat = ({ otherUser }) => {
             <div
               className={`max-w-70 rounded-2xl py-2 px-3 ${
                 isOwn
-                  ? "bg-[#9b1fff] rounded-br-none"
-                  : "bg-[#5d1093] rounded-bl-none"
+                  ? "bg-[#a98bff] rounded-br-none"
+                  : "bg-[#2c2738] rounded-bl-none"
               }`}
             >
               <p className="break-words">{msg.content}</p>
@@ -274,7 +274,7 @@ const Chat = ({ otherUser }) => {
 
   return (
     <>
-      <div className="flex items-center justify-between px-4 py-2 fixed top-0 w-[100%] fade-in bg-[#9b1fff]">
+      <div className="flex items-center justify-between px-4 py-2 fixed top-0 w-[100%] fade-in bg-[#a98bff]">
         <div className="flex items-center">
           <svg
             onClick={() => navigate("/generali")}
@@ -324,9 +324,9 @@ const Chat = ({ otherUser }) => {
             </svg>
           </DropdownTrigger>
           <DropdownMenu
-            className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
+            className="flex justify-center p-2 border-[#a98bff] border-[0.5px] rounded-lg"
             style={{
-              backgroundColor: "rgba(12, 5, 18, 0.5)",
+              backgroundColor: "rgba(11, 10, 16, 0.5)",
               backdropFilter: "blur(10px)",
             }}
           >
@@ -368,7 +368,7 @@ const Chat = ({ otherUser }) => {
       )}
 
       <div className="input-container flex p-4 fixed bottom-0 w-[100%] bg-transparent z-10 fade-in">
-        <div className="messageBox mx-auto bg-[#9b1fff]">
+        <div className="messageBox mx-auto bg-[#a98bff]">
           <input
             required
             placeholder="Scrivi un messaggio..."

@@ -61,7 +61,7 @@ const SpotlightCard = ({
       <div className="flex  mt-10 mb-5">
         <Link
           to={"/accedi"}
-          className="font-semibold py-2 px-8 rounded-lg transition duration-300 bg-[#850ee2]"
+          className="font-semibold py-2 px-8 rounded-lg transition duration-300 bg-[#8f6bff]"
           id="btnCardsHome"
         >
           Scopri
