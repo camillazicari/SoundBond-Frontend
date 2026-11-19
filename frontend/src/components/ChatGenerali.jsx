@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import { getConversazioni } from "../redux/actions/chat.js";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +45,9 @@ const ChatGenerali = () => {
   useEffect(() => {
     if (isLoggedIn && userId) {
       const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/chatHub")
+        .withUrl(`${API_URL}/chatHub`, {
+          accessTokenFactory: () => localStorage.getItem("jwtToken"),
+        })
         .withAutomaticReconnect()
         .build();
 
@@ -198,9 +201,9 @@ const ChatGenerali = () => {
                 <div className="w-1/3 flex items-center justify-start">
                   <img
                     src={
-                      conv?.immagine.startsWith("http")
+                      conv?.immagine?.startsWith("http")
                         ? conv?.immagine
-                        : `http://192.168.1.63:5220${conv?.immagine}`
+                        : `${API_URL}${conv?.immagine}`
                     }
                     alt="avatar"
                     className="w-13 h-13 object-cover rounded-full me-4"

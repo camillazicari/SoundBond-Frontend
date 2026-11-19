@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getBonders } from "../redux/actions/bonders.js";
@@ -58,9 +59,9 @@ const BonderCard = ({ bonder }) => {
         <Avatar className="h-16 w-16">
           <AvatarImage
             src={
-              bonder?.profilo?.immagine.startsWith("http")
+              bonder?.profilo?.immagine?.startsWith("http")
                 ? bonder?.profilo?.immagine
-                : `http://192.168.1.63:5220${bonder?.profilo.immagine}`
+                : `${API_URL}${bonder?.profilo.immagine}`
             }
           />
           <AvatarFallback className="bg-[#ad42ff]">

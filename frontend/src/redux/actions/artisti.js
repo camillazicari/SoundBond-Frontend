@@ -1,7 +1,8 @@
+import { API_URL } from "../../config";
 export const getArtisti = () => {
   return async (dispatch) => {
     try {
-      const response = await fetch("http://192.168.1.63:5220/api/Artisti", {
+      const response = await fetch(`${API_URL}/api/Artisti`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwtToken"),
           "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export const getArtisti = () => {
 export const postArtisti = (nome, img) => {
   return async (dispatch) => {
     try {
-      const response = await fetch("http://192.168.1.63:5220/api/Artisti", {
+      const response = await fetch(`${API_URL}/api/Artisti`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwtToken"),
           "Content-Type": "application/json",
@@ -60,7 +61,7 @@ export const putArtisti = (nome, img) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        "http://192.168.1.63:5220/api/Artisti/artista?nome=" +
+        `${API_URL}/api/Artisti/artista?nome=` +
         encodeURIComponent(nome),
         {
           method: "PUT",
@@ -89,7 +90,7 @@ export const deleteArtista = (nome) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        "http://192.168.1.63:5220/api/Artisti?nome=" + encodeURIComponent(nome),
+        `${API_URL}/api/Artisti?nome=` + encodeURIComponent(nome),
         {
           method: "DELETE",
           headers: {

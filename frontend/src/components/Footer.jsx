@@ -1,3 +1,4 @@
+import soundBondTesto from "../assets/SoundBond/SoundBondTesto.png";
 import React from "react";
 import { BsFacebook, BsGithub, BsInstagram, BsDiscord } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -90,7 +91,7 @@ export function Footer() {
               <p className="text-center sm:text-left text-sm flex items-center">
                 &copy; {new Date().getFullYear()} &nbsp;
                 <img
-                  src="/src/assets/SoundBond/SoundBondTesto.png"
+                  src={soundBondTesto}
                   className="w-1/4"
                   alt=""
                 />

@@ -1,7 +1,8 @@
+import { API_URL } from "../../config";
 export const getConversazioni = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch("http://192.168.1.63:5220/api/Messages/conversazioni", {
+            const response = await fetch(`${API_URL}/api/Messages/conversazioni`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("jwtToken"),
                     "Content-Type": "application/json",

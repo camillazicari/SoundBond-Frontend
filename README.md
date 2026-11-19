@@ -1,135 +1,96 @@
-<p align="center">
-  <img src="frontend/src/assets/SoundBond/SoundBondViola.png" alt="Logo" width="180"/>
-</p>
+# SoundBond – Frontend
 
-<h2 align="center">La tua musica, le tue connessioni.</h2>
+SoundBond è un social network musicale che mette in contatto persone con gusti simili: calcola la compatibilità tra utenti in base a generi e artisti preferiti e permette di connettersi e chattare in tempo reale.
+Questo repository contiene il client web (React). L'API si trova in [SoundBond-Backend](https://github.com/camillazicari/SoundBond-Backend).
 
-**SoundBond** è un social network musicale che abbina utenti in base ai loro gusti. Ascolta brani, esplora nuove playlist, invia richieste e chatta con chi condivide la tua passione.
+![Pagina Connessioni con la percentuale di compatibilità tra utenti](docs/connessioni.jpg)
 
-### 🚀 Funzionalità principali
+Progetto finale del corso di sviluppo web full-stack (aprile–luglio 2025), sviluppato da [Camilla Zicari](https://github.com/camillazicari).
 
-- 🔒 **Proteggi la tua identità musicale** <br/>
-  Registrati in modo sicuro con il sistema di autenticazione ASP.NET Identity, che mantiene al sicuro i tuoi dati mentre esplori il mondo SoundBond.
+## Funzionalità principali
 
-- 🎵 **Playlist che parlano di te** <br/>
-  Non più playlist generiche! SoundBond crea raccolte musicali giornaliere su misura analizzando i tuoi generi preferiti, perché ogni brano rifletta davvero il tuo gusto unico.
+- Registrazione e login con token JWT emessi dal backend (ASP.NET Identity).
+- Onboarding dei gusti musicali: generi, artisti e brani preferiti, cercati tramite l'API di Deezer.
+- Matching: percentuale di compatibilità con gli altri utenti, filtrabile per fascia (alta, media, bassa).
+- Richieste di connessione, che una volta accettate creano un legame ("bond") tra due utenti.
+- Chat privata in tempo reale con SignalR, con stato di lettura dei messaggi e notifiche nella barra di navigazione.
+- Playlist consigliate in base ai generi preferiti e anteprime audio dei brani tramite Deezer.
+- Profilo modificabile (immagine, bio, nome utente) e recensioni sulla piattaforma.
 
-- 🎧 **Ascolta prima, ama dopo** <br/>
-  Grazie all'integrazione con l'API di Deezer, puoi scoprire anteprime dei brani direttamente nella piattaforma, senza dover saltare tra app diverse.
+## Scelte tecniche
 
-- 🤝 **Anima gemella musicale? Ora la trovi** <br/>
-  Un algoritmo intelligente ti abbina con altri utenti che condividono la tua passione per artisti, generi o brani specifici. Chi sa che amicizie nasceranno da un riff condiviso?
+- **React 19 + Vite**, routing con React Router e rotte protette per le pagine riservate agli utenti autenticati.
+- **Redux Toolkit** per lo stato condiviso (utente, gusti, connessioni, richieste, conversazioni); le chiamate all'API sono negli action creator in `src/redux/actions`.
+- **SignalR** (`@microsoft/signalr`): una connessione autenticata con il JWT verso l'hub `/chatHub` del backend per messaggi e conferme di lettura.
+- **Algoritmo di compatibilità** in `src/components/data/matchMaking.js`: il 60% del punteggio dipende dai generi in comune e il 40% dagli artisti in comune, normalizzati sulla lista più lunga dei due utenti.
+- **Proxy Deezer** (`server.js`, Express): l'API pubblica di Deezer non consente chiamate dirette dal browser per via del CORS, quindi un piccolo server Node inoltra ricerche, generi, artisti e top brani.
+- **Tailwind CSS 4** con componenti HeroUI, Radix e Ant Design; animazioni con Motion.
 
-- 📝 **Il tuo biglietto da visita sonoro** <br/>
-  Crea un profilo che racconti chi sei attraverso la musica: aggiungi i tuoi artisti del cuore, i generi che ti fanno vibrare e i brani che non smetteresti mai di ascoltare.
+## Architettura
 
-- 💬 **Chatta al ritmo giusto** <br/>
-  Scambia messaggi in tempo reale con i tuoi match grazie alla tecnologia SignalR, perfetta per condividere impressioni su quel nuovo album o organizzare il prossimo concerto insieme.
+```
+Browser (React, porta 5173)
+   │  REST + JWT            ┌──────────────────────────────┐
+   ├──────────────────────► │ SoundBond-Backend            │
+   │  WebSocket (SignalR)   │ ASP.NET Core 8 – porta 5220  │──► SQL Server
+   ├──────────────────────► │ /api/*  e  /chatHub          │
+   │                        └──────────────────────────────┘
+   │  REST
+   └──────────────────────► Proxy Node (server.js, porta 5002) ──► API Deezer
+```
 
-- 🌟 **La tua opinione modella SoundBond** <br/>
-  Ogni feedback che lasci aiuta a migliorare la piattaforma, rendendola sempre più adatta alle esigenze della community musicale.
+## Avvio in locale
 
-<hr/>
-
-### 🛠️ Tech Stack
-
-**Frontend**
-
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [Redux Toolkit](https://redux-toolkit.js.org/)
-- [React Router DOM](https://reactrouter.com/)
-
-**Backend**
-
-- [ASP.NET Core Web API](https://docs.microsoft.com/en-us/aspnet/core/web-api/)
-- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server/)
-- [ASP.NET Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity)
-- [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr)
-
-**Servizi esterni**
-
-- [Deezer API](https://developers.deezer.com/)
-
-<hr/>
-
-### 💻 Installazione e setup
-
-**Prerequisiti**
-
-- Node.js
-
-- .NET 8 SDK
-
-- SQL Server
-
-- Visual Studio 2022 o superiore
-
-**Frontend**
-
-1. Clona il repository frontend:
+Prerequisiti: Node.js 20 o superiore e il [backend](https://github.com/camillazicari/SoundBond-Backend) avviato su `http://localhost:5220`.
 
 ```bash
 git clone https://github.com/camillazicari/SoundBond-Frontend.git
-```
-
-2. Accedi alla cartella del progetto
-
-```bash
-cd CAPSTONE
-```
-
-3. Installa le dipendenze
-
-```bash
+cd SoundBond-Frontend/frontend
 npm install
+cp .env.example .env.local   # modifica gli URL solo se il backend gira altrove
 ```
 
-4. Avvia il server di sviluppo
+Servono due processi, in due terminali:
 
 ```bash
-node server.js & npm start
+node server.js     # proxy Deezer su http://localhost:5002
 ```
-
-**Backend**
-
-1. Clona il repository del backend
 
 ```bash
-git clone https://github.com/camillazicari/SoundBond-Backend.git
+npm run dev        # app su http://localhost:5173
 ```
 
-2. Apri la soluzione SoundBond.API in Visual Studio
+Il backend accetta richieste CORS da `http://localhost:5173`. Se Vite parte su un'altra porta, aggiungila a `Cors:AllowedOrigins` nel backend e ad `ALLOWED_ORIGINS` del proxy (per esempio `ALLOWED_ORIGINS=http://localhost:5174 node server.js`).
 
-3. Configura appsettings.json con la tua stringa di connessione per SQL Server
+Per provare matching e chat senza registrare utenti a mano, il backend include uno script che crea quattro utenti dimostrativi: vedi `scripts/seed-demo.sh` nel repository del backend.
 
-4. Applica le migration (se necessario)
+### Variabili d'ambiente
 
-```bash
-$ dotnet ef database update
+| Variabile | Default | Uso |
+| --- | --- | --- |
+| `VITE_API_URL` | `http://localhost:5220` | URL del backend ASP.NET Core (REST e SignalR) |
+| `VITE_DEEZER_PROXY_URL` | `http://localhost:5002` | URL del proxy Deezer |
+| `ALLOWED_ORIGINS` | `http://localhost:5173` | Origini ammesse dal proxy (`server.js`), separate da virgola |
+| `PORT` | `5002` | Porta del proxy |
+
+### Comandi
+
+| Comando | Descrizione |
+| --- | --- |
+| `npm run dev` | Server di sviluppo Vite |
+| `npm run build` | Build di produzione in `dist/` |
+| `npm run preview` | Anteprima locale della build |
+| `npm run lint` | ESLint |
+
+## Struttura
+
 ```
-
-5. Avvia il progetto (assicurati che usi HTTP)
-
-<hr/>
-
-### 🔮 Funzionalità future
-
-Modalità ascolto condiviso
-
-Integrazione Spotify
-
-<hr/>
-
-### 👤 Autore
-
-Sviluppato da Camilla Zicari
-🔗 GitHub — camillazicari
-
-<hr />
-
-### 🔗 Link Utili
-
-Backend: https://github.com/camillazicari/SoundBond-Backend.git
+frontend/
+├── server.js              proxy Express verso l'API Deezer
+└── src/
+    ├── config.js          URL dei servizi (da variabili d'ambiente)
+    ├── components/        pagine e componenti (Connessioni, Chat, Esplora, ...)
+    │   └── data/          algoritmo di compatibilità
+    ├── redux/             store, reducer e action con le chiamate all'API
+    └── services/          connessione SignalR
+```

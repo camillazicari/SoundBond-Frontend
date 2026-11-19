@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMemo, memo } from "react";
 import { Card } from "./personalizedComponents/Card";
@@ -38,9 +39,9 @@ const UserCard = memo(({ utente, navigate }) => {
         <Avatar className="w-15 h-15 md:w-20 md:h-20 lg:w-25 lg:h-25 transition-all duration-300 group-hover:border-[#d489e9]">
           <AvatarImage
             src={
-              utente?.profilo?.immagine.startsWith("http")
+              utente?.profilo?.immagine?.startsWith("http")
                 ? utente?.profilo?.immagine
-                : `http://192.168.1.63:5220${utente?.profilo?.immagine}`
+                : `${API_URL}${utente?.profilo?.immagine}`
             }
             alt={utente.profilo?.nomeUtente}
           />

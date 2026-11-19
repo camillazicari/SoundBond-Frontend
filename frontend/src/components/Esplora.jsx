@@ -1,3 +1,5 @@
+import { playlistCovers } from "../assets/playlistCovers";
+import { DEEZER_PROXY_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dialog,
@@ -29,7 +31,7 @@ const Esplora = () => {
 
   const fetchGenres = async () => {
     try {
-      const response = await fetch("http://localhost:5002/api/genres");
+      const response = await fetch(`${DEEZER_PROXY_URL}/api/genres`);
       if (!response.ok) throw new Error("Errore nel recupero dei dati");
       const data = await response.json();
       setGenres(data.data);
@@ -64,7 +66,7 @@ const Esplora = () => {
         const results = await Promise.all(
           generiId.map(async (id) => {
             const res = await fetch(
-              `http://localhost:5002/api/artists?genre_id=${id}`
+              `${DEEZER_PROXY_URL}/api/artists?genre_id=${id}`
             );
             if (!res.ok) throw new Error(`Errore artisti genre_id: ${id}`);
             const data = await res.json();
@@ -108,7 +110,7 @@ const Esplora = () => {
             const songsInGroup = await Promise.all(
               group?.map(async (artist) => {
                 const res = await fetch(
-                  `http://localhost:5002/api/songs?artist_id=${artist.id}`
+                  `${DEEZER_PROXY_URL}/api/songs?artist_id=${artist.id}`
                 );
                 if (!res.ok)
                   throw new Error(`Errore canzoni artist_id: ${artist.id}`);
@@ -181,7 +183,7 @@ const Esplora = () => {
                         >
                           <div>
                             <img
-                              src={`/src/assets/PLAYLISTS/P${id + 1}.jpeg`}
+                              src={playlistCovers[id]}
                               alt="cover"
                               className="w-50 sm:w-60 lg:w-75 xl:w-90 object-cover rounded-2xl"
                             />

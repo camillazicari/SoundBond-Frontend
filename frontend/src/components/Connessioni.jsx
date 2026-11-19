@@ -1,3 +1,4 @@
+import { API_URL, DEEZER_PROXY_URL } from "../config";
 import { useEffect, useMemo, useState } from "react";
 import { useGetUserMatches } from "./data/matchMaking.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,7 +49,7 @@ const Connessioni = () => {
   } = usePlayer();
 
   const getSongs = async (titolo, artista) => {
-    const url = `http://localhost:5002/api/search?q=${titolo}%20${artista}`;
+    const url = `${DEEZER_PROXY_URL}/api/search?q=${titolo}%20${artista}`;
     try {
       const response = await fetch(url);
       if (response.ok) {
@@ -320,9 +321,9 @@ const Connessioni = () => {
                     <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#7112b7]">
                       <AvatarImage
                         src={
-                          match?.user?.profilo?.immagine.startsWith("http")
+                          match?.user?.profilo?.immagine?.startsWith("http")
                             ? match?.user?.profilo?.immagine
-                            : `http://192.168.1.63:5220${match?.user?.profilo?.immagine}`
+                            : `${API_URL}${match?.user?.profilo?.immagine}`
                         }
                         alt={match.user?.profilo?.nomeUtente}
                       />
