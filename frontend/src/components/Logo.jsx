@@ -1,13 +1,8 @@
-import mark from "../assets/SoundBond/SBViola.png";
+import lockup from "../assets/brand/soundbond-lockup.svg";
 
-// Monogramma SB del brand + nome in Geist
-const Logo = ({ className = "" }) => (
-  <span className={`flex items-center gap-2 ${className}`}>
-    <img src={mark} alt="" className="size-7" />
-    <span className="text-[1.05rem] font-semibold tracking-[-0.03em] text-fg">
-      SoundBond
-    </span>
-  </span>
+// Logotipo SoundBond: simbolo "onda intrecciata" + nome, versione per fondo scuro
+const Logo = ({ className = "h-7" }) => (
+  <img src={lockup} alt="SoundBond" className={`w-auto ${className}`} />
 );
 
 export default Logo;
