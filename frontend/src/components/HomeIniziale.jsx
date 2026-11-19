@@ -1,18 +1,19 @@
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  animate,
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, RefreshCw } from "lucide-react";
+import { calculateCompatibility } from "./data/matchMaking";
 import SyncWaves from "./SyncWaves";
 import { playlistCovers } from "../assets/playlistCovers";
-import concert from "../assets/Concert Energy.jpeg";
-import listener from "../assets/Silhouette with Headphones.jpeg";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -44,19 +45,45 @@ function SyncCounter({ progress }) {
   );
 }
 
+const demoPeople = [
+  { name: "Giulia", score: 82 },
+  { name: "Marco", score: 67 },
+  { name: "Sara", score: 91 },
+  { name: "Luca", score: 58 },
+];
+const syncEase = [0.65, 0, 0.35, 1];
+
 function Hero() {
-  const ref = useRef(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  const raw = useTransform(scrollYProgress, [0.02, 0.75], [0, 1], {
-    clamp: true,
-  });
-  const progress = useSpring(raw, { stiffness: 120, damping: 30 });
-  const shiftLeft = useTransform(scrollYProgress, [0, 1], ["0%", "-4%"]);
-  const shiftRight = useTransform(scrollYProgress, [0, 1], ["0%", "3%"]);
+  const [index, setIndex] = useState(0);
+  const person = demoPeople[index];
+  // Avanzamento della sintonia: parte da 0 e si ferma sul punteggio della persona
+  const progress = useMotionValue(reduce ? person.score / 100 : 0);
+  // Le due metà del nome si avvicinano man mano che le onde entrano in sintonia
+  const soundX = useTransform(progress, [0, 1], ["-7%", "0%"]);
+  const bondX = useTransform(progress, [0, 1], ["7%", "0%"]);
+
+  useEffect(() => {
+    if (reduce) return;
+    const controls = animate(progress, demoPeople[0].score / 100, {
+      delay: 0.9,
+      duration: 2.8,
+      ease: syncEase,
+    });
+    return () => controls.stop();
+  }, [progress, reduce]);
+
+  const nextMatch = () => {
+    const next = (index + 1) % demoPeople.length;
+    setIndex(next);
+    const target = demoPeople[next].score / 100;
+    if (reduce) return progress.set(target);
+    animate(progress, [progress.get(), 0.06, target], {
+      duration: 2.6,
+      times: [0, 0.3, 1],
+      ease: syncEase,
+    });
+  };
 
   const intro = (i) => ({
     initial: reduce ? false : { opacity: 0, y: 60 },
@@ -65,22 +92,18 @@ function Hero() {
   });
 
   return (
-    <section ref={ref} className={reduce ? "relative" : "relative h-[230vh]"}>
-      <div className="sticky top-0 flex min-h-[100dvh] flex-col justify-between overflow-hidden px-4 pt-28 pb-8 md:pt-32">
+    <section className="relative">
+      <div className="relative flex min-h-[100dvh] flex-col justify-between overflow-hidden px-4 pt-28 pb-8 md:pt-32">
         <h1 className="display relative mx-auto w-full max-w-7xl text-[clamp(5.5rem,19vw,17rem)] font-extrabold uppercase select-none">
-          <motion.span
-            {...intro(0)}
-            style={reduce ? undefined : { x: shiftLeft }}
-            className="block"
-          >
-            Sound
+          <motion.span {...intro(0)} className="block">
+            <motion.span className="inline-block" style={{ x: soundX }}>
+              Sound
+            </motion.span>
           </motion.span>
-          <motion.span
-            {...intro(1)}
-            style={reduce ? undefined : { x: shiftRight }}
-            className="block text-right text-accent"
-          >
-            Bond
+          <motion.span {...intro(1)} className="block text-right text-accent">
+            <motion.span className="inline-block" style={{ x: bondX }}>
+              Bond
+            </motion.span>
           </motion.span>
           <span className="sr-only">: la tua musica, le tue connessioni</span>
         </h1>
@@ -111,19 +134,33 @@ function Hero() {
           </motion.div>
 
           <motion.div {...intro(3)} className="md:text-right">
-            <p className="display text-7xl font-bold text-fg md:text-8xl">
-              {reduce ? "100" : <SyncCounter progress={progress} />}
+            <p className="text-sm text-muted" aria-live="polite">
+              Tu e {person.name}, in sintonia al
+            </p>
+            <p className="display mt-1 text-7xl font-bold text-fg md:text-8xl">
+              <SyncCounter progress={progress} />
               <span className="text-accent">%</span>
             </p>
-            <div className="mt-2 flex gap-5 text-sm text-muted md:justify-end">
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted md:justify-end">
               <span className="flex items-center gap-2">
                 <span className="h-0.5 w-6 rounded-full bg-accent" />
-                i tuoi gusti
+                tu
               </span>
               <span className="flex items-center gap-2">
                 <span className="h-0.5 w-6 rounded-full bg-fg/80" />
-                i suoi
+                {person.name}
               </span>
+              <button
+                type="button"
+                onClick={nextMatch}
+                className="group flex cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-fg transition-[background-color,transform] hover:bg-white/[0.06] active:scale-95"
+              >
+                <RefreshCw
+                  size={14}
+                  className="transition-transform duration-500 group-hover:rotate-180"
+                />
+                Un altro match
+              </button>
             </div>
           </motion.div>
         </div>
@@ -132,36 +169,157 @@ function Hero() {
   );
 }
 
-function Formula() {
+const giulia = {
+  generi: ["Pop", "Indie", "Rock"].map((nome) => ({ nome })),
+  artisti: ["Arctic Monkeys", "Dua Lipa", "Måneskin"].map((nome) => ({ nome })),
+};
+const genreOptions = ["Pop", "Rock", "Indie", "Jazz", "Elettronica", "Hip Hop"];
+const artistOptions = [
+  "Arctic Monkeys",
+  "Dua Lipa",
+  "Måneskin",
+  "Daft Punk",
+  "Amy Winehouse",
+];
+
+function Toggle({ label, on, onClick, common }) {
   return (
-    <section className="px-4 py-24 md:py-32">
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-accent px-6 py-14 text-accent-ink md:px-14 md:py-20">
-        <Reveal>
-          <h2 className="display max-w-3xl text-5xl font-bold md:text-7xl">
-            Il match non è magia. È una formula.
-          </h2>
-        </Reveal>
-        <div className="mt-14 grid gap-10 md:grid-cols-[1.3fr_1fr] md:gap-6">
-          <Reveal delay={0.1}>
-            <p className="display text-[clamp(7rem,20vw,15rem)] leading-[0.8] font-extrabold">
-              60
-              <span className="text-[0.4em]">%</span>
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onClick}
+      className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 active:scale-95 ${
+        on
+          ? common
+            ? "border-accent bg-accent text-accent-ink"
+            : "border-line-strong bg-white/[0.08] text-fg"
+          : "border-line text-muted hover:text-fg"
+      }`}
+    >
+      {on && <Check size={14} strokeWidth={2.5} />}
+      {label}
+    </button>
+  );
+}
+
+function Simulator() {
+  const reduce = useReducedMotion();
+  const [generi, setGeneri] = useState(["Pop", "Jazz"]);
+  const [artisti, setArtisti] = useState(["Dua Lipa", "Amy Winehouse"]);
+  const toggle = (list, set) => (v) =>
+    set(list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
+
+  // Stessa funzione usata dall'app per la pagina Connessioni
+  const result = useMemo(() => {
+    if (!generi.length || !artisti.length) return { score: 0, details: {} };
+    return calculateCompatibility(
+      {
+        generi: generi.map((nome) => ({ nome })),
+        artisti: artisti.map((nome) => ({ nome })),
+      },
+      giulia
+    );
+  }, [generi, artisti]);
+
+  const score = useMotionValue(0);
+  const smooth = useSpring(score, { stiffness: 140, damping: 22 });
+  const ring = useTransform(smooth, (v) => Math.max(0.001, v / 100));
+  const ratio = useTransform(smooth, (v) => v / 100);
+  useEffect(() => {
+    if (reduce) smooth.jump(result.score);
+    score.set(result.score);
+  }, [result.score, score, smooth, reduce]);
+
+  const commonG = result.details.commonGenres ?? [];
+  const commonA = result.details.commonArtists ?? [];
+  const isCommon = (list, v) => list.includes(v.toLowerCase());
+
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-24 md:py-32">
+      <Reveal>
+        <h2 className="display max-w-3xl text-5xl font-bold md:text-7xl">
+          Prova a fare match con Giulia.
+        </h2>
+        <p className="mt-5 max-w-lg text-lg text-muted">
+          Scegli i tuoi gusti. L&apos;affinità si calcola come nell&apos;app:
+          generi in comune per il 60%, artisti per il 40%.
+        </p>
+      </Reveal>
+
+      <Reveal delay={0.1} className="mt-14">
+        <div className="surface grid gap-10 p-6 md:grid-cols-[1.4fr_1fr] md:p-10">
+          <div className="space-y-8">
+            <div>
+              <h3 className="mb-3 text-sm font-medium text-subtle">
+                I tuoi generi
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {genreOptions.map((g) => (
+                  <Toggle
+                    key={g}
+                    label={g}
+                    on={generi.includes(g)}
+                    common={isCommon(commonG, g)}
+                    onClick={() => toggle(generi, setGeneri)(g)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-3 text-sm font-medium text-subtle">
+                I tuoi artisti
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {artistOptions.map((a) => (
+                  <Toggle
+                    key={a}
+                    label={a}
+                    on={artisti.includes(a)}
+                    common={isCommon(commonA, a)}
+                    onClick={() => toggle(artisti, setArtisti)(a)}
+                  />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-subtle">
+              Giulia ascolta Pop, Indie e Rock, con Arctic Monkeys, Dua Lipa e
+              Måneskin. In viola quello che avete in comune.
             </p>
-            <p className="mt-4 max-w-sm text-lg font-medium">
-              generi in comune, rispetto alla lista più lunga tra le due.
-            </p>
-          </Reveal>
-          <Reveal delay={0.2} className="md:mt-28">
-            <p className="display text-[clamp(5rem,13vw,10rem)] leading-[0.8] font-extrabold">
-              40
-              <span className="text-[0.4em]">%</span>
-            </p>
-            <p className="mt-4 max-w-xs text-lg font-medium">
-              artisti in comune. La somma è la vostra affinità.
-            </p>
-          </Reveal>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-6 border-t border-line pt-10 md:border-t-0 md:border-l md:pt-0 md:pl-10">
+            <div className="relative grid size-56 place-items-center">
+              <svg viewBox="0 0 100 100" className="absolute inset-0 -rotate-90" aria-hidden="true">
+                <circle cx="50" cy="50" r="44" fill="none" stroke="var(--color-line-strong)" strokeWidth="3" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="44"
+                  fill="none"
+                  stroke="var(--color-accent)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  style={{ pathLength: ring }}
+                />
+              </svg>
+              <p className="display text-7xl font-bold" aria-live="polite">
+                <SyncCounter progress={ratio} />
+                <span className="text-[0.45em] text-accent">%</span>
+              </p>
+            </div>
+            <dl className="grid w-full max-w-xs grid-cols-2 gap-4 text-center">
+              <div>
+                <dt className="text-xs text-subtle">Generi in comune</dt>
+                <dd className="mt-1 font-mono text-lg">{commonG.length}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-subtle">Artisti in comune</dt>
+                <dd className="mt-1 font-mono text-lg">{commonA.length}</dd>
+              </div>
+            </dl>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -255,28 +413,38 @@ function Covers() {
 }
 
 function Closing() {
+  const synced = useMotionValue(1);
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-28 md:py-40">
-      <div className="grid items-end gap-12 md:grid-cols-[1.4fr_1fr]">
+    <section className="relative overflow-hidden px-4 py-32 md:py-44">
+      <SyncWaves
+        progress={synced}
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-64 w-full -translate-y-1/2 opacity-40 mix-blend-screen md:h-96"
+      />
+      <div className="relative mx-auto max-w-7xl">
         <Reveal>
-          <h2 className="display text-6xl font-bold md:text-8xl">
-            Chi ascolta quello che ascolti tu?
+          <h2 className="display max-w-5xl text-[clamp(3.5rem,9vw,8.5rem)] font-bold">
+            Chi ascolta quello che ascolti{" "}
+            <span className="text-accent">tu?</span>
           </h2>
-          <Link to="/accedi/registrati" className="btn btn-primary mt-10">
-            Crea un account
-          </Link>
         </Reveal>
-        <Reveal delay={0.15} className="relative hidden h-96 md:block">
-          <img
-            src={concert}
-            alt=""
-            className="absolute top-0 right-16 h-72 w-56 -rotate-6 rounded-3xl object-cover shadow-2xl shadow-black/60"
-          />
-          <img
-            src={listener}
-            alt=""
-            className="absolute right-0 bottom-0 h-64 w-52 rotate-6 rounded-3xl border border-line object-cover shadow-2xl shadow-black/60"
-          />
+        <Reveal
+          delay={0.12}
+          className="mt-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+        >
+          <p className="max-w-md text-lg text-muted">
+            Imposta generi e artisti in pochi minuti e scopri subito con chi
+            sei in sintonia.
+          </p>
+          <Link
+            to="/accedi/registrati"
+            className="btn btn-primary group self-start px-8 py-4 text-lg md:self-auto"
+          >
+            Crea un account
+            <ArrowRight
+              size={20}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
         </Reveal>
       </div>
     </section>
@@ -286,7 +454,7 @@ function Closing() {
 const HomeIniziale = () => (
   <div className="-mt-[4.75rem] overflow-x-clip md:-mt-20">
     <Hero />
-    <Formula />
+    <Simulator />
     <Vinyl />
     <Covers />
     <Closing />
