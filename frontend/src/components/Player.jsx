@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { usePlayer } from "../context/PlayerContext";
 import { useLocation } from "react-router-dom";
+import { ChevronDown, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 
 const Player = () => {
   const {
@@ -91,180 +92,155 @@ const Player = () => {
   };
 
   useEffect(() => {
-    if (!audio) return;
-
+    if (!audio || !isPlaying) return;
+    let raf;
     const updateProgress = () => {
-      if (!audio) return;
       setProgress((audio.currentTime / audio.duration) * 100);
-      requestAnimationFrame(updateProgress);
+      raf = requestAnimationFrame(updateProgress);
     };
-
-    if (isPlaying) {
-      requestAnimationFrame(updateProgress);
-    }
-
-    return () => {
-      cancelAnimationFrame(updateProgress);
-    };
+    raf = requestAnimationFrame(updateProgress);
+    return () => cancelAnimationFrame(raf);
   }, [audio, isPlaying]);
 
   const formatTime = (timeInSeconds) => {
+    if (!Number.isFinite(timeInSeconds)) return "0:00";
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+  const hiddenRoute =
+    location.pathname.startsWith("/chat") ||
+    ["/generi", "/artisti", "/brani"].includes(location.pathname);
+  if (!audio || !nowPlaying || hiddenRoute) return null;
+
+  const cover = nowPlaying?.album?.cover_big ?? nowPlaying?.album?.cover_medium;
+  const pct = isNaN(progress) ? 0 : progress;
+  const bars = waveform(nowPlaying?.id ?? nowPlaying?.title ?? "");
+  const hasPrev = playlist?.length > 0 && currentIndex > 0;
+  const hasNext = playlist?.length > 0 && currentIndex < playlist.length - 1;
+
+  const Disc = ({ size }) => (
+    <span className={`relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line-strong ${size}`}>
+      <img
+        src={cover}
+        alt=""
+        className="size-full object-cover motion-safe:animate-[sb-spin_6s_linear_infinite]"
+        style={{ animationPlayState: isPlaying ? "running" : "paused" }}
+      />
+      <span className="absolute top-1/2 left-1/2 size-[18%] -translate-1/2 rounded-full bg-ink ring-1 ring-white/20" />
+    </span>
+  );
+
+  if (isHidden) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsHidden(false)}
+        aria-label={`Mostra il player: ${nowPlaying?.title}`}
+        className="glass fixed right-4 bottom-4 z-50 cursor-pointer rounded-full p-1.5 transition-transform active:scale-95"
+      >
+        <Disc size="size-12" />
+      </button>
+    );
+  }
+
   return (
-    <div
-      className={`player-container ${
-        audio === null || location.pathname.startsWith("/chat")
-          ? "hidden"
-          : isHidden
-          ? "fixed bottom-[-10.5%] left-0 right-0 z-50 mx-2"
-          : "fixed bottom-0 left-0 right-0 z-50 mx-2"
-      }`}
+    <section
+      aria-label="Player"
+      className="glass fixed inset-x-3 bottom-3 z-50 mx-auto max-w-3xl rounded-[1.75rem] p-2.5 pr-3 md:bottom-4"
     >
-      <div className="cardPlayer border-1 border-[#a98bff]/50 relative">
-        <button
-          className="cursor-pointer absolute top-0 right-2"
-          onClick={() => setIsHidden(!isHidden)}
-        >
-          {isHidden ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="#a98bff"
-              className="bi bi-arrow-up-short"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="#a98bff"
-              className="bi bi-arrow-down-short"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4"
-              />
-            </svg>
-          )}
-        </button>
-        <div className="top">
-          <div className="w-[10%]">
-            <div
-              className="pfp"
-              style={{
-                backgroundImage: `url(${nowPlaying?.album?.cover_big})`,
-                backgroundSize: "cover",
-              }}
-            >
-              {isPlaying ? (
-                <div className="playing">
-                  <div className="greenline line-1"></div>
-                  <div className="greenline line-2"></div>
-                  <div className="greenline line-3"></div>
-                  <div className="greenline line-4"></div>
-                  <div className="greenline line-5"></div>
-                </div>
-              ) : (
-                <div></div>
-              )}
+      <div className="flex items-center gap-3">
+        <Disc size="size-12 md:size-14" />
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="min-w-0 truncate text-sm font-semibold md:text-base">
+              {nowPlaying?.title}
+              <span className="font-normal text-muted"> · {nowPlaying?.artist?.name}</span>
+            </p>
+            <p className="hidden shrink-0 font-mono text-[11px] text-subtle tabular-nums sm:block">
+              {formatTime(audio.currentTime)} / {formatTime(audio.duration)}
+            </p>
+          </div>
+
+          {/* Forma d'onda: le barre si colorano con l'avanzamento, il range sopra la rende trascinabile */}
+          <div className="relative mt-1.5 h-7">
+            <div aria-hidden="true" className="flex h-full items-center gap-[3px]">
+              {bars.map((h, i) => (
+                <span
+                  key={i}
+                  className={`flex-1 rounded-full transition-colors duration-150 ${
+                    (i + 0.5) / bars.length <= pct / 100 ? "bg-accent" : "bg-white/15"
+                  }`}
+                  style={{ height: `${h}%` }}
+                />
+              ))}
             </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="0.1"
+              value={pct}
+              onChange={handleSeek}
+              aria-label="Posizione nel brano"
+              aria-valuetext={`${formatTime(audio.currentTime)} di ${formatTime(audio.duration)}`}
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            />
           </div>
-          <div className="texts text-center w-[60%]">
-            <p className="title-1">{nowPlaying?.title}</p>
-            <p className="title-2">{nowPlaying?.artist?.name}</p>
-          </div>
-          <div className="w-[10%] flex justify-end items-center"></div>
         </div>
 
-        <div className="controls mb-1.5">
-          {/* Freccia sinistra per il brano precedente */}
-          <svg
+        <div className="flex shrink-0 items-center gap-0.5">
+          <button
+            type="button"
             onClick={handlePrev}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            height="35"
-            width="35"
-            className="frecciaSx cursor-pointer"
+            disabled={!hasPrev}
+            aria-label="Brano precedente"
+            className="hidden size-10 cursor-pointer place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.08] hover:text-fg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent sm:grid"
           >
-            <path
-              clipRule="evenodd"
-              d="M12 21.6a9.6 9.6 0 1 0 0-19.2 9.6 9.6 0 0 0 0 19.2Zm.848-12.352a1.2 1.2 0 0 0-1.696-1.696l-3.6 3.6a1.2 1.2 0 0 0 0 1.696l3.6 3.6a1.2 1.2 0 0 0 1.696-1.696L11.297 13.2H15.6a1.2 1.2 0 1 0 0-2.4h-4.303l1.551-1.552Z"
-              fillRule="evenodd"
-            ></path>
-          </svg>
-          {/* Pulsante Play/Pause */}
-          <button onClick={handlePlayPause} className="mx-2">
-            {!isPlaying ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="40"
-                height="40"
-                fill="currentColor"
-                className="bi bi-play-circle-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="40"
-                height="40"
-                fill="currentColor"
-                className="bi bi-pause-circle-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-              </svg>
-            )}
+            <SkipBack size={18} fill="currentColor" />
           </button>
-          {/* Freccia destra per il brano successivo */}
-          <svg
-            onClick={handleNext}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            height="35"
-            width="35"
-            className="frecciaDx cursor-pointer"
+          <button
+            type="button"
+            onClick={handlePlayPause}
+            aria-label={isPlaying ? "Pausa" : "Riproduci"}
+            className="grid size-12 cursor-pointer place-items-center rounded-full bg-accent text-accent-ink transition-transform active:scale-90"
           >
-            <path
-              clipRule="evenodd"
-              d="M12 21.6a9.6 9.6 0 1 0 0-19.2 9.6 9.6 0 0 0 0 19.2Zm4.448-10.448-3.6-3.6a1.2 1.2 0 0 0-1.696 1.696l1.551 1.552H8.4a1.2 1.2 0 1 0 0 2.4h4.303l-1.551 1.552a1.2 1.2 0 1 0 1.696 1.696l3.6-3.6a1.2 1.2 0 0 0 0-1.696Z"
-              fillRule="evenodd"
-            ></path>
-          </svg>
+            {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={!hasNext}
+            aria-label="Brano successivo"
+            className="grid size-10 cursor-pointer place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.08] hover:text-fg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
+          >
+            <SkipForward size={18} fill="currentColor" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsHidden(true)}
+            aria-label="Riduci il player"
+            className="grid size-10 cursor-pointer place-items-center rounded-full text-subtle transition-colors hover:bg-white/[0.08] hover:text-fg"
+          >
+            <ChevronDown size={18} />
+          </button>
         </div>
-        <input
-          className="time"
-          type="range"
-          min="0"
-          max="100"
-          value={isNaN(progress) ? 0 : progress}
-          onChange={handleSeek}
-          style={{ "--progress": `${progress}%` }}
-        />
-        <p className="timetext time_now">
-          {audio ? formatTime(audio.currentTime) : "0:00"}
-        </p>
-        <p className="timetext time_full">
-          {audio ? formatTime(audio.duration) : "0:00"}
-        </p>
       </div>
-    </div>
+    </section>
   );
 };
+
+/* Barre pseudo-casuali ma stabili per ogni brano (stessa canzone, stessa forma) */
+function waveform(seed, n = 56) {
+  let h = 2166136261;
+  for (const c of String(seed)) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return Array.from({ length: n }, (_, i) => {
+    h = Math.imul(h ^ (h >>> 13), 1274126177);
+    const noise = ((h >>> 0) % 1000) / 1000;
+    const env = 0.55 + 0.45 * Math.sin((Math.PI * i) / (n - 1));
+    return Math.round(18 + 82 * env * (0.35 + 0.65 * noise));
+  });
+}
 
 export default Player;

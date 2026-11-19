@@ -167,3 +167,6 @@
 .sb-eq { height: 40%; animation: sb-eq 0.9s ease-in-out infinite alternate; }
 @keyframes sb-eq { from { height: 20%; } to { height: 100%; } }
 @media (prefers-reduced-motion: reduce) { .sb-eq { animation: none; height: 60%; } }
+
+/* Copertina del player che gira come un disco */
+@keyframes sb-spin { to { transform: rotate(360deg); } }
