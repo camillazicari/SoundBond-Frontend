@@ -162,3 +162,8 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 85%);
   mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 85%);
 }
+
+/* Barre del caricamento */
+.sb-eq { height: 40%; animation: sb-eq 0.9s ease-in-out infinite alternate; }
+@keyframes sb-eq { from { height: 20%; } to { height: 100%; } }
+@media (prefers-reduced-motion: reduce) { .sb-eq { animation: none; height: 60%; } }

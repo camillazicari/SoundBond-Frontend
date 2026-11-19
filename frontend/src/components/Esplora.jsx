@@ -12,6 +12,8 @@ import { getGeneri } from "../redux/actions/generi.js";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BondSpinner from "./BondSpinner.jsx";
+import PageHeader from "./ui/PageHeader.jsx";
+import { Pause, Play } from "lucide-react";
 import { usePlayer } from "../context/PlayerContext.jsx";
 
 const Esplora = () => {
@@ -19,7 +21,6 @@ const Esplora = () => {
   const generi = useSelector((state) => state.generi.generi);
   const [genres, setGenres] = useState([]);
   const [generiId, setGeneriId] = useState([]);
-  const [artists, setArtists] = useState([]);
   const [songs, setSongs] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [match, setMatch] = useState([]);
@@ -54,81 +55,35 @@ const Esplora = () => {
     setGeneriId(matches.map((m) => m.id));
   }, [genres, generi]);
 
+  // Per ogni genere: classifica dei brani del genere, 15 brani che cambiano ogni giorno
   useEffect(() => {
     if (generiId.length === 0) return;
+    const giornoDellAnno = Math.floor(
+      (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
+    );
+    const PER_PLAYLIST = 15;
 
-    const fetchArtists = async () => {
-      try {
-        const giornoDellAnno = Math.floor(
-          (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
-        );
-
-        const results = await Promise.all(
-          generiId.map(async (id) => {
-            const res = await fetch(
-              `${DEEZER_PROXY_URL}/api/artists?genre_id=${id}`
-            );
-            if (!res.ok) throw new Error(`Errore artisti genre_id: ${id}`);
-            const data = await res.json();
-            const allArtists = data.data || [];
-
-            if (allArtists.length === 0) return [];
-
-            // Numero di gruppi distinti possibili
-            const groupsCount = Math.ceil(allArtists.length / 3);
-
-            // Seleziona il gruppo del giorno in modo circolare
-            const groupIndex = giornoDellAnno % groupsCount;
-            const startIdx = groupIndex * 3;
-            let artists = allArtists.slice(startIdx, startIdx + 3);
-
-            // Se siamo alla fine dell'array e ne mancano, prendi i primi per completare
-            if (artists.length < 3 && allArtists.length > 3) {
-              const remaining = 3 - artists.length;
-              artists = [...artists, ...allArtists.slice(0, remaining)];
-            }
-            return artists;
-          })
-        );
-
-        setArtists(results);
-      } catch (err) {
-        console.error("Errore artisti:", err);
-      }
-    };
-
-    fetchArtists();
-  }, [generiId]);
-
-  useEffect(() => {
-    if (artists.length === 0) return;
-    console.log(artists);
     const fetchSongs = async () => {
       try {
         const results = await Promise.all(
-          artists?.map(async (group) => {
-            const songsInGroup = await Promise.all(
-              group?.map(async (artist) => {
-                const res = await fetch(
-                  `${DEEZER_PROXY_URL}/api/songs?artist_id=${artist.id}`
-                );
-                if (!res.ok)
-                  throw new Error(`Errore canzoni artist_id: ${artist.id}`);
-                const data = await res.json();
-                return data.data;
-              })
-            );
-            return songsInGroup.flat();
+          generiId.map(async (id) => {
+            const res = await fetch(`${DEEZER_PROXY_URL}/api/genre-tracks?genre_id=${id}`);
+            if (!res.ok) throw new Error(`Errore brani genre_id: ${id}`);
+            const data = await res.json();
+            const all = (data.data || []).filter((t) => t.preview);
+            if (all.length <= PER_PLAYLIST) return all;
+            const start = (giornoDellAnno * PER_PLAYLIST) % all.length;
+            return [...all.slice(start), ...all.slice(0, start)].slice(0, PER_PLAYLIST);
           })
         );
         setSongs(results);
       } catch (err) {
-        console.error("Errore canzoni:", err);
+        console.error("Errore brani:", err);
       }
     };
 
     fetchSongs();
-  }, [artists]);
+  }, [generiId]);
 
   const { nowPlaying, setNowPlaying, setPlaylist, setCurrentIndex, setAudio } =
     usePlayer();
@@ -150,148 +105,87 @@ const Esplora = () => {
     }
   };
 
+  if (generi.length < 1) return <BondSpinner />;
+
   return (
-    <div className="container mx-auto">
-      {generi.length < 1 ? (
-        <BondSpinner />
+    <div className="mx-auto w-full max-w-7xl px-4 pt-12 pb-16 md:pt-15">
+      <PageHeader eyebrow="Esplora" title="Playlist" accent="pensate per te.">
+        Ogni giorno nuove anteprime dai tuoi generi preferiti. Apri una playlist e premi play.
+      </PageHeader>
+
+      {match.length > 0 ? (
+        <ul className="mt-12 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+          {match.map((genere, id) => (
+            <li key={genere?.id}>
+              <Dialog>
+                <DialogTrigger
+                  className="group block w-full cursor-pointer text-left"
+                  onClick={() => setSelectedIndex(id)}
+                >
+                  <div className="relative overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line">
+                    <img
+                      src={playlistCovers[id % playlistCovers.length]}
+                      alt=""
+                      className="aspect-square w-full object-cover transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:scale-105"
+                    />
+                    <span className="absolute right-4 bottom-4 grid size-12 translate-y-2 place-items-center rounded-full bg-accent text-accent-ink opacity-0 shadow-lg transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                      <Play size={20} fill="currentColor" className="ml-0.5" />
+                    </span>
+                  </div>
+                  <p className="mt-4 font-mono text-xs uppercase tracking-[0.16em] text-subtle">Playlist del giorno</p>
+                  <p className="display mt-1 text-2xl font-bold md:text-3xl">Il meglio di {genere?.name}</p>
+                </DialogTrigger>
+                <DialogContent
+                  aria-label={`Playlist ${genere?.name}`}
+                  className="glass max-w-lg gap-0 rounded-[var(--radius-card)] border-line p-0"
+                >
+                  <div className="flex items-center gap-4 border-b border-line p-5">
+                    <img src={playlistCovers[id % playlistCovers.length]} alt="" className="size-16 rounded-xl object-cover" />
+                    <div>
+                      <DialogTitle className="display text-2xl font-bold">Il meglio di {genere?.name}</DialogTitle>
+                      <DialogDescription className="text-sm text-muted">
+                        {songs[selectedIndex]?.length ?? 0} anteprime da 30 secondi
+                      </DialogDescription>
+                    </div>
+                  </div>
+                  <ol className="max-h-[60dvh] overflow-y-auto p-2">
+                    {songs[selectedIndex]?.length > 0 ? (
+                      songs[selectedIndex].map((song, j) => {
+                        const playing = nowPlaying?.id === song?.id;
+                        return (
+                          <li key={song?.id ?? j}>
+                            <button
+                              type="button"
+                              onClick={() => handleSongSelect(song, j, songs[selectedIndex])}
+                              aria-label={playing ? `Metti in pausa ${song?.title}` : `Ascolta ${song?.title}`}
+                              className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-white/[0.05] ${playing ? "bg-accent-soft" : ""}`}
+                            >
+                              <span className={`w-6 shrink-0 text-right font-mono text-sm ${playing ? "text-accent" : "text-subtle"}`}>{j + 1}</span>
+                              <img src={song?.album?.cover_big} alt="" className="size-11 rounded-lg object-cover" />
+                              <span className="min-w-0 flex-1">
+                                <span className={`block truncate font-medium ${playing ? "text-accent" : ""}`}>{song?.title}</span>
+                                <span className="block truncate text-sm text-muted">{song?.artist?.name}</span>
+                              </span>
+                              <span className={`grid size-9 shrink-0 place-items-center rounded-full ${playing ? "bg-accent text-accent-ink" : "bg-white/[0.06]"}`}>
+                                {playing ? <Pause size={15} fill="currentColor" /> : <Play size={15} fill="currentColor" className="ml-0.5" />}
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })
+                    ) : (
+                      <li className="p-6 text-center text-muted">Nessun brano disponibile.</li>
+                    )}
+                  </ol>
+                </DialogContent>
+              </Dialog>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <div className="fade-in">
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-1"
-            style={{
-              backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Playlist pensate per te
-          </h1>
-          {match.length > 0 ? (
-            <>
-              <p className="text-center mb-2 text-base lg:text-lg leading-4">
-                Ogni giorno nuove anteprime di brani dei tuoi generi preferiti,
-                da scoprire e amare!
-              </p>
-              <div className="mx-auto grid grid-cols-2 md:grid-cols-3">
-                {match &&
-                  match?.map((genere, id) => {
-                    return (
-                      <Dialog key={genere?.id}>
-                        <DialogTrigger
-                          className="my-2 place-items-center cursor-pointer"
-                          onClick={() => setSelectedIndex(id)}
-                        >
-                          <div>
-                            <img
-                              src={playlistCovers[id]}
-                              alt="cover"
-                              className="w-50 sm:w-60 lg:w-75 xl:w-90 object-cover rounded-2xl"
-                            />
-                            <p className="my-2 md:text-md lg:text-lg font-bold text-[#d9cfff]">
-                              Il meglio di "{genere?.name}"
-                            </p>
-                          </div>
-                        </DialogTrigger>
-                        <DialogContent
-                          aria-label={`Playlist ${genere?.name}`}
-                          className="grid grid-cols-1 p-2 border-[#a98bff]/50"
-                          style={{
-                            backgroundColor: "rgba(11, 10, 16, 0.5)",
-                            backdropFilter: "blur(10px)",
-                          }}
-                        >
-                          <DialogTitle></DialogTitle>
-                          <DialogDescription className="text-lg font-bold text-center text-[#a98bff]">
-                            Il meglio di "{genere?.name}"
-                          </DialogDescription>
-                          <div className="h-140 overflow-auto">
-                            {songs[selectedIndex]?.length > 0 ? (
-                              <div className="grid grid-cols-1 gap-2 ">
-                                {songs[selectedIndex]?.map((song, j) => (
-                                  <div
-                                    key={j}
-                                    className="py-1.5 shadow flex items-center justify-between hoverBrani rounded-lg px-3 cursor-pointer"
-                                    onClick={() =>
-                                      handleSongSelect(
-                                        song,
-                                        j,
-                                        songs[selectedIndex]
-                                      )
-                                    }
-                                  >
-                                    <div className="flex items-center w-[80%]">
-                                      <p className="w-[30px]">{j + 1}.</p>
-                                      <img
-                                        src={song?.album?.cover_big}
-                                        alt="cover canzone"
-                                        className="rounded-lg h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3 object-cover"
-                                      />
-                                      <div>
-                                        <p className="font-semibold w-[100%]">
-                                          {song?.title}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                          {song?.artist?.name}
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <button
-                                      onClick={() =>
-                                        handleSongSelect(
-                                          song,
-                                          j,
-                                          songs[selectedIndex]
-                                        )
-                                      }
-                                      className="cursor-pointer"
-                                    >
-                                      {nowPlaying?.id === song?.id ? (
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          width="40"
-                                          height="40"
-                                          fill="currentColor"
-                                          className="bi bi-pause-circle-fill"
-                                          viewBox="0 0 16 16"
-                                        >
-                                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-                                        </svg>
-                                      ) : (
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          width="40"
-                                          height="40"
-                                          fill="#a98bff"
-                                          className="bi bi-play-circle-fill"
-                                          viewBox="0 0 16 16"
-                                        >
-                                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-                                        </svg>
-                                      )}
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p>Nessun brano disponibile.</p>
-                            )}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    );
-                  })}
-              </div>
-            </>
-          ) : (
-            <div>
-              <p className="text-center text-lg">
-                Wow che gusti ricercati... persino l'algoritmo si è arreso.
-              </p>
-              <p className="text-center">
-                Prova ad aggiungere altri generi nelle impostazioni.
-              </p>
-            </div>
-          )}
+        <div className="surface mt-12 p-10 text-center">
+          <p className="display text-3xl font-bold">Gusti ricercati.</p>
+          <p className="mt-2 text-muted">Non troviamo playlist per i tuoi generi. Aggiungine altri nelle impostazioni.</p>
         </div>
       )}
     </div>

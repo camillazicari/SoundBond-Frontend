@@ -228,7 +228,7 @@ const Connessioni = () => {
   const visible = filteredMatches.slice(0, page * itemsPerPage);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pt-10 pb-6">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-12 pb-6 md:pt-15">
       <header className="max-w-2xl">
         <h1 className="display text-6xl font-bold md:text-8xl">
           Connessioni

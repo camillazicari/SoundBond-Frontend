@@ -24,13 +24,13 @@ const ImpDelete = () => {
   };
 
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg">
+    <Card className="surface border-rose-400/25 p-6 md:p-8">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[#a98bff] mb-1">
+          <h3 className="display text-3xl font-bold mb-2">
             Eliminazione profilo
           </h3>
-          <p className="text-sm text-[#f2f0f7]">
+          <p className="text-sm text-muted">
             Questa azione è irreversibile.
           </p>
         </div>
@@ -38,27 +38,27 @@ const ImpDelete = () => {
           <AlertDialogTrigger asChild>
             <button
               variant="destructive"
-              className="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 py-2 px-4 rounded-md flex items-center transition-colors"
+              className="btn mt-4 border border-rose-400/40 bg-rose-500/10 text-rose-200 hover:bg-rose-500/20 md:mt-0"
             >
-              <Trash2 size={18} className="mr-2" /> Elimina profilo
+              <Trash2 size={18} /> Elimina profilo
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-[#1c1925]/30 border border-[#3a3449]/50">
+          <AlertDialogContent className="glass rounded-[var(--radius-card)] border-line">
             <AlertDialogHeader>
               <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
-              <AlertDialogDescription className="text-[#f2f0f7]">
+              <AlertDialogDescription className="text-fg">
                 Questa azione non può essere annullata. <br />
                 Eliminerà definitivamente il tuo profilo e tutti i dati
                 associati.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-transparent border-[#3a3449] hover:bg-[#3a3449]/30 py-2 px-3 rounded-md">
+              <AlertDialogCancel className="btn btn-ghost">
                 Annulla
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={deleteProfile}
-                className="bg-red-600 hover:bg-red-700 py-2 px-3 rounded-md "
+                className="btn bg-rose-500 text-white hover:bg-rose-600"
               >
                 Elimina
               </AlertDialogAction>

@@ -213,9 +213,9 @@ const ImpBrani = () => {
   };
 
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#1c1925]/30 border border-[#3a3449]/50 rounded-xl shadow-lg">
+    <Card className="surface p-6 md:p-8">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold" style={{ color: "#a98bff" }}>
+        <h3 className="display text-3xl font-bold">
           I tuoi brani preferiti
         </h3>
         <Dialog
@@ -227,16 +227,16 @@ const ImpBrani = () => {
           }}
         >
           <DialogTrigger asChild>
-            <button className="bg-[#a98bff] hover:bg-[#a98bff] py-1.5 px-4 rounded-md flex items-center transition-colors">
-              <Plus size={18} className="mr-2" /> Aggiungi
+            <button className="btn btn-primary">
+              <Plus size={18} /> Aggiungi
             </button>
           </DialogTrigger>
-          <DialogContent className="bg-[#1c1925]/30 border border-[#3a3449]/50">
+          <DialogContent className="glass rounded-[var(--radius-card)] border-line">
             <DialogHeader>
-              <DialogTitle className="text-[#f2f0f7]">
+              <DialogTitle className="text-fg">
                 Aggiungi un brano preferito
               </DialogTitle>
-              <DialogDescription className="text-[#f2f0f7]">
+              <DialogDescription className="text-fg">
                 Inserisci il titolo del brano che vuoi aggiungere.
               </DialogDescription>
             </DialogHeader>
@@ -247,16 +247,16 @@ const ImpBrani = () => {
                   onChange={handleSearchChange}
                   onSubmit={() => {}}
                   value={search}
-                  className="bg-[#3a3449]/30 border-[#1c1925] focus:border-[#a98bff]"
+                  className="h-11 rounded-xl border-line-strong bg-white/[0.03] focus:border-accent/70"
                 />
               </div>
               <DialogClose>
                 {searchResults.length > 0 && (
-                  <ul className="bg-[#14121b] shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-42 z-50">
+                  <ul className="glass rounded-2xl p-1.5 mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-42 z-50">
                     {searchResults.map((song, index) => (
                       <li
                         key={index}
-                        className="p-2 hover:bg-[#3a3449]/30 cursor-pointer flex items-center"
+                        className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/[0.07]"
                         onClick={() => handleSelectSong(song)}
                       >
                         {song.image && (
@@ -283,7 +283,7 @@ const ImpBrani = () => {
             {brani.map((song) => (
               <div
                 key={song.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-[#1c1925]/30 border border-[#3a3449]/50 hover:bg-[#3a3449]/30  transition-colors"
+                className="flex items-center justify-between rounded-xl border border-line bg-white/[0.02] p-3 transition-colors hover:bg-white/[0.05]"
               >
                 <div className="flex items-center">
                   {song.img ? (
@@ -299,17 +299,17 @@ const ImpBrani = () => {
                     <p>No image available</p>
                   )}
                   <div>
-                    <h4 className="font-medium text-[#f2f0f7]">
+                    <h4 className="font-medium text-fg">
                       {song.titolo}
                     </h4>
-                    <p className="text-sm text-[#f2f0f7]">{song.artista}</p>
+                    <p className="text-sm text-fg">{song.artista}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => handleRemoveSong(song)}
                   size="icon"
                   variant="ghost"
-                  className="hover:bg-[#a98bff]/20 text-[#f2f0f7]"
+                  className="rounded-xl data-[hover=true]:bg-white/[0.06]"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -318,7 +318,7 @@ const ImpBrani = () => {
           </div>
         ) : (
           <div className="h-full flex items-center justify-center">
-            <p className="text-[#f2f0f7] italic">
+            <p className="italic text-muted">
               Non hai ancora aggiunto brani preferiti
             </p>
           </div>

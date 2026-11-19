@@ -60,42 +60,34 @@ const RecommendedPlaylists = () => {
     setMatch(matches);
   }, [genres, generi]);
 
+  if (!match.length) return null;
+
   return (
-    <div>
-      <div className=" flex justify-between mx-4 xxl:mx-2 my-2">
-        <h2 className="font-bold text-xl sm:text-2xl lg:text-3xl">
-          Le playlist che ti consigliamo
-        </h2>
-        <button
-          className=" cursor-pointer"
-          onClick={() => navigate("/esplora")}
-        >
+    <section className="mt-20">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <h2 className="display text-4xl font-bold md:text-5xl">Da ascoltare</h2>
+        <button type="button" onClick={() => navigate("/esplora")} className="cursor-pointer text-sm font-medium text-muted transition-colors hover:text-fg">
           Vedi tutti
         </button>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3">
-        {match &&
-          match?.map((genere, id) => {
-            const shuff = shuffledCovers[id];
-            return (
-              <div
-                className="m-3 xxl:mx-0 border-0 rounded-xl shadow-lg  gap-5 items-center cursor-pointer"
-                key={genere?.id}
-                onClick={() => navigate("/esplora")}
-              >
+      <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        {match.map((genere, i) => (
+          <li key={genere.id}>
+            <button type="button" onClick={() => navigate("/esplora")} className="group block w-full cursor-pointer text-left">
+              <div className="overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line">
                 <img
-                  src={shuff.img}
-                  alt="cover"
-                  className="w-[100%] h-60 md:h-70 lg:h-90 xl:h-110 object-cover rounded-2xl"
+                  src={shuffledCovers[i % shuffledCovers.length]?.img}
+                  alt=""
+                  className="aspect-square w-full object-cover transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:scale-105"
                 />
-                <p className="text-center my-2 md:text-md lg:text-lg font-bold text-[#d9cfff]">
-                  {genere?.name}
-                </p>
               </div>
-            );
-          })}
-      </div>
-    </div>
+              <p className="mt-3 font-medium">{genere.name}</p>
+              <p className="text-sm text-subtle">Playlist del giorno</p>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 };
 

@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllUtenti, register } from "../redux/actions/account.js";
 import BondSpinner from "./BondSpinner.jsx";
+import AuthLayout from "./AuthLayout.jsx";
+import Field from "./ui/Field.jsx";
+import { ArrowRight } from "lucide-react";
 
 const Registrati = () => {
   const dispatch = useDispatch();
@@ -75,6 +78,7 @@ const Registrati = () => {
     setLastName("");
     setDataDiNascita("");
     setEmail("");
+    setConfirm("");
     setErrorMessages({});
 
     dispatch(
@@ -96,150 +100,103 @@ const Registrati = () => {
       });
   };
 
+  const clear = (setter) => (e) => {
+    setter(e.target.value);
+    setErrorMessages({});
+  };
+  const [confirm, setConfirm] = useState("");
+  const filled =
+    [firstName, lastName, dataDiNascita, username, email, password, confirm].filter(Boolean).length / 7;
+
   return isLoading ? (
-    <BondSpinner />
+    <BondSpinner label="Creazione dell'account" />
   ) : (
-    <div className="flex flex-col items-center justify-center fade-in">
-      {errorMessages.generic && (
-        <p className="Errors">{errorMessages.generic}</p>
-      )}
-      <form className="form" onSubmit={handleSignUp}>
-        <p className="title">REGISTRATI</p>
-        <p className="message">
-          Registrati ora ed ottieni accesso completo alla nostra app.
-        </p>
-        <label>
-          <input
-            className="input"
-            type="text"
-            placeholder=" "
-            value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Nome</span>
-        </label>
-
-        <label>
-          <input
-            className="input"
-            type="text"
-            placeholder=" "
-            value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Cognome</span>
-        </label>
-        {errorMessages.user && (
-          <p className="text-sm text-center Errors">{errorMessages.user}</p>
-        )}
-
-        <label>
-          <input
-            className="input"
-            type="date"
-            placeholder=" "
-            value={dataDiNascita}
-            onChange={(e) => {
-              setDataDiNascita(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Data di nascita</span>
-        </label>
-
-        <label>
-          <input
-            className="input"
-            type="text"
-            placeholder=" "
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Username</span>
-        </label>
-        {errorMessages.username && (
-          <p className="text-sm text-center Errors">{errorMessages.username}</p>
-        )}
-
-        <label>
-          <input
-            className="input"
-            type="text"
-            placeholder=" "
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Email</span>
-        </label>
-        {errorMessages.email && (
-          <p className="text-sm text-center Errors">{errorMessages.email}</p>
-        )}
-
-        <label>
-          <input
-            className="input"
-            type="password"
-            placeholder=" "
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrorMessages({});
-            }}
-            required
-          />
-          <span>Password</span>
-        </label>
-        {errorMessages.password && (
-          <div className="flex flex-col items-center">
-            <p className="text-sm text-center Errors">
-              {errorMessages.password}
-            </p>
-            <ol className="text-sm text-start">
-              <li className="Errors">1. &nbsp;&nbsp; almeno 8 caratteri</li>
-              <li className="Errors">2. &nbsp; almeno una lettera maiuscola</li>
-              <li className="Errors">3. &nbsp; almeno una lettera minuscola</li>
-              <li className="Errors">4. &nbsp; almeno un numero</li>
-            </ol>
-          </div>
-        )}
-        <label>
-          <input
-            className="input"
-            type="password"
-            placeholder=" "
-            name="confirmPassword"
-            required
-          />
-          <span>Conferma password</span>
-        </label>
-        {errorMessages.confirmPassword && (
-          <p className="text-sm text-center Errors">
-            {errorMessages.confirmPassword}
+    <AuthLayout
+      eyebrow="Crea un account"
+      title="Trova chi"
+      accent="suona come te."
+      intro="Un minuto per il profilo, poi scegli generi, artisti e brani. Il resto lo fa il match."
+      progress={filled}
+      aside={
+        <ol className="space-y-3 text-sm text-muted">
+          {["Crea il profilo", "Scegli generi, artisti e brani", "Scopri chi è in sintonia con te"].map((step, i) => (
+            <li key={step} className="flex items-center gap-3">
+              <span className="grid size-7 place-items-center rounded-full border border-line-strong font-mono text-xs text-fg">
+                {i + 1}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
+      }
+    >
+      <form className="grid gap-5 sm:grid-cols-2" onSubmit={handleSignUp} noValidate>
+        {errorMessages.generic && (
+          <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200 sm:col-span-2">
+            {errorMessages.generic}
           </p>
         )}
-        <button className="submit">Registrati ora</button>
-        <p className="signin">
-          Hai già un account? <Link to={"/accedi"}>Accedi</Link>{" "}
+        <Field label="Nome" autoComplete="given-name" value={firstName} onChange={clear(setFirstName)} required />
+        <Field label="Cognome" autoComplete="family-name" value={lastName} onChange={clear(setLastName)} required />
+        <Field
+          className="sm:col-span-2"
+          label="Data di nascita"
+          type="date"
+          autoComplete="bday"
+          value={dataDiNascita}
+          onChange={clear(setDataDiNascita)}
+          required
+        />
+        <Field
+          label="Nome utente"
+          autoComplete="username"
+          value={username}
+          onChange={clear(setUsername)}
+          error={errorMessages.username}
+          hint="Almeno 5 caratteri"
+          required
+        />
+        <Field
+          label="Email"
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={clear(setEmail)}
+          error={errorMessages.email}
+          required
+        />
+        <Field
+          label="Password"
+          type="password"
+          autoComplete="new-password"
+          value={password}
+          onChange={clear(setPassword)}
+          error={errorMessages.password && "Almeno 8 caratteri, con una maiuscola, una minuscola e un numero."}
+          hint="Almeno 8 caratteri, con maiuscola, minuscola e numero"
+          required
+        />
+        <Field
+          label="Conferma password"
+          type="password"
+          name="confirmPassword"
+          autoComplete="new-password"
+          value={confirm}
+          onChange={clear(setConfirm)}
+          error={errorMessages.confirmPassword}
+          required
+        />
+        <button type="submit" className="btn btn-primary mt-2 h-12 w-full sm:col-span-2">
+          Crea l'account
+          <ArrowRight size={18} />
+        </button>
+        <p className="text-center text-sm text-muted sm:col-span-2">
+          Hai già un account?{" "}
+          <Link to="/accedi" className="font-medium text-accent underline-offset-4 hover:underline">
+            Accedi
+          </Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 };
 

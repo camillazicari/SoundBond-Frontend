@@ -1,9 +1,13 @@
-import { API_URL, DEEZER_PROXY_URL } from "../config";
+import { DEEZER_PROXY_URL } from "../config";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getUtenti } from "../redux/actions/account.js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { MessageCircle, Pause, Play, UserMinus } from "lucide-react";
+import { Affinity, profileImage } from "./MatchCard.jsx";
+import { Avatar, AvatarFallback, AvatarImage } from "./personalizedComponents/Avatar.jsx";
+import { calculateCompatibility } from "./data/matchMaking.js";
 import BondSpinner from "./BondSpinner";
 import { usePlayer } from "../context/PlayerContext";
 import { deleteBonder, getBonders } from "../redux/actions/bonders";
@@ -13,7 +17,7 @@ const Dettagli = () => {
   const users = useSelector((state) => state.account.users);
   const bonders = useSelector((state) => state.bonders.bonders);
   const isBonder = bonders.find((u) => u.otherUser.id === id);
-  const [isHover, setIsHover] = useState(false);
+  const me = useSelector((state) => state.account.userLogged);
   const user = users.find((u) => u.id === id);
   const dispatch = useDispatch();
 
@@ -78,206 +82,122 @@ const Dettagli = () => {
     }
   };
 
-  return user && user?.nome ? (
-    <div className="p-6 md:p-8 max-w-screen-2xl mx-auto fade-in">
-      {" "}
-      <div className="glass-card p-6 md:p-8">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
-            <div className="w-34 h-34 rounded-full flex items-center justify-center overflow-hidden mb-4 md:mb-0 md:mr-6">
-              {user?.profilo ? (
-                <img
-                  src={
-                    user?.profilo?.immagine?.startsWith("http")
-                      ? user?.profilo?.immagine
-                      : `${API_URL}${user?.profilo?.immagine}`
-                  }
-                  alt={user?.nome}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-4xl font-semibold">
-                  {user?.nome?.charAt(0) || "U"}
-                </span>
-              )}
-            </div>
+  if (!user?.nome) return <BondSpinner />;
 
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl md:text-4xl font-bold text-gradient mb-2">
-                {user?.nome}
-              </h1>
-              <p className="bioColorata mb-2">@{user?.nomeUtente}</p>
-              <p className="bioColorata mb-2">{user?.profilo?.bio}</p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
-                {user?.generi?.map((genre) => (
-                  <span
-                    key={genre.id}
-                    className="px-3 py-1 badgini rounded-full text-xs"
-                  >
-                    {genre.nome}
-                  </span>
-                ))}
-              </div>
+  const compatibility = me?.id ? calculateCompatibility(me, user) : null;
+  const common = new Set([
+    ...(compatibility?.details?.commonArtists ?? []),
+    ...(compatibility?.details?.commonGenres ?? []),
+  ]);
+  const isCommon = (n) => common.has(n?.trim().toLowerCase());
+
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 pt-12 pb-16 md:pt-15">
+      <section className="surface relative isolate overflow-hidden p-6 md:p-10">
+        {user.artisti?.[0]?.img && (
+          <div aria-hidden="true" className="ambient pointer-events-none absolute -inset-x-20 -top-40 -z-10 h-[30rem] opacity-55">
+            <div className="flex h-full scale-110 blur-[70px] saturate-[1.8]">
+              {user.artisti.slice(0, 3).map((a) => (
+                <img key={a.id} src={a.img} alt="" className="h-full flex-1 object-cover" />
+              ))}
             </div>
           </div>
-          {isBonder && (
+        )}
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
+            <Avatar className="size-28 ring-1 ring-line-strong md:size-36">
+              <AvatarImage src={profileImage(user?.profilo?.immagine)} alt="" className="object-cover" />
+              <AvatarFallback className="bg-accent-soft text-3xl font-semibold text-accent">{user.nome.slice(0, 2).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-subtle">{isBonder ? "Bonder" : "Profilo"}</p>
+              <h1 className="display mt-2 text-[clamp(2.75rem,7vw,5rem)] font-bold">{user.nome} {user.cognome}</h1>
+              <p className="mt-2 text-muted">@{user.nomeUtente}</p>
+            </div>
+          </div>
+          {typeof compatibility?.score === "number" && <Affinity score={compatibility.score} />}
+        </div>
+        {user.profilo?.bio && <p className="mt-8 max-w-2xl text-lg text-muted">{user.profilo.bio}</p>}
+        {isBonder && (
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Link to={`/chat/${user.id}`} className="btn btn-primary">
+              <MessageCircle size={17} /> Scrivi
+            </Link>
             <button
-              className={`md:ml-auto flex justify-center items-center p-2 md:p-4 rounded-full ${
-                isHover ? "bg-red-700" : "buttonGradient2"
-              }`}
-              onMouseEnter={() => setIsHover(true)}
-              onMouseLeave={() => setIsHover(false)}
+              type="button"
               onClick={() => dispatch(deleteBonder(user?.id))}
+              className="btn btn-ghost hover:border-rose-400/40 hover:text-rose-200"
             >
-              {isHover ? (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fill="currentColor"
-                    className="bi bi-person-x me-2"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                  </svg>
-                  <p>Elimina</p>
-                </>
-              ) : (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fill="currentColor"
-                    className="bi bi-person-check me-2"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />
-                  </svg>
-                  <p>Bonder</p>
-                </>
-              )}
+              <UserMinus size={17} /> Rimuovi bond
             </button>
+          </div>
+        )}
+      </section>
+
+      <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_24rem]">
+        <div className="flex flex-col gap-12">
+          {user.artisti?.length > 0 && (
+            <section>
+              <h2 className="display mb-6 text-3xl font-bold">Artisti</h2>
+              <ul className="grid grid-cols-3 gap-4 sm:grid-cols-5">
+                {user.artisti.map((a) => (
+                  <li key={a.id} className="text-center">
+                    <img
+                      src={a.img}
+                      alt=""
+                      className={`aspect-square w-full rounded-full object-cover ${isCommon(a.nome) ? "ring-2 ring-accent ring-offset-4 ring-offset-ink" : "ring-1 ring-line"}`}
+                    />
+                    <p className="mt-3 line-clamp-2 text-sm">{a.nome}</p>
+                    {isCommon(a.nome) && <p className="text-xs text-accent">In comune</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {user.generi?.length > 0 && (
+            <section>
+              <h2 className="display mb-6 text-3xl font-bold">Generi</h2>
+              <div className="flex flex-wrap gap-2">
+                {user.generi.map((g) => (
+                  <span key={g.id} className={`chip px-4 py-1.5 text-sm ${isCommon(g.nome) ? "border-accent/25 bg-accent-soft text-fg" : ""}`}>{g.nome}</span>
+                ))}
+              </div>
+            </section>
           )}
         </div>
-      </div>
-      <div className="glass-card overflow-hidden">
-        <div className="p-6 md:p-2 lg:p-5">
-          <div className="space-y-8">
-            <div className="text-center">
-              <p className="text-sm sm:text-base md:text-lg xl:text-xl 2xl:text-2xl font-semibold bioColorata mb-2">
-                Artisti preferiti
-              </p>
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-4 place-items-center justify-center">
-                {user?.artisti?.map((artist) => (
-                  <div
-                    key={artist?.id}
-                    className="bg-gradient-to-br from-[#14121b] to-[#2c2738] rounded-lg overflow-hidden group"
-                  >
-                    <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center">
-                      {artist?.img ? (
-                        <img
-                          src={artist?.img}
-                          alt={artist?.nome}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-16 w-16 text-gray-500"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M9 18V5l12-2v13"></path>
-                          <circle cx="6" cy="18" r="3"></circle>
-                          <circle cx="18" cy="16" r="3"></circle>
-                        </svg>
-                      )}
-                    </div>
-                    <div className="p-3 flex justify-center">
-                      <h4 className="font-medium text-[11px] sm:text-[13px] md:text-[13px] lg:text-[15px] 2xl:text-lg 2xl:leading-tight text-center mt-1 h-7 overflow-auto">
-                        {artist?.nome}
-                      </h4>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            <div>
-              <p className="text-sm sm:text-base md:text-lg xl:text-xl 2xl:text-2xl font-semibold bioColorata text-center mb-2">
-                Brani preferiti
-              </p>
-              <div className="space-y-2">
-                {user?.brani?.map((track) => (
-                  <div
-                    key={track?.id}
-                    className="flex items-center p-3 rounded-lg bg-black/30 hover:bg-white/5 transition-colors"
-                  >
-                    <div className="w-10 h-10 rounded overflow-hidden mr-3">
-                      <img
-                        src={track?.img || "/placeholder.svg"}
-                        alt={track?.titolo}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="font-medium md:text-lg">
-                        {track?.titolo}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        {track?.artista}
-                      </div>
-                    </div>
+        {user.brani?.length > 0 && (
+          <section>
+            <h2 className="display mb-6 text-3xl font-bold">Brani</h2>
+            <ol className="surface p-2">
+              {user.brani.map((brano, i) => {
+                const playing = nowPlaying?.title === brano.titolo && isPlaying;
+                return (
+                  <li key={brano.id}>
                     <button
-                      className="cursor-pointer ml-auto"
-                      onClick={() =>
-                        handleSongClick(track?.titolo, track?.artista)
-                      }
+                      type="button"
+                      onClick={() => handleSongClick(brano.titolo, brano.artista)}
+                      aria-label={playing ? `Metti in pausa ${brano.titolo}` : `Ascolta ${brano.titolo}`}
+                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-white/[0.05]"
                     >
-                      {isPlaying && nowPlaying?.title === track.titolo ? (
-                        // Icona Pause se il brano è in riproduzione
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="40"
-                          height="40"
-                          fill="currentColor"
-                          className="bi bi-pause-circle-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-                        </svg>
-                      ) : (
-                        // Icona Play se il brano non è in riproduzione
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="40"
-                          height="40"
-                          fill="#a98bff"
-                          className="bi bi-play-circle-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-                        </svg>
-                      )}
+                      <span className="w-5 shrink-0 text-right font-mono text-sm text-subtle">{i + 1}</span>
+                      <img src={brano.img} alt="" className="size-11 rounded-lg object-cover" />
+                      <span className="min-w-0 flex-1">
+                        <span className={`block truncate font-medium ${playing ? "text-accent" : ""}`}>{brano.titolo}</span>
+                        <span className="block truncate text-sm text-muted">{brano.artista}</span>
+                      </span>
+                      <span className={`grid size-9 shrink-0 place-items-center rounded-full ${playing ? "bg-accent text-accent-ink" : "bg-white/[0.06]"}`}>
+                        {playing ? <Pause size={15} fill="currentColor" /> : <Play size={15} fill="currentColor" className="ml-0.5" />}
+                      </span>
                     </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        )}
       </div>
     </div>
-  ) : (
-    <BondSpinner />
   );
 };
 
