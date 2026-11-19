@@ -319,7 +319,7 @@ function Vinyl() {
       ref={ref}
       className="mx-auto grid max-w-7xl items-center gap-16 overflow-x-clip px-4 py-24 md:grid-cols-2 md:py-32"
     >
-      <div className="relative mx-auto aspect-square w-full max-w-[34rem] md:-ml-24">
+      <div className="relative mx-auto aspect-square w-full max-w-[34rem]">
         <motion.div
           style={reduce ? undefined : { rotate }}
           className="vinyl absolute inset-0 rounded-full"
