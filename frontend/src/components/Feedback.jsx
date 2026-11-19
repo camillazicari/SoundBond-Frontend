@@ -170,7 +170,7 @@ const Feedback = () => {
             data-scroll-speed="0.5"
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-extrabold text-center"
             style={{
-              backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+              backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -190,7 +190,7 @@ const Feedback = () => {
               data-scroll-speed="0.5"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-center mb-7"
               style={{
-                backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+                backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -207,7 +207,7 @@ const Feedback = () => {
             <Input
               value={testo}
               onChange={(e) => setTesto(e.target.value)}
-              className="border border-[#3f006f] focus:border-[#ad42ff] rounded-lg mt-7"
+              className="border border-[#1c1925] focus:border-[#a98bff] rounded-lg mt-7"
               placeholder="Commenta la tua esperienza in SoundBond..."
               maxLength={100}
               minLength={1}
@@ -221,7 +221,7 @@ const Feedback = () => {
             <div className="flex w-[100%] justify-end gap-2">
               <button
                 onClick={handlePost}
-                className="bg-[#ad42ff] hover:bg-[#7112b7] py-2 px-3 rounded-md transition-colors"
+                className="bg-[#a98bff] hover:bg-[#3a3449] py-2 px-3 rounded-md transition-colors"
               >
                 Salva
               </button>
@@ -234,7 +234,7 @@ const Feedback = () => {
               data-scroll-speed="0.5"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-center"
               style={{
-                backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
+                backgroundImage: "linear-gradient(to right, #d9cfff, #a98bff)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -242,7 +242,7 @@ const Feedback = () => {
               La tua recensione:
             </h2>{" "}
             {!isEdit ? (
-              <div className="flex flex-col justify-center items-center pt-4 mt-4 border-t w-[100%] border-t-[#3f006f]">
+              <div className="flex flex-col justify-center items-center pt-4 mt-4 border-t w-[100%] border-t-[#1c1925]">
                 <Rate
                   allowHalf
                   disabled
@@ -250,7 +250,7 @@ const Feedback = () => {
                   className="custom-rate"
                 />
                 <p className="text-2xl mt-4 pb-4">"{miaRecensione.testo}"</p>
-                <div className="w-[100%] mb-7 flex justify-end items-center py-2 border-t border-t-[#3f006f]">
+                <div className="w-[100%] mb-7 flex justify-end items-center py-2 border-t border-t-[#1c1925]">
                   <button
                     className="binButton2"
                     onClick={() => setIsEdit(true)}
@@ -307,15 +307,15 @@ const Feedback = () => {
                         </svg>
                       </button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-[#170228] border border-[#7112b7]/50">
+                    <AlertDialogContent className="bg-[#14121b] border border-[#3a3449]/50">
                       <AlertDialogHeader>
                         <AlertDialogTitle></AlertDialogTitle>
-                        <AlertDialogDescription className="text-[#efd6f8]">
+                        <AlertDialogDescription className="text-[#f2f0f7]">
                           Sei sicur* di voler eliminare la tua recensione?
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-transparent border-[#732880] hover:bg-[#732880]/30 py-2 px-3 rounded-md cursor-pointer">
+                        <AlertDialogCancel className="bg-transparent border-[#3a3449] hover:bg-[#3a3449]/30 py-2 px-3 rounded-md cursor-pointer">
                           Annulla
                         </AlertDialogCancel>
                         <AlertDialogAction
@@ -340,7 +340,7 @@ const Feedback = () => {
                 <Input
                   value={testo}
                   onChange={(e) => setTesto(e.target.value)}
-                  className="border-b border-b-[#3f006f] focus:border-[#ad42ff] mt-7"
+                  className="border-b border-b-[#1c1925] focus:border-[#a98bff] mt-7"
                   placeholder="Commenta la tua esperienza in SoundBond..."
                   maxLength={100}
                   minLength={1}
@@ -354,13 +354,13 @@ const Feedback = () => {
                 <div className="flex w-[100%] justify-end gap-2">
                   <button
                     onClick={saveRecensione}
-                    className="bg-[#ad42ff] hover:bg-[#7112b7] py-2 px-3 rounded-md transition-colors"
+                    className="bg-[#a98bff] hover:bg-[#3a3449] py-2 px-3 rounded-md transition-colors"
                   >
                     Salva
                   </button>
                   <button
                     onClick={() => setIsEdit(false)}
-                    className="hover:bg-[#7112b7]/30 py-2 px-3 rounded-md"
+                    className="hover:bg-[#3a3449]/30 py-2 px-3 rounded-md"
                   >
                     Annulla
                   </button>

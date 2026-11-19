@@ -4,9 +4,8 @@ export const calculateCompatibility = (user1, user2) => {
   let score = 0;
   const maxScore = 100;
 
-  // Compatibilità generi (60% del totale)
+  // generi: 60%
   const genreWeight = 0.6;
-  // Estrai il nome per ogni genere, invece che l'oggetto intero
   const user1Generi = user1.generi?.map((genre) => genre.nome.trim().toLowerCase());
   const user2Generi = user2.generi?.map((genre) => genre.nome.trim().toLowerCase());
   const commonGenres = user1Generi?.filter((genre) =>
@@ -17,7 +16,7 @@ export const calculateCompatibility = (user1, user2) => {
     maxScore *
     genreWeight;
 
-  // Compatibilità artisti (40% del totale)
+  // artisti: 40%
   const artistWeight = 0.4;
   const user1ArtistNames = user1.artisti?.map((artist) =>
     artist.nome.trim().toLowerCase()
@@ -34,7 +33,7 @@ export const calculateCompatibility = (user1, user2) => {
     maxScore *
     artistWeight;
 
-  // Compatibilità brani (10% del totale)
+  // brani (per ora non usati)
   // const trackWeight = 0.1;
   // const user1TrackNames = user1.brani.map(
   //   (track) =>
@@ -53,7 +52,7 @@ export const calculateCompatibility = (user1, user2) => {
   //   maxScore *
   //   trackWeight;
 
-  // Calcola score finale
+  // punteggio finale
   score = genreScore + artistScore;
 
   return {
@@ -67,7 +66,7 @@ export const calculateCompatibility = (user1, user2) => {
   };
 };
 
-// Genera % compatibilità per tutti gli utenti
+// affinità con tutti gli utenti
 export const useGetUserMatches = () => {
   const currentUser = useSelector((state) => state.account.userLogged) || {};
   const utenti = useSelector((state) => state.account.users) || [];

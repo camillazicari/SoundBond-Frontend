@@ -5,9 +5,9 @@ import { useSelector } from "react-redux";
 const PlayerContext = createContext();
 
 export const PlayerProvider = ({ children }) => {
-  const [nowPlaying, setNowPlaying] = useState(null); // Traccia corrente
-  const [audio, setAudio] = useState(null); // Istanza Audio
-  const [isPlaying, setIsPlaying] = useState(false); // Stato di riproduzione
+  const [nowPlaying, setNowPlaying] = useState(null); // brano attuale
+  const [audio, setAudio] = useState(null); // audio
+  const [isPlaying, setIsPlaying] = useState(false); // sta suonando?
   const userLogged = useSelector((state) => state.account.userLogged);
 
   useEffect(() => {
@@ -20,12 +20,12 @@ export const PlayerProvider = ({ children }) => {
     }
   }, [userLogged]);
 
-  // Nuove variabili per gestire la playlist corrente
+  // playlist in riproduzione
   const [playlist, setPlaylist] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // Pulizia dell'audio al cambio o smontaggio
+    // fermo l'audio quando cambia
     return () => {
       if (audio) {
         audio.pause();
@@ -34,7 +34,7 @@ export const PlayerProvider = ({ children }) => {
     };
   }, [audio]);
 
-  // Funzione per alternare play/pause (opzionale se usi il pulsante nel Player)
+  // play/pausa
   const playPauseHandler = (previewUrl, song) => {
     if (isPlaying) {
       if (audio) {
@@ -48,13 +48,13 @@ export const PlayerProvider = ({ children }) => {
       const newAudio = new Audio(previewUrl);
       newAudio.play();
       newAudio.onended = () => {
-        // Qui gestiamo la riproduzione della traccia successiva
+        // passo al brano dopo
         if (playlist && currentIndex < playlist.length - 1) {
           const nextSong = playlist[currentIndex + 1];
           setCurrentIndex((prev) => prev + 1);
           setNowPlaying(nextSong);
         } else {
-          // Se siamo all'ultima traccia, stoppa o riparte da capo
+          // era l'ultimo, mi fermo
           setIsPlaying(false);
           setAudio(null);
         }

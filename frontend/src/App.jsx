@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./index.css";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import HomeIniziale from "./components/HomeIniziale";
@@ -13,7 +13,7 @@ import Home from "./components/Home";
 import Impostazioni from "./components/Impostazioni";
 import Feedback from "./components/Feedback";
 import { Toaster } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -30,6 +30,15 @@ import Chat from "./components/Chat";
 import ChatWrapper from "./components/ChatWrapper";
 import ChatGenerali from "./components/ChatGenerali";
 import NotFound from "./components/NotFound";
+
+// quando cambio pagina torno in cima
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   const dispatch = useDispatch();
@@ -83,9 +92,10 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100vh]">
+    <div className="grain flex min-h-[100dvh] flex-col">
+      <ScrollToTop />
       <Navbar />
-      <main className="flex-grow-1 flex flex-col justify-center">
+      <main className="flex flex-1 flex-col">
         <Routes>
           {!loginSuccess ? (
             <Route path="/" element={<HomeIniziale />} />

@@ -1,14 +1,12 @@
-import { API_URL } from "../config";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 import { getBonders } from "../redux/actions/bonders.js";
-import BondSpinner from "../components/BondSpinner";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "./personalizedComponents/Avatar";
-import { useNavigate } from "react-router-dom";
+import BondSpinner from "./BondSpinner";
+import PageHeader from "./ui/PageHeader.jsx";
+import { profileImage } from "./MatchCard.jsx";
+import { Avatar, AvatarImage, AvatarFallback } from "./personalizedComponents/Avatar";
 
 const Bonders = () => {
   const dispatch = useDispatch();
@@ -18,78 +16,55 @@ const Bonders = () => {
     dispatch(getBonders());
   }, [dispatch]);
 
-  if (bonders === undefined) {
-    return <BondSpinner />;
-  }
+  if (bonders === undefined) return <BondSpinner />;
 
   return (
-    <div className="container mx-auto fade-in">
-      <h1
-        className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-2 mb-3"
-        style={{
-          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }}
-      >
-        I tuoi bonders
-      </h1>
+    <div className="mx-auto w-full max-w-7xl px-4 pt-12 pb-16 md:pt-15">
+      <PageHeader eyebrow="Bonders" title="Le persone" accent="in sintonia con te.">
+        Chi ha accettato il tuo bond, o tu il suo. Scrivigli o guarda cosa ascolta.
+      </PageHeader>
 
-      {bonders && bonders.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bonders?.map((bonder) => (
-            <BonderCard key={bonder.otherUser.id} bonder={bonder.otherUser} />
+      {bonders?.length > 0 ? (
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {bonders.map(({ otherUser: b }) => (
+            <li key={b.id} className="surface relative isolate flex flex-col overflow-hidden p-6">
+              {b.artisti?.[0]?.img && (
+                <div aria-hidden="true" className="ambient pointer-events-none absolute -inset-x-16 -top-32 -z-10 h-80 opacity-50">
+                  <div className="flex h-full scale-110 blur-[60px] saturate-[1.8]">
+                    {b.artisti.slice(0, 3).map((a) => (
+                      <img key={a.id} src={a.img} alt="" className="h-full flex-1 object-cover" />
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center gap-4">
+                <Avatar className="size-16 ring-1 ring-line-strong">
+                  <AvatarImage src={profileImage(b?.profilo?.immagine)} alt="" className="object-cover" />
+                  <AvatarFallback className="bg-accent-soft font-semibold text-accent">{b.nome?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <h2 className="display truncate text-2xl font-bold">{b.nome} {b.cognome}</h2>
+                  <p className="truncate text-sm text-muted">@{b.nomeUtente}</p>
+                </div>
+              </div>
+              {b.profilo?.bio && <p className="mt-4 line-clamp-2 text-sm text-muted">{b.profilo.bio}</p>}
+              <div className="flex-1" />
+              <div className="mt-6 flex gap-2">
+                <Link to={`/chat/${b.id}`} className="btn btn-primary flex-1">
+                  <MessageCircle size={17} /> Scrivi
+                </Link>
+                <Link to={`/dettagli/${b.id}`} className="btn btn-ghost flex-1">Profilo</Link>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
-        <p className="text-center text-lg font-semibold">
-          Non hai ancora nessun bonder
-        </p>
-      )}
-    </div>
-  );
-};
-
-const BonderCard = ({ bonder }) => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="bg-gradient-to-br from-[#1e0a23] to-[#5d1093] rounded-xl p-6 shadow-lg border border-[#7112b7]/30 hover:border-[#ad42ff] transition-all">
-      <div className="flex items-center space-x-4 mb-4">
-        <Avatar className="h-16 w-16">
-          <AvatarImage
-            src={
-              bonder?.profilo?.immagine?.startsWith("http")
-                ? bonder?.profilo?.immagine
-                : `${API_URL}${bonder?.profilo.immagine}`
-            }
-          />
-          <AvatarFallback className="bg-[#ad42ff]">
-            {bonder.nome?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h3 className="text-xl font-semibold ">{bonder?.nome}</h3>
-          <p className="text-[#d489e9]">{bonder.profilo?.bio}</p>
+        <div className="surface mt-12 px-6 py-16 text-center">
+          <p className="display text-3xl font-bold">Nessun bonder, per ora.</p>
+          <p className="mt-2 text-muted">Manda una richiesta a qualcuno dalle connessioni.</p>
+          <Link to="/connessioni" className="btn btn-primary mt-8">Trova connessioni</Link>
         </div>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <button
-          variant="gradient"
-          onClick={() => navigate(`/chat/${bonder?.id}`)}
-          className="cursor-pointer"
-        >
-          Messaggio
-        </button>
-        <button
-          variant="outline"
-          className="cursor-pointer"
-          onClick={() => navigate(`/dettagli/${bonder.id}`)}
-        >
-          Dettagli
-        </button>
-      </div>
+      )}
     </div>
   );
 };

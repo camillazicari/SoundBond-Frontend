@@ -190,29 +190,26 @@ const ImpGeneri = () => {
     }
   };
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg">
+    <Card className="surface p-6 md:p-8">
       {generi.length > 0 ? (
         <>
           {" "}
           <div className="flex items-center justify-between mb-4">
-            <h3
-              className="text-lg font-semibold mb-3"
-              style={{ color: "#c476ff" }}
-            >
+            <h3 className="display text-3xl font-bold">
               I tuoi generi preferiti
             </h3>
             <Dialog>
               <DialogTrigger asChild>
-                <button className="bg-[#ad42ff] hover:bg-[#9b1fff] py-1.5 px-4 rounded-md flex items-center transition-colors">
-                  <Plus size={18} className="mr-2" /> Aggiungi
+                <button className="btn btn-primary">
+                  <Plus size={18} /> Aggiungi
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
+              <DialogContent className="glass rounded-[var(--radius-card)] border-line">
                 <DialogHeader>
-                  <DialogTitle className="text-[#f7ebfc]">
+                  <DialogTitle className="text-fg">
                     Aggiungi un genere preferito
                   </DialogTitle>
-                  <DialogDescription className="text-[#efd6f8]">
+                  <DialogDescription className="text-fg">
                     Seleziona il genere musicale che vuoi aggiungere.
                   </DialogDescription>
                 </DialogHeader>
@@ -226,7 +223,7 @@ const ImpGeneri = () => {
                         .map((genere) => (
                           <Badge
                             key={genere}
-                            className="px-3 py-1 bg-[#5d1093] hover:bg-[#9b1fff] flex items-center gap-2 cursor-pointer"
+                            className="chip px-3.5 py-1.5 text-sm text-fg transition-colors hover:border-accent/40 hover:bg-accent-soft cursor-pointer"
                             onClick={() => {
                               addGenre(genere);
                             }}
@@ -245,7 +242,7 @@ const ImpGeneri = () => {
               generi.map((genre) => (
                 <Badge
                   key={genre.id}
-                  className="px-3 py-1 bg-[#5d1093] hover:bg-[#9b1fff] flex items-center gap-2"
+                  className="chip px-3.5 py-1.5 text-sm text-fg transition-colors hover:border-accent/40 hover:bg-accent-soft"
                 >
                   {genre.nome}
                   <button
@@ -253,14 +250,14 @@ const ImpGeneri = () => {
                       e.preventDefault();
                       removeGenre(genre.id);
                     }}
-                    className="ml-1 hover:text-[#c476ff] transition-colors"
+                    className="ml-1 hover:text-accent transition-colors"
                   >
                     <X size={14} />
                   </button>
                 </Badge>
               ))
             ) : (
-              <p className="text-[#efd6f8] italic w-full text-center py-4">
+              <p className="italic text-muted w-full text-center py-4">
                 Non hai ancora aggiunto generi preferiti
               </p>
             )}

@@ -192,12 +192,12 @@ const ImpArtisti = () => {
     }
   };
   return (
-    <Card className="p-6 backdrop-blur-lg bg-[#3f006f]/30 border border-[#9b1fff]/50 rounded-xl shadow-lg">
+    <Card className="surface p-6 md:p-8">
       {artisti.length > 0 ? (
         <>
           {" "}
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#c476ff]">
+            <h3 className="display text-3xl font-bold">
               I tuoi artisti preferiti
             </h3>
             <Dialog
@@ -209,35 +209,35 @@ const ImpArtisti = () => {
               }}
             >
               <DialogTrigger asChild>
-                <button className="bg-[#ad42ff] hover:bg-[#9b1fff] transition-colors py-1.5 px-4 rounded-md flex items-center">
-                  <Plus size={18} className="mr-2" /> Aggiungi
+                <button className="btn btn-primary">
+                  <Plus size={18} /> Aggiungi
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-[#3f006f]/30 border border-[#7112b7]/50">
+              <DialogContent className="glass rounded-[var(--radius-card)] border-line">
                 <DialogHeader>
-                  <DialogTitle className="text-[#f7ebfc]">
+                  <DialogTitle className="text-fg">
                     Aggiungi un artista preferito
                   </DialogTitle>
-                  <DialogDescription className="text-[#efd6f8]">
+                  <DialogDescription className="text-fg">
                     Inserisci il nome dell'artista che vuoi aggiungere.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-2">
-                  <label className="text-sm text-[#c476ff]">Nome artista</label>
+                  <label className="text-sm text-accent">Nome artista</label>
                   <Input
                     onChange={handleSearchChange}
                     onSubmit={() => {}}
                     value={search}
-                    className="bg-[#7112b7]/30 border-[#3f006f] focus:border-[#ad42ff]"
+                    className="h-11 rounded-xl border-line-strong bg-white/[0.03] focus:border-accent/70"
                   />
                   <DialogClose>
                     {searchResults.length > 0 && (
-                      <ul className="bg-[#170228]  shadow-lg rounded-lg mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
+                      <ul className="glass rounded-2xl p-1.5 mt-2 w-[99%] max-h-60 overflow-y-auto absolute left-0.5 top-38 z-50">
                         {" "}
                         {uniqueArtists.map((artist, index) => (
                           <li
                             key={index}
-                            className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
+                            className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/[0.07]"
                             onClick={() => handleSelectArtist(artist)}
                           >
                             {artist.image && (
@@ -263,9 +263,9 @@ const ImpArtisti = () => {
                 {artisti.map((artist) => (
                   <div
                     key={artist.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-[#3f006f]/30 border border-[#7112b7]/50 hover:bg-[#7112B7]/30 transition-colors"
+                    className="flex items-center justify-between rounded-xl border border-line bg-white/[0.02] p-3 transition-colors hover:bg-white/[0.05]"
                   >
-                    <span className="font-medium text-[#fbf5fe] flex items-center">
+                    <span className="font-medium text-fg flex items-center">
                       {artist.img ? (
                         <img
                           src={artist.img}
@@ -281,7 +281,7 @@ const ImpArtisti = () => {
                       onClick={() => handleRemoveArtist(artist)}
                       size="icon"
                       variant="ghost"
-                      className="hover:bg-[#9b1fff]/20 text-[#f7ebfc]"
+                      className="rounded-xl data-[hover=true]:bg-white/[0.06]"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -290,7 +290,7 @@ const ImpArtisti = () => {
               </div>
             ) : (
               <div className="h-full flex items-center justify-center">
-                <p className="text-[#efd6f8] italic">
+                <p className="italic text-muted">
                   Non hai ancora aggiunto artisti preferiti
                 </p>
               </div>

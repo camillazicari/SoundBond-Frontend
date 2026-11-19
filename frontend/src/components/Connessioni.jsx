@@ -1,16 +1,12 @@
-import { API_URL, DEEZER_PROXY_URL } from "../config";
+import { DEEZER_PROXY_URL } from "../config";
 import { useEffect, useMemo, useState } from "react";
 import { useGetUserMatches } from "./data/matchMaking.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getUtenteLoggato, getUtenti } from "../redux/actions/account.js";
-import { Card } from "./personalizedComponents/Card.jsx";
 import BondSpinner from "./BondSpinner.jsx";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "./personalizedComponents/Avatar.jsx";
-import Badge from "./personalizedComponents/Badge.jsx";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Search, UserPlus, Users } from "lucide-react";
+import MatchCard from "./MatchCard.jsx";
 import { usePlayer } from "../context/PlayerContext.jsx";
 import { getBonders } from "../redux/actions/bonders.js";
 import {
@@ -22,6 +18,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const Connessioni = () => {
+  const reduceMotion = useReducedMotion();
   const user = useSelector((state) => state.account.userLogged);
   const bonders = useSelector((state) => state.bonders.bonders);
   const richiesteInviate = useSelector(
@@ -141,7 +138,7 @@ const Connessioni = () => {
         const username = match.user?.profilo?.nomeUtente?.toLowerCase();
         const searchLower = search?.toLowerCase();
 
-        // Controllo se il nome, cognome, nome utente, generi o artisti corrispondono al testo di ricerca
+        // cerco per nome, username, generi o artisti
         const genresMatch = match.user?.generi?.some((genere) =>
           genere.nome.toLowerCase().includes(searchLower)
         );
@@ -149,7 +146,6 @@ const Connessioni = () => {
           artista.nome?.toLowerCase().includes(searchLower)
         );
 
-        // Verifica se nome, cognome, nome utente, generi o artisti corrispondono alla ricerca
         return (
           userName?.includes(searchLower) ||
           username?.includes(searchLower) ||
@@ -183,367 +179,186 @@ const Connessioni = () => {
     setHoverStates((prev) => ({ ...prev, [userId]: false }));
   };
 
+  const filters = [
+    { id: "all", label: "Tutti" },
+    { id: "high", label: "Alta, 70%+" },
+    { id: "medium", label: "Media, 40-69%" },
+    { id: "low", label: "Bassa, sotto 40%" },
+  ];
+
+  const requestAction = (match) => {
+    const id = match.user?.id;
+    if (checkIfRequestSent(id)) {
+      return (
+        <button
+          type="button"
+          onMouseEnter={() => handleMouseEnter(id)}
+          onMouseLeave={() => handleMouseLeave(id)}
+          onClick={() => dispatch(deleteRichiesta(id))}
+          className="btn btn-ghost flex-1 hover:border-red-400/40 hover:text-red-300"
+        >
+          {hoverStates[id] ? "Annulla richiesta" : "Richiesta inviata"}
+        </button>
+      );
+    }
+    if (richiesteRicevute?.some((req) => req.sender.id === id)) {
+      return (
+        <button
+          type="button"
+          onClick={() => navigate(`/chat/${id}`)}
+          className="btn btn-ghost flex-1"
+        >
+          Ti ha scritto: rispondi
+        </button>
+      );
+    }
+    return (
+      <button
+        type="button"
+        onClick={() => dispatch(postRichiesta(id))}
+        className="btn btn-primary flex-1"
+      >
+        <UserPlus size={16} />
+        Connetti
+      </button>
+    );
+  };
+
+  const visible = filteredMatches.slice(0, page * itemsPerPage);
+
   return (
-    <div className="fade-in container mx-auto grid grid-cols-1 gap-y-6">
-      <Card className="px-6 py-10 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg grid grid-cols-1 gap-5 items-center">
-        <div>
-          {user && (
-            <h2 className="font-extrabold text-xl sm:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl textGradient">
-              Trova le Tue Connessioni Musicali
-            </h2>
+    <div className="mx-auto w-full max-w-6xl px-4 pt-12 pb-6 md:pt-15">
+      <header className="max-w-2xl">
+        <h1 className="display text-6xl font-bold md:text-8xl">
+          Connessioni
+        </h1>
+        <p className="mt-3 text-muted">
+          Le persone ordinate per affinità con i tuoi gusti. Generi e artisti
+          in comune sono evidenziati.
+        </p>
+      </header>
+
+      <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div
+          role="tablist"
+          aria-label="Filtra per affinità"
+          className="flex gap-1 overflow-x-auto rounded-full border border-line bg-surface p-1"
+        >
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              role="tab"
+              aria-selected={filter === f.id}
+              onClick={() => {
+                setFilter(f.id);
+                setPage(1);
+              }}
+              className={`relative shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                filter === f.id ? "text-accent-ink" : "text-muted hover:text-fg"
+              }`}
+            >
+              {filter === f.id && (
+                <motion.span
+                  layoutId="filter-pill"
+                  transition={
+                    reduceMotion
+                      ? { duration: 0 }
+                      : { type: "spring", bounce: 0, duration: 0.35 }
+                  }
+                  className="absolute inset-0 rounded-full bg-accent"
+                />
+              )}
+              <span className="relative">{f.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <label className="relative block md:w-72">
+          <span className="sr-only">Cerca per nome, genere o artista</span>
+          <Search
+            size={16}
+            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-subtle"
+          />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Nome, genere o artista"
+            className="h-11 w-full rounded-full border border-line bg-surface pr-4 pl-10 text-sm text-fg placeholder:text-subtle focus:border-accent/60"
+          />
+        </label>
+      </div>
+
+      {user?.nome && visible.length > 0 ? (
+        <>
+          <motion.ul layout className="mt-8 grid gap-4 lg:grid-cols-2">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visible.map((match, i) => (
+                <motion.li
+                  key={match.user?.id}
+                  layout={!reduceMotion}
+                  initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                  transition={{
+                    type: "spring",
+                    bounce: 0,
+                    duration: 0.45,
+                    delay: reduceMotion ? 0 : Math.min(i, 6) * 0.04,
+                  }}
+                >
+                  <MatchCard
+                    match={match}
+                    onSongClick={handleSongClick}
+                    playingTitle={isPlaying ? nowPlaying?.title : undefined}
+                    actions={
+                      <>
+                        {requestAction(match)}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/dettagli/${match.user?.id}`)}
+                          className="btn btn-ghost"
+                        >
+                          Profilo
+                        </button>
+                      </>
+                    }
+                  />
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </motion.ul>
+          {page * itemsPerPage < filteredMatches.length && (
+            <div className="mt-8 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setPage((p) => p + 1)}
+                className="btn btn-ghost"
+              >
+                Mostra altri
+              </button>
+            </div>
           )}
-          <p className="text-sm lg:text-base 2xl:text-2xl">
-            Scopri persone che condividono i tuoi gusti musicali, scambia
-            consigli musicali ed espandi i tuoi orizzonti sonori.
+        </>
+      ) : (
+        <div className="surface mt-8 flex flex-col items-center px-6 py-16 text-center">
+          <span className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent">
+            <Users size={20} />
+          </span>
+          <p className="mt-4 font-semibold">Nessuna persona in questa fascia</p>
+          <p className="mt-1 max-w-sm text-sm text-muted">
+            Prova un altro filtro o aggiungi qualche artista al tuo profilo per
+            ampliare i risultati.
           </p>
-        </div>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-5">
           <button
-            onClick={() => setFilter("all")}
-            className={`text-sm sm:text-base 2xl:text-2xl rounded-full py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold ${
-              filter === "all"
-                ? "buttonGradient2"
-                : "bg-purple-500/10 hover:bg-purple-500/20"
-            }`}
+            type="button"
+            onClick={() => navigate("/impostazioni")}
+            className="btn btn-ghost mt-6"
           >
-            Tutte le connessioni
+            Modifica i tuoi gusti
           </button>
-          <button
-            onClick={() => setFilter("high")}
-            className={`text-sm sm:text-base rounded-full 2xl:text-2xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold ${
-              filter === "high"
-                ? "buttonGradient2"
-                : "bg-purple-500/10 hover:bg-purple-500/20"
-            }`}
-          >
-            Match alto (70% +)
-          </button>
-          <button
-            onClick={() => setFilter("medium")}
-            className={`text-sm sm:text-base rounded-full 2xl:text-2xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold ${
-              filter === "medium"
-                ? "buttonGradient2"
-                : "bg-purple-500/10 hover:bg-purple-500/20"
-            }`}
-          >
-            Match medio (40-70%)
-          </button>
-          <button
-            onClick={() => setFilter("low")}
-            className={`text-sm sm:text-base rounded-full 2xl:text-2xl py-3 md:py-2 px-4 lg:px-5 lg:py-4 xl:px-7 xl:py-5 font-semibold ${
-              filter === "low"
-                ? "buttonGradient2"
-                : "bg-purple-500/10 hover:bg-purple-500/20"
-            }`}
-          >
-            Match basso (&lt;40%)
-          </button>
-        </div>
-      </Card>
-      {filteredMatches.length > 0 && (
-        <div id="search-container" className="my-5">
-          <div className="nebula"></div>
-          <div className="starfield"></div>
-          <div className="cosmic-dust"></div>
-          <div className="cosmic-dust"></div>
-          <div className="cosmic-dust"></div>
-
-          <div className="stardust"></div>
-
-          <div className="cosmic-ring"></div>
-
-          <div id="mainCont">
-            <input
-              className="inputSearch"
-              name="text"
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cerca utenti..."
-            />
-            <div id="input-mask"></div>
-            <div id="cosmic-glow"></div>
-            <div className="wormhole-border"></div>
-            <div id="wormhole-icon">
-              <svg
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2"
-                stroke="#0C0512"
-                fill="none"
-                height="24"
-                width="24"
-                viewBox="0 0 24 24"
-              >
-                <circle r="10" cy="12" cx="12"></circle>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                <path d="M2 12h20"></path>
-              </svg>
-            </div>
-            <div id="search-icon">
-              <svg
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2"
-                stroke="url(#cosmic-search)"
-                fill="none"
-                height="24"
-                width="24"
-                viewBox="0 0 24 24"
-              >
-                <circle r="8" cy="11" cx="11"></circle>
-                <line y2="16.65" x2="16.65" y1="21" x1="21"></line>
-                <defs>
-                  <linearGradient
-                    gradientTransform="rotate(45)"
-                    id="cosmic-search"
-                  >
-                    <stop stopColor="#d06bd9" offset="0%"></stop>
-                    <stop stopColor="#ad42ff" offset="100%"></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-          </div>
         </div>
       )}
-
-      <div>
-        {filteredMatches && user?.nome && filteredMatches.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-6">
-            {filteredMatches.slice(0, page * itemsPerPage).map((match) => (
-              <Card
-                key={match.user?.id}
-                className="py-3 backdrop-blur-lg mx-3 xxl:mx-0 bg-[#3f006f]/30 border border-[#7112b7]/50 rounded-xl shadow-lg gap-5 items-center"
-              >
-                <div className="flex justify-between items-center p-4">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="w-25 h-25 md:w-30 md:h-30 lg:w-25 lg:h-25 xl:h-25 xl:w-25 2xl:w-30 2xl:h-30 transition-all duration-300 group-hover:border-[#7112b7]">
-                      <AvatarImage
-                        src={
-                          match?.user?.profilo?.immagine?.startsWith("http")
-                            ? match?.user?.profilo?.immagine
-                            : `${API_URL}${match?.user?.profilo?.immagine}`
-                        }
-                        alt={match.user?.profilo?.nomeUtente}
-                      />
-                      <AvatarFallback className="bg-[#ad42ff] text-2xl">
-                        {match.user?.profilo?.nomeUtente
-                          ?.slice(0, 2)
-                          .toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-lg md:text-xl xl:text-xl 2xl:text-2xl font-semibold">
-                        {match.user?.nome.toUpperCase()}{" "}
-                        {match.user?.cognome.toUpperCase()}
-                      </p>
-                      <p className="text-base md:text-lg xl:text-lg 2xl:text-xl font-semibold">
-                        @{match.user?.nomeUtente}
-                      </p>
-                      <p className="text-sm md:text-base lg:text-base xl:text-base 2xl:text-lg bioColorata">
-                        {match.user?.profilo?.bio}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-[#ad42ff] rounded-full h-15 w-15 flex justify-center items-center">
-                    <p className=" font-bold">{match.compatibility?.score}%</p>
-                  </div>
-                </div>
-
-                <div
-                  className="relative z-10 flex flex-col"
-                  ata-scroll-section="false"
-                >
-                  <div className="grid grid-cols-1 place-items-center">
-                    <p className="text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold bioColorata">
-                      Artisti:
-                    </p>
-                    <div className="flex justify-center items-center">
-                      {match.user?.artisti &&
-                        match.user.artisti.map((artista) => (
-                          <div
-                            key={artista.id}
-                            className="flex flex-col items-center justify-center mx-2 w-18 sm:w-20 md:w-23 lg:w-20 xl:w-23 2xl:w-28"
-                          >
-                            <Avatar
-                              className={`w-18 h-18 sm:w-20 sm:h-20 md:w-23 md:h-23 lg:w-20 lg:h-20 xl:w-23 xl:h-23 2xl:w-28 2xl:h-28 object-cover ${
-                                match.compatibility.details.commonArtists?.includes(
-                                  artista.nome?.toLowerCase()
-                                )
-                                  ? "border-[#ad42ff] border-3"
-                                  : ""
-                              }`}
-                            >
-                              <AvatarImage
-                                src={artista.img}
-                                alt={artista.nome}
-                              />
-                              <AvatarFallback className="bg-[#ad42ff] text-2xl">
-                                {artista.nome?.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <p className="text-[11px] sm:text-[13px] md:text-[15px] 2xl:text-lg 2xl:leading-tight text-center mt-1 h-10 sm:h-11 md:h-12 2xl:h-17 overflow-auto flex items-center justify-center">
-                              {artista.nome}
-                            </p>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 place-items-center my-5">
-                    <p className="text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl font-semibold bioColorata">
-                      Brani:
-                    </p>
-                    <div className="w-[90%] max-h-40 sm:max-h-50 lg:max-h-30 overflow-auto">
-                      {match.user?.brani &&
-                        match.user?.brani?.map((brano) => {
-                          return (
-                            <div
-                              key={brano.id}
-                              className="py-1 shadow flex items-center justify-between rounded-lg"
-                            >
-                              <div className="flex items-center w-[80%]">
-                                <img
-                                  src={brano?.img}
-                                  alt="cover canzone"
-                                  className="rounded-full h-10 w-10 lg:h-12.5 lg:w-12.5 mr-3 object-cover"
-                                />
-                                <div>
-                                  <p className="font-semibold w-[100%] xl:text-lg 2xl:text-lg">
-                                    {brano?.titolo}
-                                  </p>
-                                  <p className="text-sm text-gray-600 xl:text-base">
-                                    {brano?.artista}
-                                  </p>
-                                </div>
-                              </div>
-                              <button
-                                className="cursor-pointer"
-                                onClick={() =>
-                                  handleSongClick(brano?.titolo, brano?.artista)
-                                }
-                              >
-                                {isPlaying &&
-                                nowPlaying?.title === brano.titolo ? (
-                                  // Icona Pause se il brano è in riproduzione
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="40"
-                                    height="40"
-                                    fill="currentColor"
-                                    className="bi bi-pause-circle-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-                                  </svg>
-                                ) : (
-                                  // Icona Play se il brano non è in riproduzione
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="40"
-                                    height="40"
-                                    fill="#ad42ff"
-                                    className="bi bi-play-circle-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
-                                  </svg>
-                                )}
-                              </button>
-                            </div>
-                          );
-                        })}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 place-items-center">
-                    <p className="mt-4 text-sm sm:text-base md:text-lg xl:text-lg 2xl:text-xl mb-2 font-semibold bioColorata">
-                      Generi:
-                    </p>
-                    <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-2 w-[80%] h-12">
-                      {match.user?.generi &&
-                        match.user?.generi?.map((genere) => {
-                          return (
-                            <Badge
-                              key={genere.id}
-                              className={`rounded-xl text-xs sm:text-sm xl:text-base 2xl:text-lg lg:rounded-full ${
-                                match.compatibility.details.commonGenres?.includes(
-                                  genere.nome?.toLowerCase()
-                                )
-                                  ? "badginiMatch"
-                                  : "badgini"
-                              }`}
-                            >
-                              {genere.nome}
-                            </Badge>
-                          );
-                        })}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-evenly pt-10 pb-8">
-                  {checkIfRequestSent(match.user?.id) ? (
-                    <button
-                      onMouseEnter={() => handleMouseEnter(match.user?.id)}
-                      onMouseLeave={() => handleMouseLeave(match.user?.id)}
-                      className="bg-[#7112b7] px-9 py-2 rounded-xl hover:bg-red-700 transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
-                      onClick={() => dispatch(deleteRichiesta(match.user?.id))}
-                    >
-                      {hoverStates[match.user?.id]
-                        ? "Annulla richiesta"
-                        : "Richiesta inviata"}
-                    </button>
-                  ) : richiesteRicevute?.some(
-                      (req) => req.sender.id === match.user?.id
-                    ) ? (
-                    <button
-                      className="bg-[#7112b7] px-9 py-2 rounded-xl transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl"
-                      disabled={true}
-                    >
-                      Da accettare
-                    </button>
-                  ) : (
-                    <button
-                      className="bg-[#ad42ff] px-9 py-2 rounded-xl hover:bg-[#7112b7] transition-colors sm:text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
-                      onClick={() => {
-                        dispatch(postRichiesta(match.user?.id));
-                      }}
-                    >
-                      Connetti
-                    </button>
-                  )}
-                  <button
-                    className="flex items-center justify-center cursor-pointer hover:bg-[#7112b7]/30 transition-all px-9 rounded-xl"
-                    onClick={() => navigate(`/dettagli/${match.user?.id}`)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                      className="me-2 bi bi-info-circle"
-                    >
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                    </svg>
-                    info
-                  </button>
-                </div>
-              </Card>
-            ))}
-            {page * itemsPerPage < filteredMatches.length && (
-              <button onClick={() => setPage((p) => p + 1)}>
-                Carica altro
-              </button>
-            )}
-          </div>
-        ) : (
-          <p className="text-center text-lg font-extrabold">
-            Nessun match disponibile.
-          </p>
-        )}
-      </div>
     </div>
   );
 };

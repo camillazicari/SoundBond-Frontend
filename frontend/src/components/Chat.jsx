@@ -5,6 +5,9 @@ import { HubConnectionState } from "@microsoft/signalr";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BondSpinner from "./BondSpinner.jsx";
+import { CheckCheck, ChevronLeft, Ellipsis, SendHorizontal, Trash2 } from "lucide-react";
+import { profileImage } from "./MatchCard.jsx";
+import { Avatar, AvatarFallback, AvatarImage } from "./personalizedComponents/Avatar.jsx";
 import {
   Dropdown,
   DropdownItem,
@@ -12,6 +15,7 @@ import {
   DropdownTrigger,
 } from "@heroui/react";
 import { getConversazioni } from "../redux/actions/chat.js";
+import { getUtenti } from "../redux/actions/account.js";
 
 const API_BASE_URL = `${API_URL}/api`;
 
@@ -32,6 +36,10 @@ const Chat = ({ otherUser }) => {
   const currentUserId = userLogged?.id;
   const users = useSelector((state) => state.account.users);
   const ricevente = users.find((u) => u.id === otherUser);
+
+  useEffect(() => {
+    if (currentUserId && !ricevente) dispatch(getUtenti());
+  }, [currentUserId, ricevente, dispatch]);
 
   const normalizeTimestamp = (timestamp) => {
     if (!timestamp) return "";
@@ -216,194 +224,131 @@ const Chat = ({ otherUser }) => {
       const showDate = dateStr !== lastDate;
       if (showDate) lastDate = dateStr;
 
+      const next = messages[i + 1];
+      const lastOfGroup = !next || next.senderId !== msg.senderId || formatDate(next.timestamp) !== dateStr;
+
       return (
-        <div key={`msg-${i}-${msg.timestamp}`}>
+        <li key={`msg-${i}-${msg.timestamp}`} className={lastOfGroup ? "mb-3" : "mb-1"}>
           {showDate && (
-            <div className="flex justify-center text-sm mt-2 mb-4">
-              <p className="badgini px-3 py-0.5 rounded-2xl flex items-center justify-center text-gray-400">
-                {dateStr}
-              </p>
-            </div>
+            <p className="my-6 text-center font-mono text-xs uppercase tracking-[0.16em] text-subtle">{dateStr}</p>
           )}
           <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-70 rounded-2xl py-2 px-3 ${
+              className={`max-w-[min(80%,28rem)] rounded-3xl px-4 py-2.5 ${
                 isOwn
-                  ? "bg-[#9b1fff] rounded-br-none"
-                  : "bg-[#5d1093] rounded-bl-none"
+                  ? `bg-accent text-accent-ink ${lastOfGroup ? "rounded-br-md" : ""}`
+                  : `bg-surface-3 text-fg ${lastOfGroup ? "rounded-bl-md" : ""}`
               }`}
             >
               <p className="break-words">{msg.content}</p>
-              <div
-                className={`flex items-center ${
-                  isOwn ? "justify-between" : "justify-end"
-                }`}
-              >
+              <p className={`mt-0.5 flex items-center justify-end gap-1 text-[11px] ${isOwn ? "text-accent-ink/60" : "text-subtle"}`}>
+                {time}
                 {isOwn && (
-                  <span
-                    className={`${
-                      msg.letto ? "text-blue-500 font-bold" : "text-gray-300"
-                    }`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="currentColor"
-                      className="bi bi-check-all"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.091-1.028L9.477 9.417l-.485-.486z" />
-                    </svg>
-                  </span>
+                  <CheckCheck size={14} aria-label={msg.letto ? "Letto" : "Inviato"} className={msg.letto ? "text-accent-ink" : ""} />
                 )}
-                <p
-                  className={`text-[10px] text-gray-300 ms-5 ${
-                    !isOwn && "pt-1"
-                  }`}
-                >
-                  {time}
-                </p>
-              </div>
+              </p>
             </div>
           </div>
-        </div>
+        </li>
       );
     });
   }, [messages, currentUserId, formatDate, formatTime]);
 
   return (
-    <>
-      <div className="flex items-center justify-between px-4 py-2 fixed top-0 w-[100%] fade-in bg-[#9b1fff]">
-        <div className="flex items-center">
-          <svg
-            onClick={() => navigate("/generali")}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-chevron-left-icon lucide-chevron-left cursor-pointer"
-          >
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-          <img
-            src={
-              ricevente?.profilo?.immagine?.startsWith("http")
-                ? ricevente?.profilo?.immagine
-                : `${API_URL}${ricevente?.profilo?.immagine}`
-            }
-            className="w-10 h-10 md:w-15 md:h-15 object-cover rounded-full me-4"
-            alt=""
-          />
-          <h1 className="text-center text-base md:text-xl">
+    <div className="mx-auto flex h-[calc(100dvh-5.5rem)] w-full max-w-4xl flex-col px-4 pt-4 pb-4 md:h-[calc(100dvh-6rem)]">
+      <div className="surface flex min-h-0 flex-1 flex-col overflow-hidden">
+      <header className="flex items-center gap-3 border-b border-line p-3">
+        <button
+          type="button"
+          onClick={() => navigate("/generali")}
+          aria-label="Torna alle chat"
+          className="grid size-10 cursor-pointer place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.08] hover:text-fg"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <Avatar className="size-10 ring-1 ring-line-strong">
+          <AvatarImage src={profileImage(ricevente?.profilo?.immagine)} alt="" className="object-cover" />
+          <AvatarFallback className="bg-accent-soft text-sm font-semibold text-accent">
+            {ricevente?.nome?.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate font-semibold">
             {ricevente?.nome} {ricevente?.cognome}
           </h1>
+          <p className="flex items-center gap-1.5 text-xs text-muted">
+            <span className={`size-1.5 rounded-full ${connectionEstablished ? "bg-emerald-400" : "bg-subtle"}`} />
+            {connectionEstablished ? "Connesso" : "Connessione…"}
+          </p>
         </div>
-        <Dropdown>
+        <Dropdown placement="bottom-end">
           <DropdownTrigger>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-ellipsis-icon lucide-ellipsis cursor-pointer"
+            <button
+              type="button"
+              aria-label="Opzioni della chat"
+              className="grid size-10 cursor-pointer place-items-center rounded-full text-muted transition-colors hover:bg-white/[0.08] hover:text-fg"
             >
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="19" cy="12" r="1" />
-              <circle cx="5" cy="12" r="1" />
-            </svg>
+              <Ellipsis size={20} />
+            </button>
           </DropdownTrigger>
-          <DropdownMenu
-            className="flex justify-center p-2 border-[#ad42ff] border-[0.5px] rounded-lg"
-            style={{
-              backgroundColor: "rgba(12, 5, 18, 0.5)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
+          <DropdownMenu aria-label="Opzioni della chat" className="glass rounded-2xl p-1.5">
             <DropdownItem
-              className="text-sm text-start py-2 px-12 rounded-sm hover:bg-red-500"
               key="delete-chat"
-              color="danger"
-              textValue="Delete Chat"
+              textValue="Elimina chat"
+              className="rounded-xl px-3 py-2 text-rose-300 data-[hover=true]:bg-rose-400/10"
+              startContent={<Trash2 size={16} />}
+              onPress={handleDeleteChat}
             >
-              <button
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={handleDeleteChat}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  className="bi bi-trash"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                </svg>
-                <p>Elimina chat</p>
-              </button>
+              Elimina chat
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
+      </header>
+
+      <div className="flex-1 overflow-y-auto">
+        {isLoading ? (
+          <BondSpinner label="Caricamento dei messaggi" />
+        ) : (
+          <ol className="px-4 pt-2 pb-4 md:px-6" aria-live="polite">
+            {messages.length === 0 && (
+              <li className="py-20 text-center">
+                <p className="display text-3xl font-bold">Rompi il ghiaccio.</p>
+                <p className="mt-2 text-muted">Chiedi a {ricevente?.nome ?? "questa persona"} qual è il brano che ascolta in loop.</p>
+              </li>
+            )}
+            {renderMessages()}
+            <li ref={messagesEndRef} aria-hidden="true" />
+          </ol>
+        )}
       </div>
 
-      {isLoading ? (
-        <BondSpinner />
-      ) : (
-        <div className="messages-container h-[80vh] overflow-y-auto fixed top-20 w-[100%] px-4 space-y-2 fade-in">
-          {renderMessages()}
-          <div ref={messagesEndRef} />
-        </div>
-      )}
-
-      <div className="input-container flex p-4 fixed bottom-0 w-[100%] bg-transparent z-10 fade-in">
-        <div className="messageBox mx-auto bg-[#9b1fff]">
-          <input
-            required
-            placeholder="Scrivi un messaggio..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            type="text"
-            id="messageInput"
-          />
-          <button
-            id="sendButton"
-            onClick={sendMessage}
-            disabled={!connectionEstablished || input.trim() === ""}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 664 663"
-            >
-              <path
-                fill="none"
-                d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-              />
-              <path
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="33.67"
-                stroke="#6c6c6c"
-                d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-              />
-            </svg>
-          </button>
-        </div>
+      <form
+        className="m-3 flex items-center gap-2 rounded-full border border-line-strong bg-white/[0.03] p-1.5 pl-5 focus-within:border-accent/60"
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+      >
+        <label htmlFor="messageInput" className="sr-only">Messaggio</label>
+        <input
+          id="messageInput"
+          autoComplete="off"
+          placeholder="Scrivi un messaggio"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="h-11 min-w-0 flex-1 bg-transparent text-fg outline-none placeholder:text-subtle"
+        />
+        <button
+          type="submit"
+          aria-label="Invia"
+          disabled={!connectionEstablished || input.trim() === ""}
+          className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-accent text-accent-ink transition-[transform,opacity] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <SendHorizontal size={18} />
+        </button>
+      </form>
       </div>
-    </>
+    </div>
   );
 };
 

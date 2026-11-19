@@ -4,6 +4,10 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BondSpinner from "./BondSpinner.jsx";
+import PageHeader from "./ui/PageHeader.jsx";
+import { MessageCircle, Plus } from "lucide-react";
+import { profileImage } from "./MatchCard.jsx";
+import { Avatar, AvatarFallback, AvatarImage } from "./personalizedComponents/Avatar.jsx";
 import {
   Dialog,
   DialogContent,
@@ -101,213 +105,108 @@ const ChatGenerali = () => {
     return () => clearInterval(intervalId);
   }, [fetchConversazioni]);
 
-  return !isLoading ? (
-    <div className="container mx-auto fade-in">
-      <h1
-        className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter text-center mt-1 mb-1"
-        style={{
-          backgroundImage: "linear-gradient(to right, #daacff, #9b1fff)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }}
-      >
-        Le tue chat
-      </h1>
-      <p className="text-center mb-2 text-base lg:text-lg leading-4">
-        Connettiti con i tuoi bonders. Chatta, condividi playlist e scopri nuova
-        musica.
-      </p>
-      <div className="my-8 min-h-76 overflow-auto">
-        {conversazioni.length > 0 && (
-          <Dialog>
-            <div className="flex justify-end">
-              <DialogTrigger asChild>
-                <button className="rounded-full py-3 px-3 me-2 font-semibold buttonGradient mb-4 cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-plus-icon lucide-plus"
+  const NewChat = ({ people, children }) => (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="glass gap-0 rounded-[var(--radius-card)] border-line p-0">
+        <DialogHeader className="border-b border-line p-5 text-left">
+          <DialogTitle className="display text-2xl font-bold">Nuova chat</DialogTitle>
+          <DialogDescription className="text-sm text-muted">Scegli un bonder con cui iniziare a scrivere.</DialogDescription>
+        </DialogHeader>
+        {people.length > 0 ? (
+          <ul className="max-h-80 overflow-y-auto p-2">
+            {people.map((bonder) => (
+              <li key={bonder?.id}>
+                <DialogClose asChild>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/chat/${bonder?.otherUser?.id}`)}
+                    className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-white/[0.05]"
                   >
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                  </svg>
-                </button>
-              </DialogTrigger>
-            </div>
-
-            <DialogContent className="bg-[#170228] border border-[#7112b7]/50">
-              <DialogHeader>
-                <DialogTitle className="text-[#f7ebfc]">Bonders</DialogTitle>
-                <DialogDescription className="text-[#efd6f8]">
-                  Scegli il bonder con il quale iniziare una chat.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogClose>
-                {nuoveConversazioni?.length > 0 ? (
-                  <ul className="max-h-60 overflow-y-auto">
-                    {nuoveConversazioni.map((bonder) => (
-                      <li
-                        key={bonder?.id}
-                        className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
-                        onClick={() =>
-                          navigate(`/chat/${bonder?.otherUser?.id}`)
-                        }
-                      >
-                        {bonder?.otherUser?.profilo?.immagine && (
-                          <img
-                            src={bonder?.otherUser?.profilo?.immagine}
-                            alt={bonder?.otherUser?.nome}
-                            className="h-10 w-10 rounded-full mr-2 object-cover"
-                          />
-                        )}
-                        <p>
-                          {bonder?.otherUser?.nome} {bonder?.otherUser?.cognome}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>Non ci sono bonder con cui iniziare una conversazione.</p>
-                )}
-              </DialogClose>
-            </DialogContent>
-          </Dialog>
+                    <Avatar className="size-10 ring-1 ring-line-strong">
+                      <AvatarImage src={profileImage(bonder?.otherUser?.profilo?.immagine)} alt="" className="object-cover" />
+                      <AvatarFallback className="bg-accent-soft text-sm text-accent">{bonder?.otherUser?.nome?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium">{bonder?.otherUser?.nome} {bonder?.otherUser?.cognome}</span>
+                  </button>
+                </DialogClose>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="p-6 text-center text-muted">Non ci sono bonder con cui iniziare una conversazione.</p>
         )}
-        {conversazioni && conversazioni.length > 0 ? (
-          conversazioni.map((conv, i) => {
+      </DialogContent>
+    </Dialog>
+  );
+
+  if (isLoading) return <BondSpinner label="Caricamento delle chat" />;
+
+  return (
+    <div className="mx-auto w-full max-w-4xl px-4 pt-12 pb-16 md:pt-15">
+      <PageHeader
+        eyebrow="Chat"
+        title="Le tue"
+        accent="conversazioni."
+        actions={
+          conversazioni.length > 0 && (
+            <NewChat people={nuoveConversazioni}>
+              <button type="button" className="btn btn-primary">
+                <Plus size={18} /> Nuova chat
+              </button>
+            </NewChat>
+          )
+        }
+      >
+        Scrivi ai tuoi bonders, consigliatevi brani, organizzate il prossimo concerto.
+      </PageHeader>
+
+      {conversazioni.length > 0 ? (
+        <ul className="surface mt-12 divide-y divide-line overflow-hidden">
+          {conversazioni.map((conv) => {
             const utcDate = new Date(conv.oraUltimoMessaggio);
             const localDate = new Date(utcDate.getTime() + 2 * 60 * 60 * 1000);
-
-            const orario = localDate.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
+            const orario = localDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            const unread = !conv.letto;
             return (
-              <div
-                key={conv?.chatWithUserId}
-                className={`py-3 px-2 flex items-center justify-between borderChat cursor-pointer ${
-                  i < conversazioni.length && "borderBottomChat"
-                }`}
-                onClick={() => navigate(`/chat/${conv?.chatWithUserId}`)}
-              >
-                <div className="w-1/3 flex items-center justify-start">
-                  <img
-                    src={
-                      conv?.immagine?.startsWith("http")
-                        ? conv?.immagine
-                        : `${API_URL}${conv?.immagine}`
-                    }
-                    alt="avatar"
-                    className="w-13 h-13 object-cover rounded-full me-4"
-                  />
-                  <p className=" text-sm md:text-base">
-                    {conv?.nome} {conv?.cognome}
-                  </p>
-                </div>
-                <p
-                  className={`w-1/3 text-center text-sm md:text-base truncate ${
-                    !conv.letto && "text-[#ad42ff]"
-                  }`}
+              <li key={conv?.chatWithUserId}>
+                <button
+                  type="button"
+                  onClick={() => navigate(`/chat/${conv?.chatWithUserId}`)}
+                  className="flex w-full cursor-pointer items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.03]"
                 >
-                  {conv.ultimoMessaggio}
-                </p>
-                <div className="w-1/3">
-                  <p
-                    className={`text-xs flex items-center justify-end ${
-                      !conv.letto && "text-[#ad42ff]"
-                    }`}
-                  >
-                    {orario}{" "}
-                    {!conv.letto && (
-                      <span className="w-5 h-5 flex justify-center items-center text-xs text-[#f4e5ff] rounded-full bg-[#ad42ff] ms-2">
+                  <Avatar className="size-12 shrink-0 ring-1 ring-line-strong">
+                    <AvatarImage src={profileImage(conv?.immagine)} alt="" className="object-cover" />
+                    <AvatarFallback className="bg-accent-soft text-sm text-accent">{conv?.nome?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">{conv?.nome} {conv?.cognome}</span>
+                    <span className={`block truncate text-sm ${unread ? "font-medium text-fg" : "text-muted"}`}>{conv.ultimoMessaggio}</span>
+                  </span>
+                  <span className="flex shrink-0 flex-col items-end gap-1.5">
+                    <span className={`font-mono text-xs ${unread ? "text-accent" : "text-subtle"}`}>{orario}</span>
+                    {unread && (
+                      <span className="grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-accent-ink">
                         {conv.messaggiNonLetti}
                       </span>
                     )}
-                  </p>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="grid place-items-center my-7">
-            <div className="bg-[#9b1fff] p-6 rounded-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="60"
-                height="60"
-                fill="currentColor"
-                className="bi bi-chat-left"
-                viewBox="0 0 16 16"
-              >
-                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-              </svg>
-            </div>
-            <p className="mt-3 text-lg font-extrabold">
-              Nessuna conversazione per ora.
-            </p>
-            <p className="text-base text-gray-400">
-              Trova i tuoi match musicali ed inizia a conversare!
-            </p>
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="text-sm sm:text-base 2xl:text-2xl rounded-full py-3 px-3 font-semibold buttonGradient mt-7">
-                  Inizia una chat
+                  </span>
                 </button>
-              </DialogTrigger>
-              <DialogContent className="bg-[#170228] border border-[#7112b7]/50">
-                <DialogHeader>
-                  <DialogTitle className="text-[#f7ebfc]">Bonders</DialogTitle>
-                  <DialogDescription className="text-[#efd6f8]">
-                    Scegli il bonder con il quale iniziare una chat.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogClose>
-                  {bonders.length > 0 ? (
-                    <ul className="max-h-60 overflow-y-auto">
-                      {bonders.map((bonder) => (
-                        <li
-                          key={bonder?.id}
-                          className="p-2 hover:bg-[#7112b7]/30 cursor-pointer flex items-center"
-                          onClick={() =>
-                            navigate(`/chat/${bonder?.otherUser?.id}`)
-                          }
-                        >
-                          {bonder?.otherUser?.profilo?.immagine && (
-                            <img
-                              src={bonder?.otherUser?.profilo?.immagine}
-                              alt={bonder?.otherUser?.nome}
-                              className="h-10 w-10 rounded-full mr-2 object-cover"
-                            />
-                          )}
-                          <p>
-                            {bonder?.otherUser?.nome}{" "}
-                            {bonder?.otherUser?.cognome}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>
-                      Non ci sono bonder con cui iniziare una conversazione.
-                    </p>
-                  )}
-                </DialogClose>
-              </DialogContent>
-            </Dialog>
-          </div>
-        )}
-      </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div className="surface mt-12 flex flex-col items-center px-6 py-16 text-center">
+          <MessageCircle size={36} className="text-accent" />
+          <p className="display mt-5 text-3xl font-bold">Ancora silenzio.</p>
+          <p className="mt-2 max-w-sm text-muted">Quando un match diventa bonder potete scrivervi qui.</p>
+          <NewChat people={bonders}>
+            <button type="button" className="btn btn-primary mt-8">Inizia una chat</button>
+          </NewChat>
+        </div>
+      )}
     </div>
-  ) : (
-    <BondSpinner />
   );
 };
 export default ChatGenerali;

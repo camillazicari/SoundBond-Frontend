@@ -56,6 +56,23 @@ app.get("/api/artists", async (req, res) => {
     }
 });
 
+// brani più ascoltati di un genere (genre/artists non filtra per genere)
+app.get("/api/genre-tracks", async (req, res) => {
+    const { genre_id } = req.query;
+
+    if (!genre_id) {
+        return res.status(400).json({ error: "Parametro 'genre_id' mancante" });
+    }
+
+    try {
+        const response = await fetch(`https://api.deezer.com/chart/${encodeURIComponent(genre_id)}/tracks?limit=100`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Errore durante la richiesta a Deezer", details: error.message });
+    }
+});
+
 app.get("/api/songs", async (req, res) => {
     const { artist_id } = req.query;
 

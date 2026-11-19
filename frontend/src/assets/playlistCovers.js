@@ -1,4 +1,4 @@
-// Copertine delle playlist, importate tramite Vite così da funzionare anche nella build di produzione.
+// copertine delle playlist
 const modules = import.meta.glob("./PLAYLISTS/P*.jpeg", { eager: true, import: "default" });
 
 export const playlistCovers = Array.from(
